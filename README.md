@@ -9,7 +9,7 @@ Challenge yourself (or your students) to solve bite-sized Python puzzles using t
 
 ## 🚀 What is PyGolfers?
 
-PyGolfers is an open source web platform where kids can:
+PyGolfers is an open-source web platform where kids can:
 - Solve beginner-friendly Python coding puzzles (“golf challenges”)
 - Compete to write the shortest, most efficient code
 - Instantly see their code’s output and results
@@ -45,13 +45,13 @@ Whether you’re a learner, parent, or teacher, PyGolfers is a playful way to bu
 
 1. **Clone the repository:**
     ```
-    git clone https://github.com/yourusername/pygolfers.git
+    git clone https://github.com/CodeWithKids/pygolfers.git
     cd Pygolfers
     ```
 2. **Install dependencies:**  
-    (Instructions will depend on your tech stack—add details here)
+    (depend on your tech stack—add details)
 3. **Run the app locally:**  
-    (Add commands here, e.g., `python app.py` or `npm start`)
+    (commands here, e.g., `python app.py` or `npm start`)
 4. **Start contributing!**
 
 ---
