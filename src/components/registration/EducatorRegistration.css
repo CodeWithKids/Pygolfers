@@ -1,0 +1,144 @@
+/* Educator Registration Specific Styles */
+.role-selection {
+  margin-bottom: 1.5rem;
+}
+
+.role-options {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.role-option {
+  flex: 1;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.role-option:hover {
+  border-color: #36B6A8;
+  background-color: #f0fdfa;
+}
+
+.role-option.active {
+  border-color: #36B6A8;
+  background-color: #f0fdfa;
+  box-shadow: 0 0 0 2px rgba(54, 182, 168, 0.2);
+}
+
+.role-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #e6fffa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38b2ac;
+  font-size: 1.5rem;
+  transition: all 0.2s;
+}
+
+.role-option.active .role-icon {
+  background-color: #36B6A8;
+  color: white;
+}
+
+.role-option span {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.95rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 6px;
+  background-color: #e2e8f0;
+  border-radius: 3px;
+  margin: 1.5rem 0 2rem;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #36B6A8;
+  transition: width 0.3s ease;
+}
+
+/* Checkbox Styles */
+.checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  margin: 1rem 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #4a5568;
+}
+
+.checkbox-custom {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #cbd5e0;
+  border-radius: 4px;
+  margin-right: 0.75rem;
+  position: relative;
+  flex-shrink: 0;
+  top: 0.15rem;
+  transition: all 0.2s;
+}
+
+input[type="checkbox"]:checked + .checkbox-label .checkbox-custom {
+  background-color: #36B6A8;
+  border-color: #36B6A8;
+}
+
+input[type="checkbox"]:checked + .checkbox-label .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 0.8rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .role-options {
+    flex-direction: column;
+  }
+  
+  .role-option {
+    flex-direction: row;
+    text-align: left;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  .role-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+  
+  .checkbox-label {
+    font-size: 0.85rem;
+  }
+}

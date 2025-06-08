@@ -14,12 +14,8 @@ const About = () => {
       <main className="about-content">
         <section className="about-section">
           <h2>Welcome to PyGolfers!</h2>
-          <p>PyGolfers is a fun and friendly place where kids become coding champions! Our mission is to make learning Python exciting, creative, and rewarding for everyone ages 8-14.</p>
-        </section>
-
-        <section className="about-section">
-          <h2>What is PyGolfers?</h2>
-          <p>PyGolfers is a "code golf" platform—but instead of golf clubs and balls, you use your brain and Python code! The goal? Solve fun coding puzzles using the fewest lines of code possible.</p>
+          <p>PyGolfers is a fun and friendly place where kids become coding champions! Our mission is to make learning Python exciting, creative, and rewarding for everyone ages 8–14.</p>
+          <p>PyGolfers borrows the concept of golf—but with code! In traditional golf, the goal is to get the ball in the hole using as few strokes as possible. In PyGolfers, the "golf course" is a coding puzzle, and your "strokes" are lines of Python code. Just like in golf, the challenge is to solve each puzzle using the shortest, most efficient solution you can—the fewer lines of code you write, the better your score! This playful approach turns every Python puzzle into a fun game of skill and strategy, making coding feel like a creative adventure rather than just another lesson.</p>
         </section>
 
         <section className="about-section">

@@ -1,0 +1,449 @@
+/* Registration Type Selector Styles */
+/* Base Styles */
+.registration-page {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+}
+
+.registration-type-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.registration-header {
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.registration-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #24304A;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #36B6A8 0%, #4F46E5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.registration-header .subtitle {
+  font-size: 1.25rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.subtitle {
+  color: #4a5568;
+  font-size: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.registration-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin: 3rem 0;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.registration-card-wrapper {
+  position: relative;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.registration-card.learner {
+  border-top: 4px solid #36B6A8;
+}
+
+.registration-card.teacher {
+  border-top: 4px solid #4F46E5;
+}
+
+.registration-card.parent {
+  border-top: 4px solid #10B981;
+}
+
+.registration-card.code {
+  border-top: 4px solid #F59E0B;
+}
+
+.registration-card.guest {
+  border-top: 4px solid #6B7280;
+}
+
+.card-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #F59E0B;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.registration-card:hover .card-icon {
+  transform: scale(1.1);
+}
+
+.registration-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+  line-height: 1.3;
+}
+
+.registration-card p {
+  color: #64748b;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  flex-grow: 1;
+}
+
+.card-features li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.feature-icon {
+  color: #36B6A8;
+  margin-right: 0.75rem;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.card-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #36B6A8;
+  transition: all 0.3s ease;
+  margin-left: auto;
+  margin-top: auto;
+}
+
+.registration-card:hover .card-arrow {
+  background: #36B6A8;
+  color: white;
+  transform: translateX(5px);
+}
+
+.registration-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.guest-row {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.guest-centered {
+  max-width: 500px;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem;
+}
+
+.guest-centered .card-icon {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.guest-centered .card-features {
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.guest-centered .card-features li {
+  background: #f8fafc;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  margin: 0;
+  border: 1px solid #e2e8f0;
+}
+
+.guest-centered .card-arrow {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.registration-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.8rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  color: #334155;
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
+  min-height: 280px;
+}
+
+.registration-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-color: #36B6A8; /* Teal */
+}
+
+.registration-cards .teacher {
+  background-color: #e6f7ff;
+  border: 1px solid #91d5ff;
+  color: #1890ff;
+}
+
+.registration-cards .teacher:hover {
+  background-color: #d0e9ff;
+  border-color: #69b1ff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.registration-cards .parent {
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f;
+  color: #52c41a;
+}
+
+.registration-cards .parent:hover {
+  background-color: #d9f7be;
+  border-color: #95de64;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.card-icon.learner {
+  background-color: #36B6A8; /* Teal */
+}
+
+.card-icon.educator {
+  background-color: #F76C7B; /* Pink */
+}
+
+.card-icon.code {
+  background-color: #FFD43B; /* Yellow */
+  color: #24304A; /* Dark Blue for better contrast */
+}
+
+.card-icon.guest {
+  background-color: #24304A; /* Dark Blue */
+}
+
+.registration-card h3 {
+  margin: 0 0 0.75rem 0;
+  color: #2d3748;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
+  min-height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.registration-card p {
+  color: #4a5568;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.login-redirect {
+  color: #4a5568;
+  font-size: 1rem;
+}
+
+.login-redirect a {
+  color: #36B6A8; /* Teal */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-redirect a:hover {
+  text-decoration: underline;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+}
+
+.feature {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 1.5rem;
+  color: white;
+  background: linear-gradient(135deg, #36B6A8 0%, #4F46E5 100%);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.feature:nth-child(2) .feature-icon {
+  background: linear-gradient(135deg, #4F46E5 0%, #8B5CF6 100%);
+}
+
+.feature:nth-child(3) .feature-icon {
+  background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+}
+
+.feature h4 {
+  font-size: 1.25rem;
+  color: #1e293b;
+  margin: 0 0 0.75rem 0;
+  font-weight: 700;
+}
+
+.feature p {
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .registration-type-container {
+    padding: 2rem 1.25rem;
+  }
+  
+  .registration-header h1 {
+    font-size: 2.25rem;
+  }
+  
+  .registration-header .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .registration-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  
+  .registration-card {
+    padding: 1.75rem 1.5rem;
+  }
+  
+  .guest-centered {
+    padding: 2rem 1.5rem;
+  }
+  
+  .registration-card h3 {
+    font-size: 1.35rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .feature {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Animation for page load */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.registration-type-container {
+  animation: fadeIn 0.6s ease-out forwards;
+}

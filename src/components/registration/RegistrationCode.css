@@ -1,0 +1,106 @@
+/* Registration Code Specific Styles */
+.code-validated {
+  background-color: #f0fff4;
+  border: 1px solid #c6f6d5;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.code-validated-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #c6f6d5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: #38a169;
+  font-size: 1.75rem;
+}
+
+.code-validated h3 {
+  color: #2f855a;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.code-type {
+  display: inline-block;
+  background-color: #e6fffa;
+  color: #2c7a7b;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.code-expires {
+  color: #4a5568;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.code-help {
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.help-icon {
+  color: #0ea5e9;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.code-help p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #0369a1;
+  line-height: 1.5;
+}
+
+.code-help a {
+  color: #0369a1;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.code-help a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .code-validated {
+    padding: 1.25rem 1rem;
+  }
+  
+  .code-validated-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+  
+  .code-validated h3 {
+    font-size: 1.1rem;
+  }
+  
+  .code-help {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .code-help p {
+    font-size: 0.85rem;
+  }
+}
