@@ -225,9 +225,9 @@ const Registration = () => {
           )}
         </AnimatePresence>
 
-        <form onSubmit={handleSubmit} className="registration-form">
+        <form onSubmit={handleSubmit} className="registration-form registration-grid" autoComplete="on" aria-label="Registration Form">
           <div className="form-group">
-            <label htmlFor="fullName">Full Name</label>
+            <label htmlFor="fullName" className="form-label">Full Name</label>
             <div className="input-with-icon">
               <FaUser className="input-icon" />
               <input
@@ -237,14 +237,18 @@ const Registration = () => {
                 placeholder="Alex Johnson"
                 value={formData.fullName}
                 onChange={handleChange}
-                className={errors.fullName ? 'error' : ''}
+                className={`input-unified${errors.fullName ? ' error' : ''}`}
+                autoComplete="name"
+                aria-label="Full Name"
+                required
+                tabIndex={1}
               />
             </div>
             {errors.fullName && <span className="error-message">{errors.fullName}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username" className="form-label">Username</label>
             <div className="input-with-icon">
               <FaUser className="input-icon" />
               <input
@@ -254,16 +258,18 @@ const Registration = () => {
                 placeholder="cool_coder123"
                 value={formData.username}
                 onChange={handleChange}
-                className={errors.username ? 'error' : ''}
+                className={`input-unified${errors.username ? ' error' : ''}`}
+                autoComplete="username"
+                aria-label="Username"
+                required
+                tabIndex={2}
               />
             </div>
             {errors.username && <span className="error-message">{errors.username}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">
-              Email {formData.role === 'learner' && '(Optional)'}
-            </label>
+            <label htmlFor="email" className="form-label">Email {formData.role === 'learner' && '(Optional)'}</label>
             <div className="input-with-icon">
               <FaEnvelope className="input-icon" />
               <input
@@ -273,15 +279,19 @@ const Registration = () => {
                 placeholder="your@email.com"
                 value={formData.email}
                 onChange={handleChange}
-                className={errors.email ? 'error' : ''}
+                className={`input-unified${errors.email ? ' error' : ''}`}
+                autoComplete="email"
+                aria-label="Email"
+                tabIndex={3}
+                required={formData.role === 'teacher' || formData.role === 'parent'}
               />
             </div>
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
-          <div className="form-row">
+          <div className="password-row">
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password" className="form-label">Password</label>
               <div className="input-with-icon">
                 <FaLock className="input-icon" />
                 <input
@@ -291,14 +301,18 @@ const Registration = () => {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
-                  className={errors.password ? 'error' : ''}
+                  className={`input-unified${errors.password ? ' error' : ''}`}
+                  autoComplete="new-password"
+                  aria-label="Password"
+                  required
+                  tabIndex={4}
                 />
               </div>
               {errors.password && <span className="error-message">{errors.password}</span>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
               <div className="input-with-icon">
                 <FaLock className="input-icon" />
                 <input
@@ -308,9 +322,14 @@ const Registration = () => {
                   placeholder="••••••••"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={errors.confirmPassword ? 'error' : ''}
+                  className={`input-unified${errors.confirmPassword ? ' error' : ''}`}
+                  autoComplete="new-password"
+                  aria-label="Confirm Password"
+                  required
+                  tabIndex={5}
                 />
               </div>
+              {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
               {errors.confirmPassword && (
                 <span className="error-message">{errors.confirmPassword}</span>
               )}
@@ -459,6 +478,9 @@ const Registration = () => {
               </p>
             </div>
           </div>
+          <button type="submit" className="btn btn-primary register-btn" disabled={isSubmitting} tabIndex={6}>
+            {isSubmitting ? 'Registering...' : 'Create Account'}
+          </button>
         </form>
       </motion.div>
       

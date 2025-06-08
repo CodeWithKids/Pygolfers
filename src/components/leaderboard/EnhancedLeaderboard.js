@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { FaTrophy, FaSearch, FaFilter, FaTimes, FaChevronDown, 
-  FaChevronUp, FaSort, FaSortUp, FaSortDown, FaUser, FaStar, 
+  FaChevronUp, FaChevronLeft, FaChevronRight, FaSort, FaSortUp, FaSortDown, FaUser, FaStar, 
   FaRegStar, FaRegBookmark, FaBookmark, FaShare, FaFlag, 
   FaTable, FaThLarge, FaMoon, FaSun, FaSyncAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,31 +8,55 @@ import UserProfileModal from './UserProfileModal';
 import Badge from './Badge';
 import Heatmap from './Heatmap';
 
+// Demo data constants
+const countries = ['US', 'UK', 'CA', 'AU', 'DE', 'FR', 'JP', 'BR', 'IN', 'CN'];
+const languages = ['Python', 'JavaScript', 'Java', 'C++', 'Go', 'Rust'];
+
 // Mock data generation
-const generateMockUsers = (count = 50) => {
-  const countries = ['US', 'UK', 'CA', 'AU', 'DE', 'FR', 'JP', 'BR', 'IN', 'CN'];
-  const languages = ['Python', 'JavaScript', 'Java', 'C++', 'Go', 'Rust'];
-  
-  return Array.from({ length: count }, (_, i) => ({
+const generateMockUsers = (count = 15) => {
+  const demoUsers = [
+    { name: 'Ava Carter', username: 'ava_c', avatar: 'https://i.pravatar.cc/150?img=5' },
+    { name: 'Liam Smith', username: 'liam_smith', avatar: 'https://i.pravatar.cc/150?img=12' },
+    { name: 'Sofia Lee', username: 'sofia.lee', avatar: 'https://i.pravatar.cc/150?img=33' },
+    { name: 'Noah Kim', username: 'noahkim', avatar: 'https://i.pravatar.cc/150?img=23' },
+    { name: 'Mia Patel', username: 'mia.patel', avatar: 'https://i.pravatar.cc/150?img=29' },
+    { name: 'Ethan Chen', username: 'ethan_chen', avatar: 'https://i.pravatar.cc/150?img=41' },
+    { name: 'Zara Müller', username: 'zara.m', avatar: 'https://i.pravatar.cc/150?img=53' },
+    { name: 'Lucas Rossi', username: 'lucasr', avatar: 'https://i.pravatar.cc/150?img=18' },
+    { name: 'Chloe Dubois', username: 'chloe.d', avatar: 'https://i.pravatar.cc/150?img=44' },
+    { name: 'Mason Okafor', username: 'mason_ok', avatar: 'https://i.pravatar.cc/150?img=60' },
+    { name: 'Layla Singh', username: 'laylasingh', avatar: 'https://i.pravatar.cc/150?img=9' },
+    { name: 'Elijah Brown', username: 'elijahb', avatar: 'https://i.pravatar.cc/150?img=25' },
+    { name: 'Isabella Wang', username: 'isaw', avatar: 'https://i.pravatar.cc/150?img=35' },
+    { name: 'Mateo Silva', username: 'mateo_s', avatar: 'https://i.pravatar.cc/150?img=16' },
+    { name: 'Amara Johnson', username: 'amara.j', avatar: 'https://i.pravatar.cc/150?img=61' }
+  ];
+  const countries = ['Kenya', 'Tanzania', 'Uganda', 'Nigeria', 'Ghana', 'South Africa', 'Rwanda', 'US', 'UK', 'CA', 'AU', 'DE', 'FR', 'JP', 'BR', 'IN', 'CN'];
+  const languages = [
+    'NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn', 'TensorFlow', 'Django', 'Flask', 'Requests', 'BeautifulSoup', 'PyTorch'
+  ];
+  return demoUsers.slice(0, count).map((user, i) => ({
     id: i + 1,
     rank: i + 1,
-    username: `user${i + 1}`,
-    name: `User ${i + 1}`,
-    avatar: `https://i.pravatar.cc/150?img=${i % 70}`,
-    country: countries[Math.floor(Math.random() * countries.length)],
-    language: languages[Math.floor(Math.random() * languages.length)],
-    score: Math.floor(Math.random() * 10000),
+    username: user.username,
+    name: user.name,
+    avatar: user.avatar,
+    country: countries[i % countries.length],
+    language: languages[i % languages.length],
+    score: 9800 - i * 350 + Math.floor(Math.random() * 200), // descending scores
     scoreChange: Math.floor(Math.random() * 100) - 45, // -45 to +54
-    challengesCompleted: Math.floor(Math.random() * 200) + 10,
-    challengesWon: Math.floor(Math.random() * 50) + 5,
-    joinDate: new Date(Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 365)), // Up to 1 year ago
-    isFollowing: Math.random() > 0.7,
-    isBookmarked: Math.random() > 0.8,
+    challengesCompleted: 200 - i * 10 + Math.floor(Math.random() * 10),
+    challengesWon: 50 - i * 2 + Math.floor(Math.random() * 3),
+    joinDate: new Date(Date.now() - (i * 1000 * 60 * 60 * 24 * 20)), // each joined 20 days apart
+    isFollowing: i % 4 === 0,
+    isBookmarked: i % 5 === 0,
     badges: [
       ...(i < 3 ? [`top-${i + 1}`] : []),
-      ...(Math.random() > 0.7 ? ['elite', 'centurion', 'dedicated', 'influencer'][Math.floor(Math.random() * 4)] : [])
+      ...(i % 5 === 0 ? ['elite'] : []),
+      ...(i % 3 === 0 ? ['dedicated'] : []),
+      ...(i % 7 === 0 ? ['influencer'] : [])
     ],
-    isCurrentUser: i === 5, // Mark one user as current user for demo
+    isCurrentUser: i === 5 // Mark one user as current user for demo
   }));
 };
 
@@ -41,6 +65,14 @@ const EnhancedLeaderboard = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Show demo data on mount
+  useEffect(() => {
+    const demoUsers = generateMockUsers(10);
+    setUsers(demoUsers);
+    setFilteredUsers(demoUsers);
+    setLoading(false);
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [timeFilter, setTimeFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -133,13 +165,13 @@ const EnhancedLeaderboard = () => {
               </td>
               <td className="actions">
                 <button 
-                  className={`icon-btn ${user.isFollowing ? 'active' : ''}`} 
+                  className={`button button-primary icon-btn ${user.isFollowing ? 'active' : ''}`} 
                   onClick={(e) => handleFollowToggle(user, e)}
                 >
                   {user.isFollowing ? <FaBookmark /> : <FaRegBookmark />}
                 </button>
                 <button 
-                  className={`icon-btn ${user.isBookmarked ? 'active' : ''}`} 
+                  className={`button button-secondary icon-btn ${user.isBookmarked ? 'active' : ''}`} 
                   onClick={(e) => handleBookmarkToggle(user, e)}
                 >
                   {user.isBookmarked ? <FaStar /> : <FaRegStar />}
@@ -209,7 +241,7 @@ const EnhancedLeaderboard = () => {
   const renderPagination = () => (
     <div className="pagination">
       <button 
-        className="page-btn" 
+        className="button button-primary page-btn" 
         onClick={() => setCurrentPage(prev => prev - 1)}
         disabled={currentPage === 1}
       >
@@ -218,14 +250,14 @@ const EnhancedLeaderboard = () => {
       {Array.from({ length: Math.ceil(filteredUsers.length / usersPerPage) }).map((_, i) => (
         <button 
           key={i + 1} 
-          className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
+          className={`button button-secondary page-btn ${currentPage === i + 1 ? 'active' : ''}`}
           onClick={() => setCurrentPage(i + 1)}
         >
           {i + 1}
         </button>
       ))}
       <button 
-        className="page-btn" 
+        className="button button-primary page-btn" 
         onClick={() => setCurrentPage(prev => prev + 1)}
         disabled={currentPage === Math.ceil(filteredUsers.length / usersPerPage)}
       >
@@ -256,16 +288,32 @@ const EnhancedLeaderboard = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = users.filter(user => {
-      const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          user.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesTime = timeFilter === 'all' || 
-                         (timeFilter === 'week' && user.joinDate >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)) ||
-                         (timeFilter === 'month' && user.joinDate >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
-      return matchesSearch && matchesTime;
-    });
+    let filtered = [...users];
+
+    // Time filter (not shown here)
+
+    // Search filter (by username, name, or country)
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.trim().toLowerCase();
+      filtered = filtered.filter(user =>
+        user.username.toLowerCase().includes(q) ||
+        user.name.toLowerCase().includes(q) ||
+        user.country.toLowerCase().includes(q)
+      );
+    }
+
+    // Sorting
+    if (sortConfig.key) {
+      filtered.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
     setFilteredUsers(filtered);
-  }, [users, searchQuery, timeFilter]);
+    setCurrentPage(1); // Reset to first page on filter/search
+  }, [users, searchQuery, timeFilter, sortConfig]);
 
   useEffect(() => {
     const sorted = [...filteredUsers].sort((a, b) => {
@@ -281,6 +329,10 @@ const EnhancedLeaderboard = () => {
   // Handlers
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
   };
 
   const handleTimeFilterChange = (e) => {
@@ -361,22 +413,27 @@ const EnhancedLeaderboard = () => {
           <input
             type="text"
             className="search-input"
-            placeholder="Search users..."
+            placeholder="Search by name, username, or country..."
             value={searchQuery}
             onChange={handleSearchChange}
           />
+          {searchQuery && (
+            <button className="button button-secondary clear-search-btn" onClick={handleClearSearch} aria-label="Clear search">
+              <FaTimes />
+            </button>
+          )}
         </div>
 
         <div className="view-controls">
           <button 
-            className={`view-btn ${viewMode === 'table' ? 'active' : ''}`}
+            className={`button button-secondary view-btn ${viewMode === 'table' ? 'active' : ''}`}
             onClick={() => setViewMode('table')}
           >
             <FaTable />
             Table
           </button>
           <button 
-            className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+            className={`button button-secondary view-btn ${viewMode === 'grid' ? 'active' : ''}`}
             onClick={() => setViewMode('grid')}
           >
             <FaThLarge />
@@ -468,7 +525,7 @@ const EnhancedLeaderboard = () => {
 
             <div className="filter-actions">
               <button 
-                className="filter-btn clear-filters"
+                className="button button-pink filter-btn clear-filters"
                 onClick={clearFilters}
               >
                 Clear Filters

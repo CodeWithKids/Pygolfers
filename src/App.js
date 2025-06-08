@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./styles/buttons.css";
+import "./styles/Buttons.css";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaPlay, FaUser, FaCog, FaSignOutAlt, FaChevronDown, FaTrophy, FaCode, FaUsers, FaChartLine, FaStar, FaQuoteLeft, FaGithub, FaTwitter, FaDiscord } from "react-icons/fa";
 import { motion } from 'framer-motion';
@@ -7,6 +7,9 @@ import CodePreview from './components/CodePreview';
 import './components/CodePreview.css';
 import "./App.css";
 import About from "./pages/About";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Classrooms from "./pages/Classrooms";
+import './styles/Classrooms.css';
 import Contact from "./pages/Contact";
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
@@ -302,7 +305,7 @@ const Home = () => {
   );
 };
 
-const NavBar = () => {
+const NavBar = ({ currentUser, setCurrentUser }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
@@ -325,13 +328,7 @@ const NavBar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [isMenuOpen]);
 
-  // Mock user data - in a real app, this would come from your auth context
-  const [currentUser, setCurrentUser] = React.useState({
-    id: '1',
-    username: 'pygolfer123',
-    avatar: 'https://i.pravatar.cc/150?img=32',
-    isAuthenticated: true
-  });
+  
 
   // Toggle mobile menu
   const toggleMenu = () => {
@@ -620,6 +617,12 @@ const NavBar = () => {
 };
 
 const App = () => {
+  const [currentUser, setCurrentUser] = useState({
+    id: '1',
+    username: 'pygolfer123',
+    avatar: 'https://i.pravatar.cc/150?img=32',
+    isAuthenticated: true
+  });
   // ...
   
   const toggleMobileMenu = () => {
@@ -632,16 +635,29 @@ const App = () => {
   return (
     <Router>
       <div className="App">
-        <NavBar />
+        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+<Route path="/classrooms" element={
+  <ProtectedRoute isAuthenticated={currentUser.isAuthenticated} message="Please log in to access classrooms.">
+    <Classrooms />
+  </ProtectedRoute>
+} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/challenges" element={<Challenges />} />
-          <Route path="/challenge/:id" element={<ChallengeDetail />} />
+          <Route path="/challenges" element={
+  <ProtectedRoute isAuthenticated={currentUser.isAuthenticated} message="Sign in to view and solve coding challenges!">
+    <Challenges />
+  </ProtectedRoute>
+} />
+          <Route path="/challenge/:id" element={
+  <ProtectedRoute isAuthenticated={currentUser.isAuthenticated} message="Sign in to attempt this coding challenge!">
+    <ChallengeDetail />
+  </ProtectedRoute>
+} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/settings" element={<ProfileSettings />} />

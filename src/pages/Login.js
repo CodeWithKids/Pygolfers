@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { FaUser, FaLock, FaArrowRight, FaUserPlus } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './Login.css';
 
 const Login = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const message = location.state?.message;
+  const from = location.state?.from?.pathname || '/';
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -40,6 +44,8 @@ const Login = () => {
       setTimeout(() => {
         console.log('Login attempt with:', formData);
         setIsLoading(false);
+        // In a real app, set auth state here
+        navigate(from, { replace: true });
       }, 1000);
     }
   };
@@ -56,6 +62,11 @@ const Login = () => {
           <h1>Welcome Back!</h1>
           <p className="subtitle">Sign in to continue your Python learning journey</p>
         </div>
+        {message && (
+          <div className="login-alert" style={{background:'#F76C7B', color:'#fff', borderRadius:'8px', padding:'0.75rem 1rem', marginBottom:'1rem', textAlign:'center'}}>
+            {message}
+          </div>
+        )}
         
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">

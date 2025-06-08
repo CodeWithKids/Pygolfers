@@ -3,6 +3,9 @@
   margin: 0 auto;
   padding: 2rem 1rem;
   color: var(--text-primary);
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f3e7fa 0%, #f9e7e7 40%, #d0f1f7 100%);
+  /* Soft purple-pink-teal gradient, matches leaderboard/home */
 }
 
 .about-header {

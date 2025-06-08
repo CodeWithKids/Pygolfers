@@ -3,53 +3,146 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.65rem 1.4rem;
+  border-radius: 12px;
   font-size: 1rem;
+  font-family: 'Fredoka', 'Segoe UI', Arial, sans-serif;
   font-weight: 600;
   line-height: 1.5;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.2s ease-in-out;
+  border: none;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.14s;
   white-space: nowrap;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(36, 48, 74, 0.08);
+  min-width: 2.5rem;
+  min-height: 2.5rem;
 }
 
-/* Primary Button */
-.button.primary {
-  background-color: var(--teal);
-  color: white;
-  border-color: var(--teal);
+/* Primary Teal Button */
+.button-primary {
+  background-color: #36B6A8;
+  color: #fff;
+  border-radius: 12px;
+  font-family: 'Fredoka', 'Segoe UI', Arial, sans-serif;
+  box-shadow: 0 2px 8px rgba(54, 182, 168, 0.10);
+}
+.button-primary:hover,
+.button-primary:focus {
+  background-color: #2aa193;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(54, 182, 168, 0.13);
+  transform: translateY(-2px) scale(1.025);
+}
+.button-primary:active {
+  background-color: #22887c;
+  color: #fff;
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 4px rgba(54, 182, 168, 0.10);
 }
 
-.button.primary:hover {
-  background-color: #2a8a7f;
-  border-color: #2a8a7f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+/* Yellow Accent Button */
+.button-yellow {
+  background-color: #FFD43B;
+  color: #fff;
+  border-radius: 12px;
+  font-family: 'Fredoka', 'Segoe UI', Arial, sans-serif;
+  box-shadow: 0 2px 8px rgba(255, 212, 59, 0.10);
+}
+.button-yellow:hover,
+.button-yellow:focus {
+  background-color: #e6bc13;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(255, 212, 59, 0.13);
+  transform: translateY(-2px) scale(1.025);
+}
+.button-yellow:active {
+  background-color: #c9a90f;
+  color: #fff;
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 4px rgba(255, 212, 59, 0.10);
 }
 
-.button.primary:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Pink Accent Button */
+.button-pink {
+  background-color: #F76C7B;
+  color: #fff;
+  border-radius: 12px;
+  font-family: 'Fredoka', 'Segoe UI', Arial, sans-serif;
+  box-shadow: 0 2px 8px rgba(247, 108, 123, 0.10);
+}
+.button-pink:hover,
+.button-pink:focus {
+  background-color: #e34e5e;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(247, 108, 123, 0.13);
+  transform: translateY(-2px) scale(1.025);
+}
+.button-pink:active {
+  background-color: #c63a49;
+  color: #fff;
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 4px rgba(247, 108, 123, 0.10);
 }
 
-/* Secondary Button */
-.button.secondary {
+/* For dark backgrounds */
+.bg-dark .button-primary,
+.bg-dark .button-yellow,
+.bg-dark .button-pink {
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(36, 48, 74, 0.15);
+}
+
+/* Never use dark blue buttons on dark backgrounds for contrast */
+
+/* Secondary/Outline Button (teal border) */
+.button-secondary {
   background-color: transparent;
-  color: var(--teal);
-  border-color: var(--teal);
+  color: #36B6A8;
+  border: 2px solid #36B6A8;
+  border-radius: 12px;
+  font-family: 'Fredoka', 'Segoe UI', Arial, sans-serif;
+  box-shadow: none;
+}
+.button-secondary:hover,
+.button-secondary:focus {
+  background-color: #e6f6f4;
+  color: #22887c;
+  border-color: #2aa193;
+  transform: translateY(-2px) scale(1.025);
+}
+.button-secondary:active {
+  background-color: #d0eeea;
+  color: #22887c;
+  border-color: #22887c;
+  transform: translateY(0) scale(0.98);
 }
 
-.button.secondary:hover {
-  background-color: rgba(54, 182, 168, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.button-yellow.button-secondary {
+  color: #FFD43B;
+  border-color: #FFD43B;
 }
+.button-yellow.button-secondary:hover,
+.button-yellow.button-secondary:focus {
+  background-color: #fffbe5;
+  color: #e6bc13;
+  border-color: #e6bc13;
+}
+
+.button-pink.button-secondary {
+  color: #F76C7B;
+  border-color: #F76C7B;
+}
+.button-pink.button-secondary:hover,
+.button-pink.button-secondary:focus {
+  background-color: #fff0f2;
+  color: #e34e5e;
+  border-color: #e34e5e;
+}
+
 
 /* Outline Button */
 .button.outline {
@@ -80,14 +173,15 @@
 
 /* Sizes */
 .button.small {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.93rem;
 }
 
 .button.large {
-  padding: 1rem 2rem;
-  font-size: 1.125rem;
+  padding: 0.9rem 1.9rem;
+  font-size: 1.12rem;
 }
+
 
 /* Full Width */
 .button.full-width {

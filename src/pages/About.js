@@ -2,6 +2,7 @@ import React from 'react';
 import { FaPython, FaTrophy, FaUsers, FaLightbulb, FaHome, FaChild, FaUserTie } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './About.css';
+import '../styles/Buttons.css';
 
 const About = () => {
   return (
