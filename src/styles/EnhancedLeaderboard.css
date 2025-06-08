@@ -1,0 +1,147 @@
+/* Enhanced Leaderboard Base Styles */
+:root {
+  --primary-color: #4a6fa5;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --info-color: #17a2b8;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --border-color: #dee2e6;
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --border-radius: 0.5rem;
+  --transition: all 0.3s ease;
+}
+
+/* Dark theme */
+.enhanced-leaderboard.dark {
+  --bg-color: #1a1e24;
+  --card-bg: #242a31;
+  --text-color: #f8f9fa;
+  --text-muted: #adb5bd;
+  --border-color: #2f363e;
+  --hover-bg: #2f363e;
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+}
+
+/* Light theme */
+.enhanced-leaderboard {
+  --bg-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --hover-bg: #f1f3f5;
+}
+
+/* Base styles */
+.enhanced-leaderboard {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  transition: var(--transition);
+}
+
+/* Header */
+.leaderboard-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.leaderboard-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.leaderboard-header .trophy-icon {
+  color: var(--warning-color);
+  font-size: 2.2rem;
+}
+
+.leaderboard-header .subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin: 0 auto;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+  min-width: 250px;
+}
+
+.search-container .search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(74, 111, 165, 0.25);
+}
+
+.view-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-btn, .filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.view-btn:hover, .filter-btn:hover {
+  background-color: var(--hover-bg);
+}
+
+.view-btn.active, .filter-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}

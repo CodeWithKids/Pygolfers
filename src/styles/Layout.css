@@ -1,0 +1,71 @@
+/* Common Layout Styles */
+:root {
+  --page-max-width: 1400px;
+  --content-padding: 0.75rem;  /* Reduced from 1.5rem */
+  --card-padding: 1.25rem;    /* Reduced from 1.5rem */
+}
+
+/* Base container for all pages */
+.page-container {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+  width: 100%;
+}
+
+/* Card/Content Wrapper */
+.content-card {
+  background: var(--card-bg, #fff);
+  border-radius: var(--border-radius, 12px);
+  box-shadow: var(--shadow, 0 4px 6px rgba(0, 0, 0, 0.1));
+  padding: var(--card-padding);
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Form Container */
+.form-container {
+  max-width: 800px;  /* Increased from 700px */
+  margin: 0 auto;
+  padding: 0 1rem;  /* Reduced from 2rem */
+  width: 100%;
+}
+
+/* Table Container */
+.table-container {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 auto;
+  padding: 0 1rem;  /* Reduced from 1.5rem */
+}
+
+/* Responsive Adjustments */
+@media (min-width: 1200px) {
+  :root {
+    --content-padding: 1rem;  /* Reduced from 2rem */
+    --card-padding: 1.5rem;   /* Reduced from 2rem */
+  }
+  
+  .page-container {
+    padding: 0 1.5%;         /* Reduced from 3% */
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --content-padding: 1rem;
+    --card-padding: 1.25rem;
+  }
+  
+  .content-card {
+    margin: 1rem auto;
+    padding: 1.25rem;
+  }
+  
+  .form-container,
+  .table-container {
+    padding: 0 0.5rem;
+  }
+}

@@ -1,0 +1,250 @@
+/* Syntax highlighting for Python */
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #1e1e1e;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.language-python .token.keyword { color: #569cd6; }
+.language-python .token.string { color: #ce9178; }
+.language-python .token.comment { color: #6a9955; font-style: italic; }
+.language-python .token.function { color: #dcdcaa; }
+.language-python .token.number { color: #b5cea8; }
+.language-python .token.operator { color: #d4d4d4; }
+.language-python .token.punctuation { color: #d4d4d4; }
+.language-python .token.builtin { color: #4ec9b0; }
+
+/* Code Preview Container */
+.code-preview {
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+  height: 100%;
+  max-height: 360px;
+  margin: 0;
+  align-self: stretch;
+}
+
+/* Tabs */
+.code-tabs {
+  display: flex;
+  background: #252526;
+  padding: 0.5rem 1rem 0;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.code-tabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.tab {
+  background: none;
+  border: none;
+  color: #9e9e9e;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.9rem;
+  position: relative;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.tab:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.tab:hover {
+  color: #fff;
+}
+
+.tab.active {
+  color: #fff;
+  font-weight: bold;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--teal);
+}
+
+/* Code Block */
+.code-block {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: #1e1e1e;
+  margin: 0;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 1rem;
+  overflow: visible;
+}
+
+/* Syntax highlighting overrides for Prism */
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #1e1e1e;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Line numbers */
+.line-numbers .line-numbers-rows {
+  border-right: 1px solid #2d2d2d;
+  padding: 1rem 0.5rem 1rem 0;
+}
+
+.line-numbers-rows > span:before {
+  color: #5c6370;
+}
+
+/* Code Footer */
+.code-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #252526;
+  color: #9e9e9e;
+  font-size: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.run-button {
+  background: #007acc;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.run-button:focus {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.run-button:not(:disabled):hover {
+  background: #1a8fe3;
+  transform: translateY(-1px);
+}
+
+.run-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.run-button.running {
+  background: #0d5d9c;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Output area */
+.code-output {
+  background: #1e1e1e;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #d4d4d4;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.output-header {
+  color: #9cdcfe;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.output-content {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9em;
+  color: #b5cea8;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .code-preview {
+    margin: 1.5rem -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .code-block {
+    font-size: 0.85rem;
+  }
+  
+  .code-tabs {
+    padding: 0.5rem 0.75rem 0;
+  }
+  
+  .tab {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .run-button {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .code-output {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}

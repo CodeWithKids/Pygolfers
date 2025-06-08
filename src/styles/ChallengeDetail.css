@@ -634,3 +634,76 @@ example pre {
     justify-content: center;
   }
 }
+
+/* Loading and Not Found States */
+.challenge-not-found,
+.challenge-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.challenge-not-found h2,
+.challenge-loading h2 {
+  color: var(--dark-blue);
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.challenge-not-found p,
+.challenge-loading p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 500px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 1.5rem;
+  border: 5px solid rgba(54, 182, 168, 0.2);
+  border-top: 5px solid var(--teal);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Back link button */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--teal);
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.back-link:hover {
+  background-color: #2a8a7f;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: white;
+}
+
+.back-link:active {
+  transform: translateY(0);
+  box-shadow: none;
+}

@@ -46,6 +46,8 @@ const ChallengeDetail = () => {
 
   // Load saved code from localStorage
   useEffect(() => {
+    if (!challenge) return;
+    
     const savedCode = localStorage.getItem(`challenge_${id}_code`);
     if (savedCode) {
       setCode(savedCode);
@@ -58,7 +60,7 @@ const ChallengeDetail = () => {
       setCode(defaultCode);
       updateCounters(defaultCode);
     }
-  }, [id]);
+  }, [id, challenge]); // Add challenge to dependency array
 
   const updateCounters = (code) => {
     setLineCount(code.split('\n').length);
@@ -78,13 +80,24 @@ const ChallengeDetail = () => {
   };
 
   if (!challenge) {
+    // Show loading state while fetching challenge data
+    if (Object.keys(challengeData).length > 0) {
+      return (
+        <div className="challenge-not-found">
+          <h2>Challenge not found</h2>
+          <p>The requested challenge could not be found or has been removed.</p>
+          <Link to="/challenges" className="back-link">
+            <FaChevronLeft /> Back to Challenges
+          </Link>
+        </div>
+      );
+    }
+    
+    // Show loading state while data is being fetched
     return (
-      <div className="challenge-not-found">
-        <h2>Challenge not found</h2>
-        <p>The requested challenge could not be found or has been removed.</p>
-        <Link to="/challenges" className="back-link">
-          <FaChevronLeft /> Back to Challenges
-        </Link>
+      <div className="challenge-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading challenge...</p>
       </div>
     );
   }
