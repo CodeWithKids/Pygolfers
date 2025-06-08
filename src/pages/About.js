@@ -1,0 +1,94 @@
+import React from 'react';
+import { FaPython, FaTrophy, FaUsers, FaLightbulb, FaHome } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import './About.css';
+
+const About = () => {
+  return (
+    <div className="about-container">
+      <header className="about-header">
+        <h1>About PyGolfers <span>🐍⛳</span></h1>
+        <p className="tagline">Where Kids Become Coding Champions!</p>
+      </header>
+
+      <main className="about-content">
+        <section className="about-section">
+          <h2>Welcome to PyGolfers!</h2>
+          <p>PyGolfers is a fun and friendly place where kids become coding champions! Our mission is to make learning Python exciting, creative, and rewarding for everyone ages 8-14.</p>
+        </section>
+
+        <section className="about-section">
+          <h2>What is PyGolfers?</h2>
+          <p>PyGolfers is a "code golf" platform—but instead of golf clubs and balls, you use your brain and Python code! The goal? Solve fun coding puzzles using the fewest lines of code possible.</p>
+        </section>
+
+        <section className="about-section">
+          <h2>Why PyGolfers?</h2>
+          <div className="features-grid">
+            <div className="feature-card">
+              <FaLightbulb className="feature-icon" />
+              <h3>Learn by Playing</h3>
+              <p>Coding is like solving a puzzle or playing a game.</p>
+            </div>
+            <div className="feature-card">
+              <FaTrophy className="feature-icon" />
+              <h3>Challenge Yourself</h3>
+              <p>Can you make your code even shorter or smarter?</p>
+            </div>
+            <div className="feature-card">
+              <FaPython className="feature-icon" />
+              <h3>Earn Badges</h3>
+              <p>Show off your skills and rise up the leaderboard!</p>
+            </div>
+            <div className="feature-card">
+              <FaUsers className="feature-icon" />
+              <h3>Friendly Community</h3>
+              <p>Share solutions, get tips, and cheer each other on.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="about-section">
+          <h2>Who is PyGolfers for?</h2>
+          <ul className="who-list">
+            <li>Kids who are curious about computers and coding</li>
+            <li>Parents and teachers looking for a safe, positive way to introduce programming</li>
+            <li>Anyone who loves a good challenge!</li>
+          </ul>
+        </section>
+
+        <section className="about-section values">
+          <h2>Our Values</h2>
+          <div className="values-grid">
+            <div className="value">
+              <h3>Creativity</h3>
+              <p>There's always more than one way to solve a problem.</p>
+            </div>
+            <div className="value">
+              <h3>Fun</h3>
+              <p>Learning should make you smile!</p>
+            </div>
+            <div className="value">
+              <h3>Teamwork</h3>
+              <p>We help each other grow and celebrate everyone's progress.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="about-section creators">
+          <h2>Meet the Creators</h2>
+          <p>PyGolfers was built by a team who loves coding, teaching, and making learning joyful. We believe everyone can be a coder—and we're here to help you on your journey.</p>
+        </section>
+
+        <div className="cta-section">
+          <h3>Ready to start your coding adventure?</h3>
+          <Link to="/" className="home-button">
+            <FaHome /> Go to Home Page
+          </Link>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default About;

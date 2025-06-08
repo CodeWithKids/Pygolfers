@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
+
+:root {
+  --primary-red: #F76C7B;      /* For buttons and icons */
+  --primary-yellow: #FFD43B;  /* For highlights and accents */
+  --primary-teal: #36B6A8;    /* For highlights and accents */
+  --primary-dark: #24304A;    /* For text and important UI elements */
+  --primary-bg: #ffffff;      /* Main background */
+  --header-bg: #f8f9fa;      /* Header background */
+  --footer-bg: #f1f3f5;      /* Footer background */
+  --card-bg: #ffffff;         /* Card background */
+  --text-color: #24304A;      /* Main text color */
+  --text-light: #6c757d;      /* Secondary text color */
+}
+
+body {
+  margin: 0;
+  font-family: 'Fredoka', Arial, sans-serif;
+  background: var(--primary-bg);
+  color: var(--text-color);
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: linear-gradient(90deg, var(--primary-yellow), var(--primary-teal));
+  padding: 1.5rem 1rem 1rem 1rem;
+  border-bottom: 5px solid var(--primary-teal);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.app-header .header-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-placeholder {
+  font-size: 3rem;
+  margin-right: 1rem;
+  background: var(--primary-red);
+  border-radius: 50%;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-title {
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+  letter-spacing: 2px;
+}
+
+.tagline {
+  font-size: 1.3rem;
+  color: var(--primary-teal);
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+
+.main-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-bg);
+  padding: 2rem 1rem;
+}
+
+.intro {
+  background: var(--card-bg);
+  border-radius: 2rem;
+  padding: 2.5rem 2rem 2rem 2rem;
+  box-shadow: 0 4px 16px 0 rgba(52,211,153,0.12);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.intro h2 {
+  font-size: 2rem;
+  color: var(--primary-blue);
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #374151;
+}
+
+.start-btn {
+  background: var(--primary-red);
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 2rem;
+  padding: 1rem 2.2rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(96,165,250,0.15);
+  transition: background 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.start-btn:hover {
+  background: var(--primary-teal);
+  transform: scale(1.05);
+}
+
+.illustrations {
+  margin-top: 1.2rem;
+  font-size: 2.2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.icon {
+  color: var(--primary-red);
+}
+
+.footer {
+  background: var(--footer-bg);
+  padding: 1rem 0.5rem 0.7rem 0.5rem;
+  text-align: center;
+  border-top: 3px solid var(--primary-teal);
+}
+.footer nav {
+  margin-bottom: 0.5rem;
+}
+.footer a, .footer a:visited {
+  color: var(--primary-teal);
+  text-decoration: none;
+  font-size: 1.1rem;
+  margin: 0 1.2rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.footer a:hover {
+  color: var(--primary-red);
+}
+.footer-logo {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-top: 0.4rem;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 0.5rem;
+  }
+  .logo-placeholder {
+    margin-bottom: 0.5rem;
+    margin-right: 0;
+  }
+  .main-section {
+    padding: 1rem 0.2rem;
+  }
+  .intro {
+    padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+  }
+  .app-title {
+    font-size: 2rem;
+  }
+  .tagline {
+    font-size: 1rem;
+  }
+}
