@@ -22,24 +22,46 @@ const About = () => {
           <h2>Why PyGolfers?</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <FaLightbulb className="feature-icon" />
+              <div className="icon-container">
+                <FaLightbulb className="feature-icon" style={{ color: '#36B6A8' }} />
+              </div>
               <h3>Learn by Playing</h3>
               <p>Coding is like solving a puzzle or playing a game.</p>
             </div>
             <div className="feature-card">
-              <FaTrophy className="feature-icon" />
+              <div className="icon-container">
+                <FaTrophy className="feature-icon" style={{ color: '#FFD43B' }} />
+              </div>
               <h3>Challenge Yourself</h3>
               <p>Can you make your code even shorter or smarter?</p>
             </div>
             <div className="feature-card">
-              <FaPython className="feature-icon" />
-              <h3>Earn Badges</h3>
+              <div className="icon-container">
+                <FaPython className="feature-icon" style={{ color: '#F76C7B' }} />
+              </div>
+              <h3>Earn Badges & Trophies</h3>
               <p>Show off your skills and rise up the leaderboard!</p>
             </div>
             <div className="feature-card">
-              <FaUsers className="feature-icon" />
+              <div className="icon-container">
+                <FaUsers className="feature-icon" style={{ color: '#24304A' }} />
+              </div>
               <h3>Friendly Community</h3>
-              <p>Share solutions, get tips, and cheer each other on.</p>
+              <p>Share your solutions, get tips, and cheer each other on.</p>
+            </div>
+            <div className="feature-card">
+              <div className="icon-container">
+                <FaLightbulb className="feature-icon" style={{ color: '#36B6A8' }} />
+              </div>
+              <h3>Boost Problem-Solving Skills</h3>
+              <p>Each puzzle helps you think creatively and logically.</p>
+            </div>
+            <div className="feature-card">
+              <div className="icon-container">
+                <FaUsers className="feature-icon" style={{ color: '#FFD43B' }} />
+              </div>
+              <h3>Safe and Supportive</h3>
+              <p>PyGolfers is a positive space where everyone can learn at their own pace.</p>
             </div>
           </div>
         </section>
