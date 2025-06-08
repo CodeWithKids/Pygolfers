@@ -11,6 +11,7 @@ import ParentRegistration from "./components/registration/ParentRegistration";
 import RegistrationCode from "./components/registration/RegistrationCode";
 import GuestRegistration from "./components/registration/GuestRegistration";
 import Login from "./pages/Login";
+import Challenges from "./pages/Challenges";
 
 const Home = () => (
   <main className="main-section">
@@ -112,8 +113,8 @@ const NavBar = () => {
           <ul className="nav-links">
             <li><Link to="/" className="nav-link" onClick={closeMenu}>Home</Link></li>
             <li><Link to="/about" className="nav-link" onClick={closeMenu}>About</Link></li>
-            <li><a href="#challenges" className="nav-link" onClick={closeMenu}>Challenges</a></li>
-            <li><a href="#leaderboard" className="nav-link" onClick={closeMenu}>Leaderboard</a></li>
+            <li><Link to="/challenges" className="nav-link" onClick={closeMenu}>Challenges</Link></li>
+            <li><Link to="/leaderboard" className="nav-link" onClick={closeMenu}>Leaderboard</Link></li>
             <li><Link to="/contact" className="nav-link" onClick={closeMenu}>Contact</Link></li>
           </ul>
           <Link to="/login" className="login-btn">Log In</Link>
@@ -139,6 +140,7 @@ const App = () => {
           <Route path="/register/code" element={<RegistrationCode />} />
           <Route path="/register/guest" element={<GuestRegistration />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/challenges" element={<Challenges />} />
         </Routes>
         <footer className="footer">
           <div className="footer-content">
