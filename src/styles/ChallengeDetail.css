@@ -41,6 +41,58 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.code-stats {
+  display: flex;
+  gap: 1.5rem;
+  background: var(--light-gray);
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--dark-blue);
+}
+
+.new-badge {
+  background-color: var(--teal);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .challenge-title {
   font-size: 2.25rem;
   color: var(--dark-blue);
@@ -197,6 +249,96 @@ example pre {
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
+}
+
+.code-editor-wrapper {
+  position: relative;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+.language-badge {
+  background-color: #2a2a2a;
+  color: #9cdcfe;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.run-btn {
+  background-color: var(--teal);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.run-btn:hover {
+  background-color: #2da194;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.run-btn:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.run-btn.running {
+  background-color: #3182ce;
+  cursor: wait;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #333;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  margin-top: 0.5rem;
+}
+
+.icon-button:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  margin-top: 0.25rem;
 }
 
 .editor-header {
@@ -219,42 +361,33 @@ example pre {
   gap: 0.75rem;
 }
 
-.run-btn,
-.submit-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-}
-
-.run-btn {
-  background: white;
-  color: var(--teal);
-  border: 1px solid var(--teal);
-}
-
-.run-btn:hover {
-  background: rgba(54, 182, 168, 0.1);
-}
-
 .submit-btn {
   background: var(--teal);
   color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover {
+  background-color: #2da194;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .submit-btn:disabled {
-  background: #A0AEC0;
+  background-color: #a0aec0;
   cursor: not-allowed;
-}
-
-.submit-btn:not(:disabled):hover {
-  background: #2da194;
+  transform: none;
+  box-shadow: none;
 }
 
 .code-editor {
@@ -301,32 +434,61 @@ example pre {
 }
 
 .output-container {
-  border-top: 1px solid var(--border-color);
-  padding: 1rem 1.5rem;
+  margin-top: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
 }
 
-.output-container h3 {
-  margin: 0 0 0.75rem 0;
-  font-size: 1rem;
-  color: var(--dark-blue);
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #252526;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.output-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9cdcfe;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.execution-time {
+  font-size: 0.8rem;
+  color: #9cdcfe;
+  font-family: 'Fira Code', monospace;
+}
+
+.output-content {
+  padding: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #d4d4d4;
 }
 
 .output {
-  background: #2D3748;
-  color: #E2E8F0;
-  padding: 1rem;
-  border-radius: 6px;
-  font-family: 'Fira Code', 'Courier New', monospace;
-  font-size: 0.9rem;
-  white-space: pre-wrap;
-  overflow-x: auto;
   margin: 0;
-  min-height: 80px;
-  max-height: 200px;
-  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
-/* Test Results */
+.output:empty::before {
+  content: 'Run your code to see the output here...';
+  color: #6b7280;
+  font-style: italic;
+}
+
 .test-results {
   border-top: 1px solid var(--border-color);
   padding: 1rem 1.5rem;
@@ -353,11 +515,50 @@ example pre {
 
 .test-result-header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.test-status {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  font-weight: 500;
+}
+
+.test-execution-time {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-family: 'Fira Code', monospace;
+}
+
+.test-result-details {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
   font-size: 0.9rem;
+}
+
+.test-result-details > div {
+  margin-bottom: 0.75rem;
+}
+
+.test-result-details strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #e2e8f0;
+}
+
+.test-result-details pre {
+  margin: 0.25rem 0 0 0;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
 }
 
 .test-result.passed .test-result-header {

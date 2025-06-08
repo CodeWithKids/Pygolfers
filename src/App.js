@@ -12,6 +12,8 @@ import RegistrationCode from "./components/registration/RegistrationCode";
 import GuestRegistration from "./components/registration/GuestRegistration";
 import Login from "./pages/Login";
 import Challenges from "./pages/Challenges";
+import ChallengeDetail from "./pages/ChallengeDetail";
+import Leaderboard from "./pages/Leaderboard";
 
 const Home = () => (
   <main className="main-section">
@@ -141,6 +143,8 @@ const App = () => {
           <Route path="/register/guest" element={<GuestRegistration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/challenges" element={<Challenges />} />
+          <Route path="/challenge/:id" element={<ChallengeDetail />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
         <footer className="footer">
           <div className="footer-content">
