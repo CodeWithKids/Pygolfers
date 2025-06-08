@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import "./App.css";
 import { FaPlay } from "react-icons/fa";
 import About from "./pages/About";
@@ -10,6 +10,7 @@ import TeacherRegistration from "./components/registration/EducatorRegistration"
 import ParentRegistration from "./components/registration/ParentRegistration";
 import RegistrationCode from "./components/registration/RegistrationCode";
 import GuestRegistration from "./components/registration/GuestRegistration";
+import Login from "./pages/Login";
 
 const Home = () => (
   <main className="main-section">
@@ -50,8 +51,9 @@ const Home = () => (
   </main>
 );
 
-const App = () => {
+const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -62,38 +64,44 @@ const App = () => {
     setIsMenuOpen(false);
   };
 
+  // Always return teal color for the PyGolfers text
+  const getTitleColor = () => {
+    return '#36B6A8'; // Always teal
+  };
+
+  return (
+    <header className="app-header">
+      <div className="header-container">
+        <Link to="/" className="header-link" onClick={closeMenu}>
+          <h1 className="app-title" style={{ color: getTitleColor() }}>PyGolfers</h1>
+        </Link>
+        <button 
+          className="menu-toggle" 
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+        >
+          ☰
+        </button>
+        <nav className={`main-nav ${isMenuOpen ? 'active' : ''}`}>
+          <ul className="nav-links">
+            <li><Link to="/" className="nav-link" onClick={closeMenu}>Home</Link></li>
+            <li><Link to="/about" className="nav-link" onClick={closeMenu}>About</Link></li>
+            <li><a href="#challenges" className="nav-link" onClick={closeMenu}>Challenges</a></li>
+            <li><a href="#leaderboard" className="nav-link" onClick={closeMenu}>Leaderboard</a></li>
+            <li><Link to="/contact" className="nav-link" onClick={closeMenu}>Contact</Link></li>
+          </ul>
+          <Link to="/login" className="login-btn">Log In</Link>
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+const App = () => {
   return (
     <Router>
       <div className="App">
-        <header className="app-header">
-          <div className="header-container">
-            <Link to="/" className="header-link" onClick={closeMenu}>
-              <div className="logo-placeholder">🐍</div>
-              <div className="header-content">
-                <h1 className="app-title">PyGolfers</h1>
-                <p className="tagline">Code Short. Code Smart. Have Fun!</p>
-              </div>
-            </Link>
-            <button 
-              className="menu-toggle" 
-              onClick={toggleMenu}
-              aria-label="Toggle menu"
-            >
-              ☰
-            </button>
-            <nav className={`main-nav ${isMenuOpen ? 'active' : ''}`}>
-              <ul className="nav-links">
-                <li><Link to="/" className="nav-link" onClick={closeMenu}>Home</Link></li>
-                <li><Link to="/about" className="nav-link" onClick={closeMenu}>About</Link></li>
-                <li><a href="#challenges" className="nav-link" onClick={closeMenu}>Challenges</a></li>
-                <li><a href="#leaderboard" className="nav-link" onClick={closeMenu}>Leaderboard</a></li>
-                <li><Link to="/contact" className="nav-link" onClick={closeMenu}>Contact</Link></li>
-              </ul>
-              <button className="login-btn">Log In</button>
-            </nav>
-          </div>
-        </header>
-        
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -104,8 +112,8 @@ const App = () => {
           <Route path="/register/parent" element={<ParentRegistration />} />
           <Route path="/register/code" element={<RegistrationCode />} />
           <Route path="/register/guest" element={<GuestRegistration />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
-        
         <footer className="footer">
           <div className="footer-content">
             <div className="footer-logo">🐍 PyGolfers</div>

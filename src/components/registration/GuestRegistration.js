@@ -248,7 +248,7 @@ const GuestRegistration = () => {
         </form>
         
         <div className="login-redirect">
-          Already have an account? <Link to="/login">Log in</Link>
+          Already have an account? <Link to="/login" className="login-link">Log in</Link>
         </div>
       </div>
     </div>

@@ -103,28 +103,33 @@ input:focus {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.875rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.875rem 1.75rem;
+  border-radius: 12px;
   font-weight: 600;
   font-size: 1rem;
+  font-family: 'Fredoka', sans-serif;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   border: none;
   text-decoration: none;
+  min-width: 120px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary {
-  background-color: #36B6A8;
+  background-color: var(--pink, #F76C7B);
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #2d9c8f;
-  transform: translateY(-1px);
+  background: #e65c6b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(247, 108, 123, 0.3);
 }
 
 .btn-primary:active {
   transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .btn-block {

@@ -100,8 +100,8 @@ const About = () => {
 
         <div className="cta-section">
           <h3>Ready to start your coding adventure?</h3>
-          <Link to="/" className="home-button">
-            <FaHome /> Go to Home Page
+          <Link to="/" className="btn btn-primary">
+            <FaHome className="btn-icon" /> Go to Home Page
           </Link>
         </div>
       </main>

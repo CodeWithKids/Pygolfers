@@ -1,16 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
 
 :root {
-  --primary-red: #F76C7B;      /* For buttons and icons */
-  --primary-yellow: #FFD43B;  /* For highlights and accents */
-  --primary-teal: #36B6A8;    /* For highlights and accents */
-  --primary-dark: #24304A;    /* For text and important UI elements */
-  --primary-bg: #ffffff;      /* Main background */
-  --header-bg: #f8f9fa;      /* Header background */
-  --footer-bg: #f1f3f5;      /* Footer background */
-  --card-bg: #ffffff;         /* Card background */
-  --text-color: #24304A;      /* Main text color */
-  --text-light: #6c757d;      /* Secondary text color */
+  /* Primary Theme Colors */
+  --teal: #36B6A8;
+  --yellow: #FFD43B;
+  --pink: #F76C7B;
+  --dark-blue: #24304A;
+  
+  /* Semantic Color Variables */
+  --primary: var(--teal);
+  --secondary: var(--yellow);
+  --accent: var(--pink);
+  --dark: var(--dark-blue);
+  
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f5;
+  
+  /* Text Colors */
+  --text-primary: var(--dark-blue);
+  --text-secondary: #4a5568;
+  --text-muted: #6c757d;
+  --text-light: #f8f9fa;
+  
+  /* UI Elements */
+  --border-color: #e2e8f0;
+  --card-bg: #ffffff;
+  --header-bg: var(--dark-blue);
+  --footer-bg: var(--dark-blue);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition: all 0.3s ease;
 }
 
 body {
@@ -28,10 +55,10 @@ body {
 
 /* Header Styles */
 .app-header {
-  background-color: #24304a;
-  color: white;
+  background-color: var(--header-bg);
+  color: var(--text-light);
   padding: 0.5rem 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -40,11 +67,12 @@ body {
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0.75rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  height: 80px; /* Fixed height for consistent header */
 }
 
 .header-link {
@@ -55,28 +83,17 @@ body {
   padding: 0.5rem 0;
 }
 
-.logo-placeholder {
-  font-size: 2.5rem;
-  margin-right: 1rem;
-}
-
-.header-content {
-  display: flex;
-  flex-direction: column;
-}
-
 .app-title {
   margin: 0;
   font-size: 1.8rem;
   font-weight: 700;
-  color: #f76c7b;
+  color: var(--pink);
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
 }
 
-.tagline {
-  margin: 0.2rem 0 0;
-  font-size: 0.9rem;
-  font-weight: 400;
-  opacity: 0.9;
+.header-link:hover .app-title {
+  color: #fff;
 }
 
 /* Navigation */
@@ -93,22 +110,29 @@ body {
 }
 
 .nav-links li {
-  margin-left: 1.5rem;
+  margin: 0 0.75rem;
+}
+
+/* Add more space between nav items on larger screens */
+@media (min-width: 1024px) {
+  .nav-links li {
+    margin: 0 1rem;
+  }
 }
 
 .nav-link {
-  color: white;
+  color: var(--text-light);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
   padding: 0.5rem 0;
   position: relative;
-  transition: color 0.3s ease;
+  transition: var(--transition);
 }
 
 .nav-link:hover,
 .nav-link.active {
-  color: #f76c7b;
+  color: var(--pink);
 }
 
 .nav-link::after {
@@ -118,8 +142,8 @@ body {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: #f76c7b;
-  transition: width 0.3s ease;
+  background-color: var(--pink);
+  transition: var(--transition);
 }
 
 .nav-link:hover::after,
@@ -128,20 +152,29 @@ body {
 }
 
 .login-btn {
-  margin-left: 1.5rem;
-  padding: 0.5rem 1.2rem;
-  background-color: #f76c7b;
+  margin-left: 1rem;
+  padding: 0 1.2rem;
+  background-color: var(--pink);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .login-btn:hover {
   background-color: #e65c6b;
   transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Mobile menu button (hidden by default) */
@@ -174,7 +207,10 @@ body {
 
 .welcome-section h1 {
   font-size: 2.8rem;
-  color: var(--primary-teal);
+  background: linear-gradient(90deg, var(--teal), var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
 }
 
@@ -235,28 +271,117 @@ body {
 }
 
 /* Buttons */
-.start-btn, .cta-button {
-  background: var(--primary-red);
-  color: #fff;
-  font-size: 1.3rem;
-  font-weight: bold;
+/* Base button styles */
+button, .btn, .start-btn, .cta-button, .submit-btn, .login-btn {
+  background: var(--pink);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
   border: none;
-  border-radius: 2rem;
-  padding: 1rem 2.2rem;
+  border-radius: 12px;
+  padding: 0.8rem 1.8rem;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(247, 108, 123, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
+  justify-content: center;
+  gap: 0.5rem;
   text-decoration: none;
-  margin: 0.5rem 0;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  text-align: center;
+  font-family: 'Fredoka', sans-serif;
+  min-width: 120px;
 }
 
-.start-btn:hover, .cta-button:hover {
-  background: var(--primary-teal);
+/* Specific button styles */
+.start-btn, .cta-button {
+  padding: 1rem 2.2rem;
+  font-size: 1.2rem;
+  border-radius: 12px;
+}
+
+/* Button states */
+button:hover, .btn:hover, .start-btn:hover, .cta-button:hover, .submit-btn:hover, .login-btn:hover {
+  background: #e65c6b;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(54, 182, 168, 0.3);
+  box-shadow: 0 5px 15px rgba(247, 108, 123, 0.3);
+}
+
+button:active, .btn:active, .start-btn:active, .cta-button:active, .submit-btn:active, .login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Disabled state */
+button:disabled, .btn:disabled, .submit-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+/* Button variants */
+.btn-primary, .login-btn, .submit-btn, button[type="submit"] {
+  background: var(--pink);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--yellow);
+  color: var(--dark);
+}
+
+.btn-secondary:hover {
+  background: #ffd11a;
+  box-shadow: 0 5px 15px rgba(255, 212, 59, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--pink);
+  color: var(--pink);
+  border-radius: 50px;
+}
+
+.btn-outline:hover {
+  background: rgba(247, 108, 123, 0.1);
+  box-shadow: 0 5px 15px rgba(247, 108, 123, 0.2);
+}
+
+/* Button with icon */
+.btn-icon {
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure all buttons have consistent styling */
+button:not([class]),
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  background: var(--pink);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 0.8rem 1.8rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  text-align: center;
+  font-family: 'Fredoka', sans-serif;
+  min-width: 120px;
 }
 
 .cta-button {
