@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaUser, FaLock, FaArrowRight, FaUserPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import './Login.css';
 
 const Login = () => {
@@ -45,64 +46,76 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className="login-card">
+      <motion.div 
+        className="login-card"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="login-header">
-          <div className="logo-placeholder">
-            <span role="img" aria-label="PyGolfers Logo">⛳🐍</span>
-          </div>
-          <h1><span className="heading-gradient">Welcome Back to PyGolfers!</span></h1>
-          <p>Ready to continue your coding adventure?</p>
+          <h1>Welcome Back!</h1>
+          <p className="subtitle">Sign in to continue your Python learning journey</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className={`form-group ${errors.username ? 'error' : ''}`}>
-            <div className="input-icon">
-              <FaUser />
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <div className={`input-with-icon ${errors.username ? 'error' : ''}`}>
+              <FaUser className="input-icon" />
+              <input
+                type="text"
+                name="username"
+                placeholder="Username or Email"
+                className="login-input"
+                value={formData.username}
+                onChange={handleChange}
+              />
             </div>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Enter your username"
-              className="login-input"
-            />
             {errors.username && <span className="error-message">{errors.username}</span>}
           </div>
           
-          <div className={`form-group ${errors.password ? 'error' : ''}`}>
-            <div className="input-icon">
-              <FaLock />
+          <div className="form-group">
+            <div className={`input-with-icon ${errors.password ? 'error' : ''}`}>
+              <FaLock className="input-icon" />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="login-input"
+                value={formData.password}
+                onChange={handleChange}
+              />
             </div>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              className="login-input"
-            />
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
           
-          <div className="forgot-password">
-            <Link to="/forgot-password">Forgot Password?</Link>
+          <div className="form-options">
+            <label className="remember-me">
+              <input type="checkbox" name="remember" />
+              <span>Remember me</span>
+            </label>
+            <Link to="/forgot-password" className="forgot-password">
+              Forgot password?
+            </Link>
           </div>
           
-          <button 
+          <motion.button 
             type="submit" 
-            className="login-button"
+            className="btn btn-primary" 
             disabled={isLoading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            {isLoading ? 'Logging in...' : 'Login'}
-            {!isLoading && <FaArrowRight className="button-icon" />}
-          </button>
+            {isLoading ? 'Signing In...' : 'Sign In'}
+            <FaArrowRight className="button-icon" />
+          </motion.button>
+          
+
         </form>
         
         <div className="register-cta">
-          <p>New to PyGolfers? <Link to="/register">Create an account <FaUserPlus /></Link></p>
+          Don't have an account? <Link to="/register">Sign up <FaUserPlus /></Link>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

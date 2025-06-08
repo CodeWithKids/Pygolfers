@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaPython, FaTrophy, FaUsers, FaLightbulb, FaHome } from 'react-icons/fa';
+import { FaPython, FaTrophy, FaUsers, FaLightbulb, FaHome, FaChild, FaUserTie } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './About.css';
 
@@ -68,11 +68,29 @@ const About = () => {
 
         <section className="about-section">
           <h2>Who is PyGolfers for?</h2>
-          <ul className="who-list">
-            <li>Kids who are curious about computers and coding</li>
-            <li>Parents and teachers looking for a safe, positive way to introduce programming</li>
-            <li>Anyone who loves a good challenge!</li>
-          </ul>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="icon-container">
+                <FaChild className="feature-icon" style={{ color: '#36B6A8' }} />
+              </div>
+              <h3>Curious Kids</h3>
+              <p>Kids who are curious about computers and coding</p>
+            </div>
+            <div className="feature-card">
+              <div className="icon-container">
+                <FaUserTie className="feature-icon" style={{ color: '#F76C7B' }} />
+              </div>
+              <h3>Parents & Teachers</h3>
+              <p>Looking for a safe, positive way to introduce programming</p>
+            </div>
+            <div className="feature-card">
+              <div className="icon-container">
+                <FaTrophy className="feature-icon" style={{ color: '#FFD43B' }} />
+              </div>
+              <h3>Challenge Lovers</h3>
+              <p>Anyone who loves a good challenge!</p>
+            </div>
+          </div>
         </section>
 
         <section className="about-section values">

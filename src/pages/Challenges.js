@@ -87,6 +87,36 @@ const Challenges = () => {
             createdAt: '2025-06-06',
             isNew: true,
           },
+          {
+            id: 7,
+            title: 'URL Shortener',
+            description: 'Design a URL shortening service that converts long URLs to short, unique codes.',
+            difficulty: 'medium',
+            par: 10,
+            completed: false,
+            createdAt: '2025-06-08',
+            isNew: true,
+          },
+          {
+            id: 8,
+            title: 'Sudoku Solver',
+            description: 'Create a program that can solve any 9x9 Sudoku puzzle using backtracking.',
+            difficulty: 'hard',
+            par: 15,
+            completed: false,
+            createdAt: '2025-06-08',
+            isNew: true,
+          },
+          {
+            id: 9,
+            title: 'Tic-Tac-Toe AI',
+            description: 'Build an unbeatable Tic-Tac-Toe AI using the minimax algorithm.',
+            difficulty: 'medium',
+            par: 12,
+            completed: false,
+            createdAt: '2025-06-08',
+            isNew: true,
+          },
         ];
         
         setChallenges(data);

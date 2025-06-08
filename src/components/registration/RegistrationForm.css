@@ -85,6 +85,8 @@
   display: flex;
   position: relative;
   width: 100%;
+  align-items: stretch;
+  min-height: 48px; /* Ensure minimum height matches input */
 }
 
 .input-with-button .input-icon {
@@ -102,14 +104,20 @@
   flex: 1;
   border-radius: 50px 0 0 50px;
   border-right: none;
+  min-height: 48px; /* Ensure input has consistent height */
 }
 
 .input-with-button .btn-outline {
   border-radius: 0 50px 50px 0;
   border-left: none;
   white-space: nowrap;
-  padding: 0.5rem 1.25rem;
+  padding: 0 1.25rem;
   margin-left: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px; /* Ensure button has enough width */
+  height: auto; /* Allow height to adjust */
 }
 
 .input-icon {
@@ -369,21 +377,24 @@ input:focus, select:focus {
   
   .input-with-button {
     flex-direction: column;
+    min-height: auto;
   }
   
   .input-with-button input {
-    border-radius: 50px;
-    margin-bottom: 0.5rem;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 1px; /* Remove gap between input and button */
+    border-right: 1px solid #e2e8f0;
+    min-height: 48px;
   }
 
   .input-with-button .btn-outline {
-    border-radius: 0 50px 50px 0;
-    border: 2px solid var(--pink, #F76C7B);
+    border-radius: 0 0 8px 8px;
+    border: 1px solid var(--pink, #F76C7B);
+    border-top: none;
     margin-top: 0;
-    border-left: none;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    min-height: 48px;
   }
   
   .password-group {

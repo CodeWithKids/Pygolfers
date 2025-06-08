@@ -4,13 +4,9 @@ import "./App.css";
 import { FaPlay, FaUser, FaCog, FaSignOutAlt, FaChevronDown } from "react-icons/fa";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import RegistrationTypeSelector from "./components/registration/RegistrationTypeSelector";
-import LearnerRegistration from "./components/registration/LearnerRegistration";
-import TeacherRegistration from "./components/registration/EducatorRegistration";
-import ParentRegistration from "./components/registration/ParentRegistration";
-import RegistrationCode from "./components/registration/RegistrationCode";
-import GuestRegistration from "./components/registration/GuestRegistration";
+import Registration from "./pages/Registration";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
 import Challenges from "./pages/Challenges";
 import ChallengeDetail from "./pages/ChallengeDetail";
 import Leaderboard from "./pages/Leaderboard";
@@ -355,14 +351,24 @@ const NavBar = () => {
               </div>
             </div>
           ) : (
-            <Link 
-              to="/login" 
-              className="login-btn"
-              tabIndex={isMenuOpen ? 0 : -1}
-              onClick={closeMenu}
-            >
-              Log In
-            </Link>
+            <div className="auth-links">
+              <Link 
+                to="/login" 
+                className="nav-link"
+                tabIndex={isMenuOpen ? 0 : -1}
+                onClick={closeMenu}
+              >
+                Log In
+              </Link>
+              <Link 
+                to="/register" 
+                className="signup-btn"
+                tabIndex={isMenuOpen ? 0 : -1}
+                onClick={closeMenu}
+              >
+                Sign Up
+              </Link>
+            </div>
           )}
         </nav>
       </div>
@@ -379,13 +385,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/register" element={<RegistrationTypeSelector />} />
-          <Route path="/register/learner" element={<LearnerRegistration />} />
-          <Route path="/register/teacher" element={<TeacherRegistration />} />
-          <Route path="/register/parent" element={<ParentRegistration />} />
-          <Route path="/register/code" element={<RegistrationCode />} />
-          <Route path="/register/guest" element={<GuestRegistration />} />
+          <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/challenges" element={<Challenges />} />
           <Route path="/challenge/:id" element={<ChallengeDetail />} />
           <Route path="/leaderboard" element={<Leaderboard />} />

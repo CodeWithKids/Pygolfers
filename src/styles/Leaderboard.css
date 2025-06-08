@@ -1,25 +1,42 @@
 /* Leaderboard Page Styles */
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
 
 :root {
-  --primary: #36B6A8;
-  --primary-dark: #2a8a7f;
-  --secondary: #2C3E50;
-  --light-gray: #F8FAFC;
+  --teal: #36B6A8;
+  --teal-dark: #2a8a7f;
+  --pink: #F76C7B;
+  --dark-blue: #24304A;
   --border-color: #E2E8F0;
   --text-primary: #2D3748;
   --text-secondary: #4A5568;
-  --text-tertiary: #718096;
+  --text-muted: #718096;
+  --bg-light: #F8FAFC;
   --success: #48BB78;
-  --warning: #ECC94B;
+  --warning: #F6E05E;
   --danger: #F56565;
-  --gold: #FFD700;
-  --silver: #C0C0C0;
-  --bronze: #CD7F32;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --gold: #F6AD55;
+  --silver: #A0AEC0;
+  --bronze: #ED8936;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --transition: all 0.2s ease-in-out;
+  --border-radius: 16px;
+  --border-radius-sm: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Fredoka', sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-light);
+  line-height: 1.5;
 }
 
 .leaderboard-container {
@@ -27,6 +44,7 @@
   margin: 0 auto;
   padding: 2rem 1.5rem;
   color: var(--text-primary);
+  min-height: calc(100vh - 120px);
 }
 
 .leaderboard-header {
@@ -36,12 +54,13 @@
 
 .leaderboard-header h1 {
   font-size: 2.5rem;
-  color: var(--secondary);
+  color: var(--dark-blue);
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  font-weight: 700;
 }
 
 .trophy-icon {
@@ -53,6 +72,9 @@
   color: var(--text-secondary);
   font-size: 1.1rem;
   margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 /* Controls */
@@ -61,6 +83,11 @@
   flex-direction: column;
   gap: 1.5rem;
   margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 .search-container {
@@ -90,7 +117,7 @@
 
 .search-input:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(54, 182, 168, 0.2);
 }
 
@@ -119,27 +146,28 @@
 }
 
 .filter-btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border-color);
+  padding: 0.5rem 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
   background: white;
-  border-radius: 6px;
+  color: var(--text-primary);
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
   transition: var(--transition);
-  white-space: nowrap;
+  font-size: 0.95rem;
+  font-family: 'Fredoka', sans-serif;
 }
 
 .filter-btn:hover {
-  background: var(--light-gray);
-  border-color: var(--primary);
-  color: var(--primary);
+  background: var(--bg-light);
+  transform: translateY(-1px);
 }
 
 .filter-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--teal);
   color: white;
+  border-color: var(--teal);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Leaderboard Table */
@@ -154,18 +182,24 @@
 
 .leaderboard-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 .leaderboard-table th {
-  background: var(--light-gray);
+  background: var(--dark-blue);
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  font-weight: 600;
   padding: 1rem 1.5rem;
   text-align: left;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -240,7 +274,8 @@
 }
 
 .leaderboard-table tr:hover {
-  background: rgba(0, 0, 0, 0.01);
+  background: rgba(54, 182, 168, 0.05);
+  transform: translateX(4px);
 }
 
 /* Rank Cell */
@@ -248,6 +283,9 @@
   text-align: center;
   font-weight: 600;
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .rank-badge {
@@ -449,6 +487,16 @@
 
 .current-user td:first-child {
   padding-left: calc(1.5rem - 3px);
+}
+
+.current-user::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--teal);
 }
 
 /* Top Three Rows */
