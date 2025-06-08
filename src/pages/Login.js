@@ -50,7 +50,7 @@ const Login = () => {
           <div className="logo-placeholder">
             <span role="img" aria-label="PyGolfers Logo">⛳🐍</span>
           </div>
-          <h1>Welcome Back to PyGolfers!</h1>
+          <h1><span className="heading-gradient">Welcome Back to PyGolfers!</span></h1>
           <p>Ready to continue your coding adventure?</p>
         </div>
         

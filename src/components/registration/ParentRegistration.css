@@ -57,8 +57,8 @@
 }
 
 .success-message h2 {
-  color: #2c7a7b;
-  margin-bottom: 1rem;
+  color: var(--teal) !important;
+  margin-bottom: 1rem !important;
 }
 
 .success-message p {

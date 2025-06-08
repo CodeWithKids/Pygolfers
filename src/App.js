@@ -31,13 +31,39 @@ const Home = () => (
     </section>
 
     <section className="how-it-works">
-      <h2>How It Works</h2>
-      <ol className="steps">
-        <li>Pick a Python puzzle.</li>
-        <li>Write your solution in as few lines as you can.</li>
-        <li>Run your code and see if you beat the "par" score!</li>
-        <li>Collect badges, unlock new challenges, and share your results.</li>
-      </ol>
+      <div className="container">
+        <h2 className="section-title">How It Works</h2>
+        <ol className="steps">
+          <li className="step">
+            <div className="step-number">1</div>
+            <div className="step-content">
+              <h3>Pick a Python Puzzle</h3>
+              <p>Browse our collection of engaging Python challenges, from string manipulation to algorithm optimization. Each puzzle has a "par" score - the target number of lines to beat!</p>
+            </div>
+          </li>
+          <li className="step">
+            <div className="step-number">2</div>
+            <div className="step-content">
+              <h3>Write Your Solution</h3>
+              <p>Put your Python skills to the test! The goal is to write working code using as few lines as possible. Can you find the most elegant solution?</p>
+            </div>
+          </li>
+          <li className="step">
+            <div className="step-number">3</div>
+            <div className="step-content">
+              <h3>Run & Validate</h3>
+              <p>Submit your code and see if it passes all test cases. Our system will count your lines and compare against the par score. Did you beat it?</p>
+            </div>
+          </li>
+          <li className="step">
+            <div className="step-number">4</div>
+            <div className="step-content">
+              <h3>Earn & Share</h3>
+              <p>Collect unique badges for your achievements, climb the leaderboard, and share your best solutions with the community. Can you become a Python code golf champion?</p>
+            </div>
+          </li>
+        </ol>
+      </div>
     </section>
 
     <section className="join-us">

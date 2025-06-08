@@ -22,11 +22,11 @@
 }
 
 .registration-header h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #24304A;
-  margin-bottom: 1rem;
+  color: var(--dark-blue) !important;
+  margin-bottom: 1rem !important;
   line-height: 1.2;
+  font-size: 2.8rem !important;
+  text-align: center;
 }
 
 .gradient-text {

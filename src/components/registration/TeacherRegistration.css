@@ -9,9 +9,9 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  color: #2d3748;
-  margin: 0 0 0.75rem 0;
-  font-size: 1.5rem;
+  color: var(--dark-blue) !important;
+  margin: 0 0 1rem 0 !important;
+  font-size: 1.5rem !important;
 }
 
 .welcome-teacher .welcome-icon {

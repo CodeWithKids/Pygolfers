@@ -36,11 +36,11 @@
   margin-right: 0.5rem;
 }
 
-h1 {
-  color: #24304A; /* Dark Blue */
-  margin: 0 0 0.5rem 0;
-  font-size: 2rem;
+.registration-card h1 {
+  color: var(--dark-blue) !important;
+  margin: 0 0 1rem 0 !important;
   text-align: center;
+  font-size: 2rem !important;
 }
 
 .subtitle {

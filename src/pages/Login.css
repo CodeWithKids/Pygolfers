@@ -52,16 +52,13 @@
   box-shadow: 0 8px 20px rgba(36, 48, 74, 0.15);
 }
 
-h1 {
-  color: var(--dark-blue);
-  font-family: 'Fredoka One', cursive;
-  font-size: 2rem;
-  margin: 0.5rem 0;
-  letter-spacing: -0.5px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.login-header h1 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.login-header h1 span {
+  display: inline-block;
 }
 
 p {
