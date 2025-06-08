@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaTrophy, FaSearch, FaFilter, FaChevronLeft, FaChevronRight, FaFire, FaCrown } from 'react-icons/fa';
+import { 
+  FaTrophy, 
+  FaSearch, 
+  FaFilter, 
+  FaChevronLeft, 
+  FaChevronRight, 
+  FaFire, 
+  FaCrown, 
+  FaUser
+} from 'react-icons/fa';
 import '../styles/Leaderboard.css';
 
 // Mock data - in a real app, this would come from an API
@@ -181,42 +190,98 @@ const Leaderboard = () => {
                   <th className="user-col">User</th>
                   <th className="score-col">Score</th>
                   <th className="challenges-col">Challenges</th>
+                  <th className="last-active-col">Last Active</th>
                 </tr>
               </thead>
               <tbody>
-                {currentUsers.map((user) => (
-                  <tr 
-                    key={user.id} 
-                    className={`user-row ${user.isCurrentUser ? 'current-user' : ''} ${user.rank <= 3 ? 'top-three' : ''}`}
-                  >
-                    <td className="rank-cell">
-                      {getRankBadge(user.rank)}
-                    </td>
-                    <td className="user-cell">
-                      <div className="user-info">
-                        <img 
-                          src={user.avatar} 
-                          alt={user.username} 
-                          className="user-avatar" 
-                        />
-                        <div className="user-details">
-                          <span className="username">
-                            {user.username}
-                            {user.rank <= 3 && <span className="top-badge">Top {user.rank}</span>}
-                            {user.isCurrentUser && <span className="you-badge">You</span>}
-                          </span>
+                {currentUsers.length > 0 ? (
+                  currentUsers.map((user) => (
+                    <tr 
+                      key={user.id} 
+                      className={`user-row ${user.isCurrentUser ? 'current-user' : ''} ${user.rank <= 3 ? 'top-three' : ''}`}
+                      onClick={(e) => handleUserClick(user.username, e)}
+                    >
+                      <td className="rank-cell">
+                        {getRankBadge(user.rank)}
+                      </td>
+                      <td className="user-cell">
+                        <div className="user-info">
+                          <div className="avatar-container">
+                            {user.avatar ? (
+                              <img 
+                                src={user.avatar} 
+                                alt={user.username} 
+                                className="user-avatar" 
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.style.display = 'none';
+                                  e.target.nextElementSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : (
+                              <div className="avatar-fallback">
+                                <FaUser className="user-icon" />
+                              </div>
+                            )}
+                            <div className="avatar-fallback" style={{ display: user.avatar ? 'none' : 'flex' }}>
+                              <FaUser className="user-icon" />
+                            </div>
+                          </div>
+                          <div className="user-details">
+                            <Link 
+                              to={`/profile/${user.username}`} 
+                              className="username"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {user.username}
+                              {user.rank <= 3 && <span className="top-badge">Top {user.rank}</span>}
+                              {user.isCurrentUser && <span className="you-badge">You</span>}
+                            </Link>
+                            {user.title && (
+                              <span className="user-title">{user.title}</span>
+                            )}
+                          </div>
                         </div>
+                      </td>
+                      <td className="score-cell">
+                        <span className="score-value">{formatScore(user.score)}</span>
+                        {user.rank <= 3 && <FaFire className="fire-icon" />}
+                      </td>
+                      <td className="challenges-cell">
+                        <div className="challenges-count">
+                          <span className="count">{user.challengesCompleted}</span>
+                          <span className="label">completed</span>
+                        </div>
+                      </td>
+                      <td className="last-active-cell">
+                        {user.lastActive ? (
+                          <span className="last-active" title={new Date(user.lastActive).toLocaleString()}>
+                            {formatLastActive(user.lastActive)}
+                          </span>
+                        ) : 'N/A'}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="no-results-cell">
+                      <div className="no-results-message">
+                        <FaExclamationTriangle className="no-results-icon" />
+                        <p>No users found matching your search.</p>
+                        <button 
+                          className="clear-filters-btn"
+                          onClick={() => {
+                            setSearchQuery('');
+                            setTimeFilter('all');
+                            setCurrentPage(1);
+                          }}
+                        >
+                          Clear filters
+                        </button>
                       </div>
                     </td>
-                    <td className="score-cell">
-                      <span className="score-value">{formatScore(user.score)}</span>
-                      {user.rank <= 3 && <FaFire className="fire-icon" />}
-                    </td>
-                    <td className="challenges-cell">
-                      {user.challengesCompleted} completed
-                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
