@@ -8,57 +8,9 @@ import UserProfileModal from './UserProfileModal';
 import Badge from './Badge';
 import Heatmap from './Heatmap';
 
-// Demo data constants
+// Country and language options for filters
 const countries = ['US', 'UK', 'CA', 'AU', 'DE', 'FR', 'JP', 'BR', 'IN', 'CN'];
 const languages = ['Python', 'JavaScript', 'Java', 'C++', 'Go', 'Rust'];
-
-// Mock data generation
-const generateMockUsers = (count = 15) => {
-  const demoUsers = [
-    { name: 'Ava Carter', username: 'ava_c', avatar: 'https://i.pravatar.cc/150?img=5' },
-    { name: 'Liam Smith', username: 'liam_smith', avatar: 'https://i.pravatar.cc/150?img=12' },
-    { name: 'Sofia Lee', username: 'sofia.lee', avatar: 'https://i.pravatar.cc/150?img=33' },
-    { name: 'Noah Kim', username: 'noahkim', avatar: 'https://i.pravatar.cc/150?img=23' },
-    { name: 'Mia Patel', username: 'mia.patel', avatar: 'https://i.pravatar.cc/150?img=29' },
-    { name: 'Ethan Chen', username: 'ethan_chen', avatar: 'https://i.pravatar.cc/150?img=41' },
-    { name: 'Zara Müller', username: 'zara.m', avatar: 'https://i.pravatar.cc/150?img=53' },
-    { name: 'Lucas Rossi', username: 'lucasr', avatar: 'https://i.pravatar.cc/150?img=18' },
-    { name: 'Chloe Dubois', username: 'chloe.d', avatar: 'https://i.pravatar.cc/150?img=44' },
-    { name: 'Mason Okafor', username: 'mason_ok', avatar: 'https://i.pravatar.cc/150?img=60' },
-    { name: 'Layla Singh', username: 'laylasingh', avatar: 'https://i.pravatar.cc/150?img=9' },
-    { name: 'Elijah Brown', username: 'elijahb', avatar: 'https://i.pravatar.cc/150?img=25' },
-    { name: 'Isabella Wang', username: 'isaw', avatar: 'https://i.pravatar.cc/150?img=35' },
-    { name: 'Mateo Silva', username: 'mateo_s', avatar: 'https://i.pravatar.cc/150?img=16' },
-    { name: 'Amara Johnson', username: 'amara.j', avatar: 'https://i.pravatar.cc/150?img=61' }
-  ];
-  const countries = ['Kenya', 'Tanzania', 'Uganda', 'Nigeria', 'Ghana', 'South Africa', 'Rwanda', 'US', 'UK', 'CA', 'AU', 'DE', 'FR', 'JP', 'BR', 'IN', 'CN'];
-  const languages = [
-    'NumPy', 'Pandas', 'Matplotlib', 'Scikit-learn', 'TensorFlow', 'Django', 'Flask', 'Requests', 'BeautifulSoup', 'PyTorch'
-  ];
-  return demoUsers.slice(0, count).map((user, i) => ({
-    id: i + 1,
-    rank: i + 1,
-    username: user.username,
-    name: user.name,
-    avatar: user.avatar,
-    country: countries[i % countries.length],
-    language: languages[i % languages.length],
-    score: 9800 - i * 350 + Math.floor(Math.random() * 200), // descending scores
-    scoreChange: Math.floor(Math.random() * 100) - 45, // -45 to +54
-    challengesCompleted: 200 - i * 10 + Math.floor(Math.random() * 10),
-    challengesWon: 50 - i * 2 + Math.floor(Math.random() * 3),
-    joinDate: new Date(Date.now() - (i * 1000 * 60 * 60 * 24 * 20)), // each joined 20 days apart
-    isFollowing: i % 4 === 0,
-    isBookmarked: i % 5 === 0,
-    badges: [
-      ...(i < 3 ? [`top-${i + 1}`] : []),
-      ...(i % 5 === 0 ? ['elite'] : []),
-      ...(i % 3 === 0 ? ['dedicated'] : []),
-      ...(i % 7 === 0 ? ['influencer'] : [])
-    ],
-    isCurrentUser: i === 5 // Mark one user as current user for demo
-  }));
-};
 
 const EnhancedLeaderboard = () => {
   // State
@@ -66,12 +18,29 @@ const EnhancedLeaderboard = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Show demo data on mount
+  // Fetch leaderboard data from API
   useEffect(() => {
-    const demoUsers = generateMockUsers(10);
-    setUsers(demoUsers);
-    setFilteredUsers(demoUsers);
-    setLoading(false);
+    const fetchLeaderboardData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/leaderboard');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch leaderboard data');
+        }
+        
+        const data = await response.json();
+        setUsers(data);
+        setFilteredUsers(data);
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        // You might want to set an error state here to show to the user
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLeaderboardData();
   }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [timeFilter, setTimeFilter] = useState('all');
@@ -271,15 +240,19 @@ const EnhancedLeaderboard = () => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-          const mockUsers = generateMockUsers(50);
-          setUsers(mockUsers);
-          setFilteredUsers(mockUsers);
-          setLoading(false);
-        }, 800);
+        // Fetch leaderboard data from API
+        const response = await fetch('/api/leaderboard');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch leaderboard data');
+        }
+        
+        const data = await response.json();
+        setUsers(data);
+        setFilteredUsers(data);
       } catch (err) {
         console.error('Error fetching leaderboard:', err);
+        // You might want to set an error state here to show to the user
         setLoading(false);
       }
     };

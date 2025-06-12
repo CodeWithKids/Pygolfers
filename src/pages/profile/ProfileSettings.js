@@ -37,36 +37,44 @@ const ProfileSettings = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Load user data (in a real app, this would be an API call)
+  // Load user data from API
   useEffect(() => {
-    // Simulate loading user data
     const loadUserData = async () => {
       try {
-        // Mock user data - replace with actual API call
-        const mockUser = {
-          fullName: 'Alex Johnson',
-          username: 'pygolfer123',
-          email: 'alex@example.com',
-          bio: 'Python enthusiast and code golfer. Love solving problems with minimal code!',
-          socialLinks: {
-            website: 'https://alexjohnson.dev',
-            github: 'alexjohnson',
-            twitter: 'alexcodes',
-            linkedin: 'alex-johnson-dev'
-          },
-          avatar: 'https://i.pravatar.cc/150?img=32'
-        };
+        const response = await fetch('/api/users/me', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         
+        if (!response.ok) {
+          throw new Error('Failed to load user data');
+        }
+        
+        const userData = await response.json();
+        
+        // Update form data with user data from API
         setFormData(prev => ({
           ...prev,
-          ...mockUser,
-          avatarPreview: mockUser.avatar
+          fullName: userData.fullName || '',
+          username: userData.username || '',
+          email: userData.email || '',
+          bio: userData.bio || '',
+          socialLinks: {
+            website: userData.website || '',
+            github: userData.github || '',
+            twitter: userData.twitter || '',
+            linkedin: userData.linkedin || ''
+          },
+          avatar: userData.avatar || null,
+          avatarPreview: userData.avatar || ''
         }));
       } catch (error) {
         console.error('Error loading user data:', error);
+        // You might want to show an error message to the user here
       }
     };
-
+    
     loadUserData();
   }, []);
 
@@ -123,7 +131,7 @@ const ProfileSettings = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -132,15 +140,69 @@ const ProfileSettings = () => {
     
     setIsSubmitting(true);
     
-    // In a real app, you would submit the form data to your API
-    console.log('Submitting form data:', formData);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // Show success message or redirect
+    try {
+      // Prepare form data for submission
+      const updateData = new FormData();
+      updateData.append('fullName', formData.fullName);
+      updateData.append('bio', formData.bio);
+      updateData.append('website', formData.socialLinks.website);
+      updateData.append('github', formData.socialLinks.github);
+      updateData.append('twitter', formData.socialLinks.twitter);
+      updateData.append('linkedin', formData.socialLinks.linkedin);
+      
+      // Only append password if it's being changed
+      if (formData.newPassword) {
+        updateData.append('currentPassword', formData.currentPassword);
+        updateData.append('newPassword', formData.newPassword);
+      }
+      
+      // Append avatar if it's a new file
+      if (formData.avatar && formData.avatar instanceof File) {
+        updateData.append('avatar', formData.avatar);
+      }
+      
+      // Send update request to API
+      const response = await fetch('/api/users/me', {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: updateData
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update profile');
+      }
+      
+      const updatedUser = await response.json();
+      
+      // Update form data with the server response
+      setFormData(prev => ({
+        ...prev,
+        fullName: updatedUser.fullName,
+        bio: updatedUser.bio,
+        socialLinks: {
+          website: updatedUser.website || '',
+          github: updatedUser.github || '',
+          twitter: updatedUser.twitter || '',
+          linkedin: updatedUser.linkedin || ''
+        },
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        avatar: updatedUser.avatar || null,
+        avatarPreview: updatedUser.avatar || ''
+      }));
+      
+      // Show success message
       alert('Profile updated successfully!');
-    }, 1500);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert(error.message || 'Failed to update profile. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

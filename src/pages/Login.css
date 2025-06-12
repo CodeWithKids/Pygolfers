@@ -254,9 +254,76 @@ body {
   text-decoration: none;
 }
 
-.register-cta a:hover {
-  color: var(--pink);
-  text-decoration: underline;
+/* Sign In Button */
+.signin-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(54, 182, 168, 0.2);
+}
+
+.signin-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(54, 182, 168, 0.3);
+}
+
+.signin-button:active {
+  transform: translateY(0);
+}
+
+.signin-button:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Register CTA */
+.register-cta {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.signup-link {
+  color: var(--teal);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s ease;
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.25rem;
+  border-radius: 4px;
+}
+
+.signup-link:hover {
+  color: var(--teal-dark);
+  background-color: rgba(54, 182, 168, 0.1);
+  text-decoration: none;
+}
+
+.signup-icon {
+  font-size: 0.9em;
+  transition: transform 0.2s ease;
+}
+
+.signup-link:hover .signup-icon {
+  transform: translateX(2px);
 }
 
 /* Responsive Design */

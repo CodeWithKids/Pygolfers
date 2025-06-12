@@ -5,33 +5,24 @@ import Editor from '@monaco-editor/react';
 import { formatDistanceToNow } from 'date-fns';
 import '../styles/ChallengeDetail.css';
 
-// Mock data - in a real app, this would come from an API
-const challengeData = {
-  1: {
-    id: 1,
-    title: 'FizzBuzz',
-    description: 'Write a program that prints the numbers from 1 to N. But for multiples of three print "Fizz" instead of the number and for the multiples of five print "Buzz". For numbers which are multiples of both three and five print "FizzBuzz".',
-    difficulty: 'easy',
-    par: 4,
-    examples: [
-      {
-        input: '15',
-        output: '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'
-      }
-    ],
-    testCases: [
-      { input: '5', output: '1\n2\nFizz\n4\nBuzz' },
-      { input: '15', output: '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz' },
-      { input: '30', output: '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n16\n17\nFizz\n19\nBuzz\nFizz\n22\n23\nFizz\nBuzz\n26\nFizz\n28\n29\nFizzBuzz' }
-    ]
-  },
-  // Add more challenges here
+// Function to fetch challenge data from API
+const fetchChallengeData = async (challengeId) => {
+  try {
+    const response = await fetch(`/api/challenges/${challengeId}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch challenge data');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching challenge data:', error);
+    return null;
+  }
 };
 
 const ChallengeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const challenge = challengeData[id];
+  const [challenge, setChallenge] = useState(null);
   const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
   const [showTestCases, setShowTestCases] = useState(false);
@@ -105,70 +96,95 @@ const ChallengeDetail = () => {
   const allTestsPassed = testResults.length > 0 && testResults.every(test => test.passed);
 
   const handleRunCode = async () => {
-    if (!code.trim()) {
-      setOutput('Error: Please write some code before running.');
-      return;
-    }
-
+    if (!code.trim()) return;
+    
     setIsRunning(true);
-    setOutput('Running your code...\n');
+    setOutput('Running your code...');
+    setTestResults([]);
     
     try {
-      // In a real app, this would be an API call to a backend service
       const startTime = performance.now();
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Execute code via API
+      const response = await fetch('/api/execute', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code,
+          challengeId: id,
+          language: 'python' // or get from user selection if you support multiple languages
+        })
+      });
       
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to execute code');
+      }
+      
+      const result = await response.json();
       const endTime = performance.now();
-      const executionTimeMs = (endTime - startTime).toFixed(2);
-      setExecutionTime(executionTimeMs);
+      const executionTimeMs = Math.floor(endTime - startTime);
       
-      // Mock output - in a real app, this would come from the backend
-      const mockOutput = '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz';
-      setOutput(`✓ Execution completed in ${executionTimeMs}ms\n\n${mockOutput}`);
+      setOutput(`✓ Execution completed in ${executionTimeMs}ms\n\n${result.output}`);
+      
+      if (result.testResults) {
+        setTestResults(result.testResults);
+      }
+      
+      setExecutionTime(executionTimeMs);
     } catch (error) {
-      setOutput(`Error: ${error.message}\n${error.stack || ''}`);
+      setOutput(`Error: ${error.message}`);
     } finally {
       setIsRunning(false);
     }
   };
 
   const handleSubmit = async () => {
-    if (!code.trim()) {
-      setOutput('Error: Please write some solution before submitting.');
-      return;
-    }
-
+    if (!code.trim()) return;
+    
     setIsSubmitting(true);
-    setTestResults([]);
+    setOutput('Submitting your solution...\n');
     
     try {
-      // In a real app, this would be an API call to submit the solution
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Submit solution via API
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you use token-based auth
+        },
+        body: JSON.stringify({
+          code,
+          challengeId: id,
+          language: 'python' // or get from user selection
+        })
+      });
       
-      // Simulate test results
-      const results = challenge.testCases.map((testCase, index) => ({
-        id: index + 1,
-        passed: Math.random() > 0.3, // Random pass/fail for demo
-        input: testCase.input,
-        expected: testCase.output,
-        actual: testCase.output, // In a real app, this would be the actual output
-        executionTime: (Math.random() * 100).toFixed(2) + 'ms'
-      }));
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit solution');
+      }
       
-      setTestResults(results);
+      const result = await response.json();
       
-      // Scroll to test results
-      setTimeout(() => {
-        const resultsElement = document.querySelector('.test-results');
-        if (resultsElement) {
-          resultsElement.scrollIntoView({ behavior: 'smooth' });
+      if (result.testResults) {
+        setTestResults(result.testResults);
+        
+        if (result.testResults.every(test => test.passed)) {
+          setOutput('✅ All tests passed! Your solution is correct!\n\n');
+        } else {
+          setOutput('❌ Some tests failed. Please try again.\n\n');
         }
-      }, 100);
+      }
       
+      // If there's a message from the server, show it
+      if (result.message) {
+        setOutput(prev => prev + result.message + '\n');
+      }
     } catch (error) {
-      setOutput(`Submission error: ${error.message}`);
+      setOutput(`Error: ${error.message}\n`);
     } finally {
       setIsSubmitting(false);
     }

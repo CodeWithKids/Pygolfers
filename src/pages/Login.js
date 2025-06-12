@@ -111,21 +111,19 @@ const Login = () => {
           
           <motion.button 
             type="submit" 
-            className="btn btn-primary" 
+            className="btn btn-primary signin-button" 
             disabled={isLoading}
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, boxShadow: '0 4px 12px rgba(54, 182, 168, 0.3)' }}
             whileTap={{ scale: 0.98 }}
           >
             {isLoading ? 'Signing In...' : 'Sign In'}
             <FaArrowRight className="button-icon" />
           </motion.button>
           
-
+          <div className="register-cta">
+            Don't have an account? <Link to="/register" className="signup-link">Sign up <FaUserPlus className="signup-icon" /></Link>
+          </div>
         </form>
-        
-        <div className="register-cta">
-          Don't have an account? <Link to="/register">Sign up <FaUserPlus /></Link>
-        </div>
       </motion.div>
     </div>
   );
