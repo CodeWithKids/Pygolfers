@@ -499,6 +499,7 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
                   onClick={closeMenu}
                   tabIndex={isMenuOpen ? 0 : -1}
                 >
+                  <FaTrophy style={{ marginRight: '5px' }} />
                   Leaderboard
                 </Link>
               </li>

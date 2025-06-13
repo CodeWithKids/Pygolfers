@@ -250,6 +250,9 @@ example pre {
   flex-direction: column;
   height: 100%;
   position: relative;
+  transform: none !important;
+  transform-style: flat !important;
+  perspective: none !important;
 }
 
 .code-editor-wrapper {

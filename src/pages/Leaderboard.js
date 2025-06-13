@@ -1,16 +1,16 @@
 import React from 'react';
-import EnhancedLeaderboard from '../components/leaderboard/EnhancedLeaderboard';
-import '../styles/EnhancedLeaderboard.css';
-import '../styles/Buttons.css';
-import '../styles/EnhancedLeaderboardTable.css';
-import '../styles/EnhancedLeaderboardGrid.css';
+import Leaderboard from '../components/Leaderboard';
 
-const Leaderboard = () => {
+const LeaderboardPage = () => {
   return (
-    <div className="leaderboard-page">
-      <EnhancedLeaderboard />
+    <div className="page-container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h1 style={{ marginBottom: '0.5rem' }}>Leaderboard</h1>
+        <p style={{ color: '#666', fontSize: '1.1rem' }}>See how you rank against other PyGolfers!</p>
+      </div>
+      <Leaderboard />
     </div>
   );
 };
 
-export default Leaderboard;
+export default LeaderboardPage;
