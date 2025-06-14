@@ -15,6 +15,31 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 10
+      }
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,22 +79,33 @@ const Login = () => {
     <div className="login-container">
       <motion.div 
         className="login-card"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
       >
-        <div className="login-header">
+        <motion.div className="login-header" variants={itemVariants}>
           <h1>Welcome Back!</h1>
           <p className="subtitle">Sign in to continue your Python learning journey</p>
-        </div>
+        </motion.div>
         {message && (
-          <div className="login-alert" style={{background:'#F76C7B', color:'#fff', borderRadius:'8px', padding:'0.75rem 1rem', marginBottom:'1rem', textAlign:'center'}}>
-            {message}
-          </div>
+          <motion.div 
+          className="login-alert" 
+          style={{
+            background:'#F76C7B', 
+            color:'#fff', 
+            borderRadius:'8px', 
+            padding:'0.75rem 1rem', 
+            marginBottom:'1rem', 
+            textAlign:'center'
+          }}
+          variants={itemVariants}
+        >
+          {message}
+        </motion.div>
         )}
         
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
+        <motion.form className="login-form" onSubmit={handleSubmit} variants={itemVariants}>
+          <motion.div className="form-group" variants={itemVariants}>
             <div className={`input-with-icon ${errors.username ? 'error' : ''}`}>
               <FaUser className="input-icon" />
               <input
@@ -82,9 +118,9 @@ const Login = () => {
               />
             </div>
             {errors.username && <span className="error-message">{errors.username}</span>}
-          </div>
+          </motion.div>
           
-          <div className="form-group">
+          <motion.div className="form-group" variants={itemVariants}>
             <div className={`input-with-icon ${errors.password ? 'error' : ''}`}>
               <FaLock className="input-icon" />
               <input
@@ -97,33 +133,49 @@ const Login = () => {
               />
             </div>
             {errors.password && <span className="error-message">{errors.password}</span>}
-          </div>
-          
-          <div className="form-options">
-            <label className="remember-me">
-              <input type="checkbox" name="remember" />
-              <span>Remember me</span>
-            </label>
-            <Link to="/forgot-password" className="forgot-password">
-              Forgot password?
-            </Link>
-          </div>
+          </motion.div>
           
           <motion.button 
             type="submit" 
-            className="btn btn-primary signin-button" 
+            className={`login-button ${isLoading ? 'loading' : ''}`}
             disabled={isLoading}
-            whileHover={{ scale: 1.02, boxShadow: '0 4px 12px rgba(54, 182, 168, 0.3)' }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            variants={itemVariants}
           >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-            <FaArrowRight className="button-icon" />
+            {isLoading ? (
+              <>
+                <div className="spinner"></div>
+                <span>Signing in...</span>
+              </>
+            ) : (
+              <>
+                <span>Sign In</span>
+                <FaArrowRight className="button-icon" />
+              </>
+            )}
           </motion.button>
           
-          <div className="register-cta">
-            Don't have an account? <Link to="/register" className="signup-link">Sign up <FaUserPlus className="signup-icon" /></Link>
-          </div>
-        </form>
+          <motion.div className="text-center mt-2 mb-2" variants={itemVariants}>
+            <Link to="/forgot-password" className="text-sm text-primary hover:text-teal hover:underline">
+              Forgot password?
+            </Link>
+          </motion.div>
+          
+          <motion.div className="login-footer" variants={itemVariants} style={{ marginTop: '0.5rem' }}>
+            <p>Don't have an account?{' '}
+              <Link 
+                to="/register" 
+                className="signup-link"
+                onClick={(e) => {
+                  if (isLoading) e.preventDefault();
+                }}
+              >
+                Sign up
+              </Link>
+            </p>
+          </motion.div>
+        </motion.form>
       </motion.div>
     </div>
   );

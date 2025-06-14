@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSortUp, FaSortDown, FaTrophy } from 'react-icons/fa';
 import '../styles/Leaderboard.css';
 
@@ -54,6 +54,17 @@ const mockUsers = [
 const Leaderboard = () => {
   const [users, setUsers] = useState(mockUsers);
   const [sortConfig, setSortConfig] = useState({ key: 'score', direction: 'desc' });
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleSort = (key) => {
     let direction = 'asc';
@@ -93,15 +104,15 @@ const Leaderboard = () => {
             <th>User</th>
             <th 
               onClick={() => handleSort('score')}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
             >
-              Score {getSortIcon('score')}
+              {!isMobile ? 'Score' : '🏆'} {getSortIcon('score')}
             </th>
             <th 
               onClick={() => handleSort('solved')}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
             >
-              Solved {getSortIcon('solved')}
+              {!isMobile ? 'Solved' : '✅'} {getSortIcon('solved')}
             </th>
           </tr>
         </thead>
@@ -116,17 +127,29 @@ const Leaderboard = () => {
                     alt={user.name} 
                     className="avatar"
                     style={{
-                      width: '24px',
-                      height: '24px',
+                      width: isMobile ? '32px' : '24px',
+                      height: isMobile ? '32px' : '24px',
                       borderRadius: '50%',
                       objectFit: 'cover',
                       border: '2px solid #4a90e2',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                      flexShrink: 0
                     }}
                   />
-                  <div>
-                    <div style={{ fontWeight: 500 }}>{user.name}</div>
-                    <div style={{ fontSize: '0.75em', color: '#666' }}>@{user.username}</div>
+                  <div style={{ minWidth: isMobile ? '100px' : 'auto' }}>
+                    <div style={{ 
+                      fontWeight: 500,
+                      fontSize: isMobile ? '0.9em' : '1em',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: isMobile ? '150px' : 'none'
+                    }}>
+                      {isMobile ? user.name.split(' ')[0] : user.name}
+                    </div>
+                    {!isMobile && (
+                      <div style={{ fontSize: '0.75em', color: '#666' }}>@{user.username}</div>
+                    )}
                   </div>
                 </div>
               </td>

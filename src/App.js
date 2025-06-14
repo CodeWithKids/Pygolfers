@@ -659,7 +659,11 @@ const App = () => {
     <ChallengeDetail />
   </ProtectedRoute>
 } />
-          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/leaderboard" element={
+            <ProtectedRoute isAuthenticated={currentUser.isAuthenticated} message="Please log in to view the leaderboard.">
+              <Leaderboard />
+            </ProtectedRoute>
+          } />
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/settings" element={<ProfileSettings />} />
         </Routes>
