@@ -1,0 +1,229 @@
+/* Teacher Registration Specific Styles */
+.welcome-teacher {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.welcome-teacher h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--dark-blue) !important;
+  margin: 0 0 1rem 0 !important;
+  font-size: 1.5rem !important;
+}
+
+.welcome-teacher .welcome-icon {
+  color: #36B6A8;
+}
+
+.welcome-teacher p {
+  color: #4a5568;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Grade Levels Checkbox Group */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+.checkbox-label:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+  background-color: #36B6A8;
+  border-color: #36B6A8;
+}
+
+.checkbox-custom {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.checkbox-custom::after {
+  content: '✓';
+  color: white;
+  font-size: 0.75rem;
+  display: none;
+}
+
+input[type="checkbox"]:checked + .checkbox-custom::after {
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .welcome-teacher h3 {
+    font-size: 1.3rem;
+  }
+  
+  .welcome-teacher p {
+    font-size: 1rem;
+  }
+  
+  .checkbox-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Success State */
+.success-container .success-icon {
+  background-color: #e6fffa;
+  color: #38b2ac;
+}
+
+.success-message h2 {
+  color: #2c7a7b;
+  margin-bottom: 1rem;
+}
+
+.success-message p {
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.account-details {
+  background-color: #f0f9ff;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.account-details p {
+  margin: 0.5rem 0;
+  color: #2d3748;
+}
+
+.important-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2b6cb0;
+  background-color: #ebf8ff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-top: 1rem !important;
+  font-size: 0.9rem;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-family: 'Fredoka', sans-serif;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  min-width: 120px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background-color: var(--pink, #F76C7B);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #e65c6b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(247, 108, 123, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.btn-outline {
+  background-color: white;
+  color: var(--pink, #F76C7B);
+  border-color: var(--pink, #F76C7B);
+}
+
+.btn-outline:hover {
+  background-color: #fff5f6;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(247, 108, 123, 0.2);
+}
+
+.btn-outline:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.btn-outline:disabled {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+  color: #b0b0b0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.login-redirect {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.login-redirect a {
+  color: #36B6A8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-redirect a:hover {
+  text-decoration: underline;
+}

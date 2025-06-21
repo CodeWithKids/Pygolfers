@@ -1,0 +1,227 @@
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { FaChevronLeft, FaCheck, FaTimes, FaCode, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import '../styles/ChallengeDetail.css';
+
+// Mock data - in a real app, this would come from an API
+const challengeData = {
+  1: {
+    id: 1,
+    title: 'FizzBuzz',
+    description: 'Write a program that prints the numbers from 1 to N. But for multiples of three print "Fizz" instead of the number and for the multiples of five print "Buzz". For numbers which are multiples of both three and five print "FizzBuzz".',
+    difficulty: 'easy',
+    par: 4,
+    examples: [
+      {
+        input: '15',
+        output: '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'
+      }
+    ],
+    testCases: [
+      { input: '5', output: '1\n2\nFizz\n4\nBuzz' },
+      { input: '15', output: '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz' },
+      { input: '30', output: '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n16\n17\nFizz\n19\nBuzz\nFizz\n22\n23\nFizz\nBuzz\n26\nFizz\n28\n29\nFizzBuzz' }
+    ]
+  },
+  // Add more challenges here
+};
+
+const ChallengeDetail = () => {
+  const { id } = useParams();
+  const challenge = challengeData[id];
+  const [code, setCode] = useState('');
+  const [output, setOutput] = useState('');
+  const [showTestCases, setShowTestCases] = useState(false);
+  const [testResults, setTestResults] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!challenge) {
+    return (
+      <div className="challenge-not-found">
+        <h2>Challenge not found</h2>
+        <Link to="/challenges" className="back-link">
+          <FaChevronLeft /> Back to Challenges
+        </Link>
+      </div>
+    );
+  }
+
+  const handleRunCode = () => {
+    // In a real app, this would send the code to a backend for execution
+    setOutput('Running code...');
+    setTimeout(() => {
+      setOutput('1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz');
+    }, 1000);
+  };
+
+  const handleSubmit = () => {
+    setIsSubmitting(true);
+    // In a real app, this would send the code to a backend for testing
+    setTimeout(() => {
+      const results = challenge.testCases.map((testCase, index) => ({
+        id: index + 1,
+        passed: Math.random() > 0.3, // Random pass/fail for demo
+        input: testCase.input,
+        expected: testCase.output,
+        actual: testCase.output // In a real app, this would be the actual output
+      }));
+      setTestResults(results);
+      setIsSubmitting(false);
+    }, 1500);
+  };
+
+  const toggleTestCases = () => {
+    setShowTestCases(!showTestCases);
+  };
+
+  return (
+    <div className="challenge-detail-container">
+      <div className="challenge-header">
+        <Link to="/challenges" className="back-link">
+          <FaChevronLeft /> Back to Challenges
+        </Link>
+        <h1 className="challenge-title">{challenge.title}</h1>
+        <div className="challenge-meta">
+          <span className={`difficulty-badge ${challenge.difficulty}`}>
+            {challenge.difficulty}
+          </span>
+          <span className="par-score">Par: {challenge.par} lines</span>
+        </div>
+      </div>
+
+      <div className="challenge-layout">
+        <div className="challenge-description">
+          <h2>Description</h2>
+          <p>{challenge.description}</p>
+
+          <div className="examples">
+            <h3>Examples</h3>
+            {challenge.examples.map((example, index) => (
+              <div key={index} className="example">
+                <div className="example-input">
+                  <h4>Input:</h4>
+                  <pre>{example.input}</pre>
+                </div>
+                <div className="example-output">
+                  <h4>Output:</h4>
+                  <pre>{example.output}</pre>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="test-cases">
+            <button className="toggle-test-cases" onClick={toggleTestCases}>
+              {showTestCases ? (
+                <>
+                  <FaChevronUp /> Hide Test Cases
+                </>
+              ) : (
+                <>
+                  <FaChevronDown /> View Test Cases
+                </>
+              )}
+            </button>
+            
+            {showTestCases && (
+              <div className="test-cases-list">
+                <h4>Test Cases:</h4>
+                {challenge.testCases.map((testCase, index) => (
+                  <div key={index} className="test-case">
+                    <div className="test-case-input">
+                      <strong>Input:</strong>
+                      <pre>{testCase.input}</pre>
+                    </div>
+                    <div className="test-case-expected">
+                      <strong>Expected Output:</strong>
+                      <pre>{testCase.output}</pre>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="code-editor-container">
+          <div className="editor-header">
+            <h3>Your Solution</h3>
+            <div className="editor-actions">
+              <button className="run-btn" onClick={handleRunCode}>
+                <FaPlay /> Run Code
+              </button>
+              <button 
+                className="submit-btn" 
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Solution'}
+              </button>
+            </div>
+          </div>
+          
+          <div className="code-editor">
+            <textarea
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="# Write your Python code here"
+              className="code-input"
+              spellCheck="false"
+            />
+            <div className="line-numbers">
+              {code.split('\n').map((_, i) => (
+                <div key={i} className="line-number">{i + 1}</div>
+              ))}
+            </div>
+          </div>
+
+          <div className="output-container">
+            <h3>Output</h3>
+            <pre className="output">{output || 'Run your code to see the output here...'}</pre>
+          </div>
+
+          {testResults.length > 0 && (
+            <div className="test-results">
+              <h3>Test Results</h3>
+              <div className="test-results-summary">
+                Passed: {testResults.filter(r => r.passed).length} / {testResults.length}
+              </div>
+              <div className="test-results-list">
+                {testResults.map((result) => (
+                  <div key={result.id} className={`test-result ${result.passed ? 'passed' : 'failed'}`}>
+                    <div className="test-result-header">
+                      {result.passed ? (
+                        <FaCheck className="test-icon passed" />
+                      ) : (
+                        <FaTimes className="test-icon failed" />
+                      )}
+                      Test Case {result.id} - {result.passed ? 'Passed' : 'Failed'}
+                    </div>
+                    {!result.passed && (
+                      <div className="test-result-details">
+                        <div className="test-result-input">
+                          <strong>Input:</strong>
+                          <pre>{result.input}</pre>
+                        </div>
+                        <div className="test-result-expected">
+                          <strong>Expected:</strong>
+                          <pre>{result.expected}</pre>
+                        </div>
+                        <div className="test-result-actual">
+                          <strong>Got:</strong>
+                          <pre>{result.actual}</pre>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChallengeDetail;

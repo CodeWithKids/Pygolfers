@@ -1,0 +1,111 @@
+.leaderboard-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.leaderboard-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.leaderboard-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.leaderboard-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.rank-cell {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a90e2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.score-cell {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .leaderboard-container {
+    padding: 0.25rem;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+  }
+  
+  .leaderboard-table {
+    min-width: 600px; /* Ensure table has minimum width for scrolling */
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.9em;
+  }
+  
+  .user-cell > div {
+    min-width: 150px;
+  }
+  
+  .score-cell,
+  .rank-cell {
+    white-space: nowrap;
+  }
+}
+
+/* Adjust for very small screens */
+@media (max-width: 360px) {
+  .leaderboard-table th,
+  .leaderboard-table td {
+    font-size: 0.8em;
+    padding: 0.5rem 0.1rem;
+  }
+  
+  .avatar {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .user-cell > div {
+    min-width: 120px;
+  }
+}

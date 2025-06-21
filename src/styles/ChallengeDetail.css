@@ -1,0 +1,712 @@
+/* Challenge Detail Page Styles */
+:root {
+  --teal: #36B6A8;
+  --pink: #FF6B6B;
+  --dark-blue: #2C3E50;
+  --light-gray: #F8FAFC;
+  --border-color: #E2E8F0;
+  --success: #48BB78;
+  --danger: #F56565;
+  --warning: #ECC94B;
+  --text-primary: #2D3748;
+  --text-secondary: #4A5568;
+}
+
+.challenge-detail-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  color: var(--text-primary);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: #2da194;
+  text-decoration: underline;
+}
+
+.challenge-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.code-stats {
+  display: flex;
+  gap: 1.5rem;
+  background: var(--light-gray);
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--dark-blue);
+}
+
+.new-badge {
+  background-color: var(--teal);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.challenge-title {
+  font-size: 2.25rem;
+  color: var(--dark-blue);
+  margin: 0.5rem 0 1rem;
+}
+
+.challenge-meta {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.difficulty-badge {
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: white;
+}
+
+.difficulty-badge.easy {
+  background-color: var(--success);
+}
+
+.difficulty-badge.medium {
+  background-color: var(--warning);
+  color: var(--text-primary);
+}
+
+.difficulty-badge.hard {
+  background-color: var(--danger);
+}
+
+.par-score {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.challenge-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.challenge-description {
+  line-height: 1.7;
+}
+
+.challenge-description h2 {
+  color: var(--dark-blue);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.challenge-description h3 {
+  color: var(--dark-blue);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.challenge-description p {
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.examples {
+  background: var(--light-gray);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.example {
+  margin: 1rem 0;
+}
+
+example h4 {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+example pre {
+  background: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.test-cases {
+  margin: 2rem 0;
+}
+
+.toggle-test-cases {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+}
+
+.test-cases-list {
+  margin-top: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.test-case {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.test-case:last-child {
+  border-bottom: none;
+}
+
+.test-case h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* Code Editor Styles */
+.code-editor-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  transform: none !important;
+  transform-style: flat !important;
+  perspective: none !important;
+}
+
+.code-editor-wrapper {
+  position: relative;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+.language-badge {
+  background-color: #2a2a2a;
+  color: #9cdcfe;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.run-btn {
+  background-color: var(--teal);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.run-btn:hover {
+  background-color: #2da194;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.run-btn:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.run-btn.running {
+  background-color: #3182ce;
+  cursor: wait;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #333;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  margin-top: 0.5rem;
+}
+
+.icon-button:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  margin-top: 0.25rem;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--light-gray);
+}
+
+.editor-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--dark-blue);
+}
+
+.editor-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.submit-btn {
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover {
+  background-color: #2da194;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.submit-btn:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.code-editor {
+  position: relative;
+  flex-grow: 1;
+  min-height: 300px;
+  display: flex;
+  overflow: hidden;
+}
+
+.code-input {
+  flex-grow: 1;
+  padding: 1rem 1rem 1rem 3rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border: none;
+  resize: none;
+  outline: none;
+  tab-size: 2;
+  background: #F8F9FA;
+  color: #2D3748;
+}
+
+.line-numbers {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 2.5rem;
+  background: #EDF2F7;
+  color: #718096;
+  text-align: right;
+  padding: 1rem 0.5rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  user-select: none;
+  overflow: hidden;
+}
+
+.line-number {
+  height: 1.5em;
+}
+
+.output-container {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #252526;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.output-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #9cdcfe;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.execution-time {
+  font-size: 0.8rem;
+  color: #9cdcfe;
+  font-family: 'Fira Code', monospace;
+}
+
+.output-content {
+  padding: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #d4d4d4;
+}
+
+.output {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.output:empty::before {
+  content: 'Run your code to see the output here...';
+  color: #6b7280;
+  font-style: italic;
+}
+
+.test-results {
+  border-top: 1px solid var(--border-color);
+  padding: 1rem 1.5rem;
+}
+
+.test-results h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: var(--dark-blue);
+}
+
+.test-results-summary {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.test-result {
+  margin-bottom: 0.75rem;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.test-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.test-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.test-execution-time {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-family: 'Fira Code', monospace;
+}
+
+.test-result-details {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.test-result-details > div {
+  margin-bottom: 0.75rem;
+}
+
+.test-result-details strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #e2e8f0;
+}
+
+.test-result-details pre {
+  margin: 0.25rem 0 0 0;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+}
+
+.test-result.passed .test-result-header {
+  background: rgba(72, 187, 120, 0.1);
+  color: var(--success);
+}
+
+.test-result.failed .test-result-header {
+  background: rgba(245, 101, 101, 0.1);
+  color: var(--danger);
+}
+
+.test-icon {
+  font-size: 0.9em;
+}
+
+.test-result-details {
+  padding: 0.75rem;
+  background: var(--light-gray);
+  font-size: 0.85rem;
+  border-left: 3px solid var(--danger);
+}
+
+.test-result-details > div {
+  margin-bottom: 0.5rem;
+}
+
+.test-result-details > div:last-child {
+  margin-bottom: 0;
+}
+
+.test-result-details pre {
+  background: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .challenge-layout {
+    grid-template-columns: 1fr 1.2fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .challenge-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .code-editor-container {
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .challenge-title {
+    font-size: 1.75rem;
+  }
+  
+  .editor-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .run-btn,
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Loading and Not Found States */
+.challenge-not-found,
+.challenge-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.challenge-not-found h2,
+.challenge-loading h2 {
+  color: var(--dark-blue);
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.challenge-not-found p,
+.challenge-loading p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 500px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 1.5rem;
+  border: 5px solid rgba(54, 182, 168, 0.2);
+  border-top: 5px solid var(--teal);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Back link button */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--teal);
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.back-link:hover {
+  background-color: #2a8a7f;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: white;
+}
+
+.back-link:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
