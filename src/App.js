@@ -194,6 +194,43 @@ const Home = () => {
         </div>
       </section>
 
+      {/* About Us Section */}
+      <section className="about-section">
+        <div className="container">
+          <motion.div 
+            className="section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2>About PyGolfers</h2>
+          </motion.div>
+          <div className="about-content">
+            <motion.div 
+              className="about-text"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <p>Welcome to PyGolfers, where Python enthusiasts come together to master the art of writing concise and efficient code. Our platform is built on the principles of code golf - solving programming challenges with the fewest possible characters.</p>
+              <p>Founded in 2023, we've grown into a vibrant community of developers who believe that constraints breed creativity. Whether you're a beginner looking to improve your Python skills or an experienced coder seeking new challenges, PyGolfers offers something for everyone.</p>
+              <Link to="/about" className="about-button">Learn More About Us</Link>
+            </motion.div>
+            <motion.div 
+              className="about-image"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Python developers collaborating" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="features-section">
         <motion.div 

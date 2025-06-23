@@ -7,28 +7,46 @@
   min-height: 100vh;
 }
 
+/* Make all icons pink */
+.events-page .icon {
+  color: #F76C7B; /* Pink accent color */
+  margin-right: 8px;
+}
+
 /* Hero Section */
 .events-hero {
-  background: linear-gradient(135deg, var(--teal) 0%, var(--dark-blue) 100%);
+  background: var(--teal);
   color: white;
-  padding: 80px 0 60px;
+  padding: 100px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
+.hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .events-hero h1 {
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .events-hero p {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   max-width: 700px;
-  margin: 0 auto 2rem;
-  opacity: 0.9;
-  line-height: 1.6;
+  margin: 0 auto 2.5rem;
+  opacity: 0.95;
+  line-height: 1.7;
+  font-weight: 300;
 }
 
 /* Main Content */
@@ -166,7 +184,7 @@
   left: 0;
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, #4a6cf7, #6f42c1);
+  background: var(--dark-blue);
   border-radius: 2px;
 }
 
@@ -283,7 +301,7 @@
 }
 
 .event-date .icon {
-  color: #4a6cf7;
+  color: #24304A; /* Dark blue color */
   font-size: 0.9rem;
 }
 
@@ -317,7 +335,7 @@
 
 .event-organizer .icon,
 .event-location .icon {
-  color: #4a6cf7;
+  color: #24304A; /* Dark blue color */
   font-size: 0.9rem;
 }
 
@@ -347,7 +365,7 @@
 }
 
 .event-participants .icon {
-  color: #4a6cf7;
+  color: #24304A; /* Dark blue color */
 }
 
 .event-actions {
@@ -355,7 +373,7 @@
 }
 
 .register-button {
-  background: linear-gradient(135deg, var(--teal) 0%, var(--dark-blue) 100%);
+  background: var(--teal);
   color: white;
   border: none;
   border-radius: 8px;
@@ -371,7 +389,8 @@
 .register-button:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(54, 182, 168, 0.3);
-  background: linear-gradient(135deg, #2aa193 0%, #1a2740 100%);
+  background: var(--teal);
+  opacity: 0.9;
 }
 
 .register-button:disabled,
@@ -471,64 +490,69 @@
 
 .modal-header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .modal-header h2 {
-  margin: 0 0 10px;
-  color: #212529;
+  color: #2d3748;
+  margin: 0 0 15px;
   font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .event-datetime {
   font-size: 1.1rem;
-  color: #495057;
-  margin-bottom: 5px;
+  color: #4a5568;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 8px;
+  font-weight: 500;
 }
 
 .event-location {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  color: #6c757d;
-  margin-bottom: 15px;
+  gap: 8px;
+  color: #718096;
+  margin-bottom: 20px;
+  font-size: 1rem;
 }
 
 .spots-remaining {
   display: inline-block;
-  background: #e9ecef;
-  color: #495057;
-  padding: 5px 15px;
+  background: #f0f9ff;
+  color: #0369a1;
+  padding: 6px 16px;
   border-radius: 20px;
   font-size: 0.9rem;
-  font-weight: 500;
-  margin-top: 10px;
+  font-weight: 600;
+  margin-top: 15px;
+  border: 1px solid #bae6fd;
 }
 
+/* Form Styling */
 .registration-form .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .registration-form label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #343a40;
-  font-size: 0.95rem;
   display: flex;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #2d3748;
+  font-size: 0.95rem;
   align-items: center;
   gap: 8px;
 }
 
 .registration-form .input-icon {
-  color: #4a6cf7;
+  color: #F76C7B; /* Pink accent color */
   font-size: 0.9rem;
 }
 
@@ -536,41 +560,66 @@
 .registration-form textarea,
 .registration-form select {
   width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
   font-size: 1rem;
   transition: all 0.3s ease;
+  background-color: #f8fafc;
+  color: #1a202c;
+}
+
+.registration-form input:not(:disabled):hover,
+.registration-form textarea:not(:disabled):hover,
+.registration-form select:not(:disabled):hover {
+  border-color: #cbd5e0;
+  background-color: #fff;
 }
 
 .registration-form input:focus,
 .registration-form textarea:focus,
 .registration-form select:focus {
-  border-color: #4a6cf7;
-  box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
   outline: none;
+  background-color: #fff;
+}
+
+.registration-form input:disabled,
+.registration-form textarea:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 .registration-form textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
+  line-height: 1.5;
 }
 
+.registration-form input::placeholder,
+.registration-form textarea::placeholder {
+  color: #a0aec0;
+  opacity: 1;
+}
+
+/* Form Actions */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 15px;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #e9ecef;
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid #edf2f7;
 }
 
 .primary-button {
-  background: linear-gradient(135deg, #4a6cf7 0%, #2541b2 100%);
+  background: #0d9488; /* Teal color */
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 12px 25px;
+  border-radius: 10px;
+  padding: 14px 30px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -579,12 +628,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .primary-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(74, 108, 247, 0.4);
+  background: #0f766e; /* Darker teal on hover */
+  box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.2), 0 4px 6px -2px rgba(13, 148, 136, 0.1);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+  background: #0d6c65; /* Even darker teal when pressed */
 }
 
 .primary-button:disabled {
@@ -592,13 +648,14 @@
   cursor: not-allowed;
   transform: none !important;
   box-shadow: none !important;
+  background: #5eead4; /* Lighter teal for disabled state */
 }
 
 .secondary-button {
-  background: #f8f9fa;
-  color: #495057;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  background: #fff;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
   padding: 12px 25px;
   font-size: 1rem;
   font-weight: 500;
@@ -612,8 +669,13 @@
 }
 
 .secondary-button:hover {
-  background: #e9ecef;
-  border-color: #ced4da;
+  background: #f7fafc;
+  border-color: #cbd5e0;
+  color: #2d3748;
+}
+
+.secondary-button:active {
+  background: #edf2f7;
 }
 
 /* Success State */

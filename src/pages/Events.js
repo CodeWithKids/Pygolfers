@@ -32,7 +32,7 @@ const mockEvents = [
     organizer: 'Python Kenya',
     maxParticipants: 30,
     registeredParticipants: 30,
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f9d0631?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1526378722484-bd91ca387e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
     status: 'full'
   },
   {

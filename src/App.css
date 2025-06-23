@@ -1078,6 +1078,88 @@ html {
 }
 
 /* Testimonials Section */
+/* About Section */
+.about-section {
+  padding: 6rem 5%;
+  background-color: var(--bg-primary);
+  position: relative;
+  z-index: 1;
+}
+
+.about-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4rem;
+  margin-top: 3rem;
+}
+
+.about-text {
+  flex: 1;
+  max-width: 600px;
+}
+
+.about-text p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.about-button {
+  display: inline-block;
+  background-color: var(--teal);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: var(--transition);
+  border: 2px solid var(--teal);
+}
+
+.about-button:hover {
+  background-color: transparent;
+  color: var(--teal);
+}
+
+.about-image {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  max-width: 550px;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.about-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .about-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .about-text {
+    max-width: 100%;
+  }
+  
+  .about-image {
+    max-width: 100%;
+    margin-top: 2rem;
+  }
+}
+
 .testimonials-section {
   padding: 6rem 5%;
   background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);

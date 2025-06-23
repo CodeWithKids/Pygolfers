@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaTimes, FaCheckCircle, FaUser, FaEnvelope, FaPhone, FaInfoCircle } from 'react-icons/fa';
+import { FaTimes, FaCheckCircle, FaUser, FaEnvelope, FaPhone, FaInfoCircle, FaMapMarkerAlt } from 'react-icons/fa';
 
 const EventRegistrationModal = ({ event, currentUser, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -125,20 +125,6 @@ const EventRegistrationModal = ({ event, currentUser, onClose, onSubmit }) => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="+254 700 000000"
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="notes">
-                    <FaInfoCircle className="input-icon" /> Additional Notes (Optional)
-                  </label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    value={formData.notes}
-                    onChange={handleChange}
-                    placeholder="Any special requirements or questions?"
-                    rows="3"
                   />
                 </div>
                 
