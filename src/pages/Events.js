@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaUserPlus, FaClock, FaRegClock, FaUserTie } from 'react-icons/fa';
+import { FaSearch, FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaUserPlus, FaClock, FaRegClock, FaUserTie, FaThLarge, FaList, FaCalendar, FaTrophy, FaStar, FaRocket, FaGamepad } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import EventCard from '../components/events/EventCard';
 import EventFilters from '../components/events/EventFilters';
@@ -68,6 +68,8 @@ const Events = ({ currentUser }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState('grid'); // grid, calendar, list
   const [filters, setFilters] = useState({
     search: '',
     status: 'all',
@@ -76,9 +78,13 @@ const Events = ({ currentUser }) => {
 
   // Load events (in a real app, this would be an API call)
   useEffect(() => {
-    // Simulate API call
-    setEvents(mockEvents);
-    setFilteredEvents(mockEvents);
+    // Simulate API call with loading
+    setIsLoading(true);
+    setTimeout(() => {
+      setEvents(mockEvents);
+      setFilteredEvents(mockEvents);
+      setIsLoading(false);
+    }, 1000);
   }, []);
 
   // Apply filters
@@ -148,9 +154,28 @@ const Events = ({ currentUser }) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  // Calculate stats
+  const totalEvents = events.length;
+  const upcomingEventsCount = events.filter(event => event.status === 'open' || event.status === 'full').length;
+  const totalParticipants = events.reduce((sum, event) => sum + event.registeredParticipants, 0);
+  const onlineEventsCount = events.filter(event => event.location.toLowerCase() === 'online').length;
+
   // Group events by status
   const upcomingEvents = filteredEvents.filter(event => event.status === 'open' || event.status === 'full');
   const pastEvents = filteredEvents.filter(event => event.status === 'completed');
+
+  // Loading skeleton component
+  const EventSkeleton = () => (
+    <div className="event-card skeleton">
+      <div className="skeleton-image"></div>
+      <div className="skeleton-content">
+        <div className="skeleton-title"></div>
+        <div className="skeleton-text"></div>
+        <div className="skeleton-text short"></div>
+        <div className="skeleton-button"></div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="events-page">
@@ -162,51 +187,154 @@ const Events = ({ currentUser }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1>Upcoming Python Events</h1>
-            <p>Join our community events to learn, compete, and connect with fellow Python enthusiasts</p>
+            <div className="hero-text">
+              <h1>
+                <span className="logo-icon">🐍⛳</span>
+                Python Events & Competitions
+              </h1>
+              <p>Join our community events to learn, compete, and connect with fellow Python enthusiasts!</p>
+            </div>
+            
+            <motion.div 
+              className="hero-stats"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="stat-card">
+                <FaCalendar className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-number">{upcomingEventsCount}</span>
+                  <span className="stat-label">Upcoming Events</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <FaUsers className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-number">{totalParticipants}</span>
+                  <span className="stat-label">Registered Members</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <FaRocket className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-number">{onlineEventsCount}</span>
+                  <span className="stat-label">Online Events</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <FaTrophy className="stat-icon" />
+                <div className="stat-content">
+                  <span className="stat-number">{totalEvents}</span>
+                  <span className="stat-label">Total Events</span>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       <section className="events-main">
         <div className="container">
-          <EventFilters 
-            filters={filters} 
-            onFilterChange={handleFilterChange} 
-            currentUser={currentUser}
-          />
+          <div className="events-controls">
+            <EventFilters 
+              filters={filters} 
+              onFilterChange={handleFilterChange} 
+              currentUser={currentUser}
+            />
+            
+            <div className="view-toggle">
+              <button 
+                className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode('grid')}
+                title="Grid View"
+              >
+                <FaThLarge />
+              </button>
+              <button 
+                className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                onClick={() => setViewMode('list')}
+                title="List View"
+              >
+                <FaList />
+              </button>
+              <button 
+                className={`view-btn ${viewMode === 'calendar' ? 'active' : ''}`}
+                onClick={() => setViewMode('calendar')}
+                title="Calendar View"
+              >
+                <FaCalendar />
+              </button>
+            </div>
+          </div>
           
-          <div className="events-grid">
-            {upcomingEvents.length > 0 ? (
-              upcomingEvents.map(event => (
-                <EventCard 
-                  key={event.id} 
-                  event={event} 
-                  onRegisterClick={handleRegisterClick}
-                  currentUser={currentUser}
-                />
-              ))
+          <div className={`events-container ${viewMode}`}>
+            {isLoading ? (
+              <div className="events-grid">
+                {[...Array(6)].map((_, index) => (
+                  <EventSkeleton key={index} />
+                ))}
+              </div>
+            ) : upcomingEvents.length > 0 ? (
+              <div className={`events-grid ${viewMode}`}>
+                {upcomingEvents.map(event => (
+                  <EventCard 
+                    key={event.id} 
+                    event={event} 
+                    onRegisterClick={handleRegisterClick}
+                    currentUser={currentUser}
+                    viewMode={viewMode}
+                  />
+                ))}
+              </div>
             ) : (
               <div className="no-events">
-                <p>No upcoming events match your filters. Check back later for new events!</p>
+                <div className="no-events-content">
+                  <FaCalendarAlt className="no-events-icon" />
+                  <h3>No upcoming events found</h3>
+                  <p>No events match your current filters. Try adjusting your search or check back later for new events!</p>
+                  <div className="no-events-actions">
+                    <button 
+                      className="btn btn-secondary"
+                      onClick={() => setFilters({ search: '', status: 'all', type: 'all' })}
+                    >
+                      Clear Filters
+                    </button>
+                    <Link to="/community" className="btn btn-primary">
+                      <FaGamepad /> Join Community
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
           </div>
 
           {pastEvents.length > 0 && (
-            <>
-              <h2 className="past-events-title">Past Events</h2>
-              <div className="events-grid past-events">
+            <motion.div 
+              className="past-events-section"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="past-events-header">
+                <h2 className="past-events-title">
+                  <FaRegClock className="title-icon" />
+                  Past Events
+                </h2>
+                <p className="past-events-subtitle">Relive the memories from our previous events</p>
+              </div>
+              <div className={`events-grid past-events ${viewMode}`}>
                 {pastEvents.map(event => (
                   <EventCard 
                     key={event.id} 
                     event={event} 
                     isPast={true}
                     currentUser={currentUser}
+                    viewMode={viewMode}
                   />
                 ))}
               </div>
-            </>
+            </motion.div>
           )}
         </div>
       </section>

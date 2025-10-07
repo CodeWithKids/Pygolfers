@@ -123,11 +123,7 @@ body {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  color: var(--teal);
   position: relative;
   display: inline-block;
 }
@@ -140,7 +136,7 @@ body {
   transform: translateX(-50%);
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   border-radius: 2px;
 }
 
@@ -177,7 +173,7 @@ body {
   z-index: 1;
 }
 
-.form-input {
+.login-input {
   width: 100%;
   padding: 0.875rem 1.25rem;
   font-size: 1rem;
@@ -190,15 +186,66 @@ body {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.form-input:focus {
+.login-input:focus {
   outline: none;
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(54, 182, 168, 0.2);
   background-color: white;
 }
 
-.form-input:hover:not(:focus) {
+.login-input:hover:not(:focus) {
   border-color: #cbd5e0;
+}
+
+.login-input.error {
+  border-color: var(--pink);
+}
+
+.login-input.error:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(247, 108, 123, 0.2);
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: var(--transition);
+  z-index: 2;
+}
+
+.password-toggle:hover {
+  color: var(--teal);
+  background-color: rgba(54, 182, 168, 0.1);
+}
+
+.password-toggle:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.error-message {
+  color: var(--pink);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: block;
+  font-weight: 500;
+}
+
+.input-with-icon.error .login-input {
+  border-color: var(--pink);
+}
+
+.input-with-icon.error .login-input:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(247, 108, 123, 0.2);
 }
 
 .form-group label {

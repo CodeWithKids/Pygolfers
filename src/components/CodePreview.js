@@ -8,6 +8,7 @@ const CodePreview = () => {
   const [activeTab, setActiveTab] = useState('problem');
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
+  const [showScore, setShowScore] = useState(false);
 
   // Code examples for the preview
   const codeExamples = {
@@ -35,6 +36,12 @@ const CodePreview = () => {
         for i in range(1, n+1)
     ]`
   };
+
+  // Calculate character counts
+  const problemChars = codeExamples.problem.length;
+  const solutionChars = codeExamples.solution.length;
+  const par = 120; // Estimated par for this challenge
+  const solutionScore = solutionChars - par;
 
   // Initialize Prism for syntax highlighting
   useEffect(() => {
@@ -105,7 +112,20 @@ const CodePreview = () => {
       </div>
       
       <div className="code-footer">
-        <span>Python 3.9</span>
+        <div className="code-info">
+          <span>Python 3.9</span>
+          <div className="character-count">
+            <span className="count-label">Characters:</span>
+            <span className={`count-value ${activeTab === 'solution' ? 'solution-count' : 'problem-count'}`}>
+              {activeTab === 'problem' ? problemChars : solutionChars}
+            </span>
+            {activeTab === 'solution' && (
+              <span className={`score-indicator ${solutionScore <= 0 ? 'under-par' : 'over-par'}`}>
+                {solutionScore <= 0 ? '🎉 Under Par!' : `+${solutionScore} over par`}
+              </span>
+            )}
+          </div>
+        </div>
         <button 
           className={`run-button ${isRunning ? 'running' : ''}`}
           onClick={runCode}

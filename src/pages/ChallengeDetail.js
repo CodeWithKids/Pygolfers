@@ -33,6 +33,9 @@ const ChallengeDetail = () => {
   const [executionTime, setExecutionTime] = useState(null);
   const [lineCount, setLineCount] = useState(0);
   const [charCount, setCharCount] = useState(0);
+  const [score, setScore] = useState(null);
+  const [parScore, setParScore] = useState(null);
+  const [shortestSolution, setShortestSolution] = useState(null);
   const editorRef = useRef(null);
 
   // Load saved code from localStorage
@@ -54,8 +57,25 @@ const ChallengeDetail = () => {
   }, [id, challenge]); // Add challenge to dependency array
 
   const updateCounters = (code) => {
-    setLineCount(code.split('\n').length);
-    setCharCount(code.length);
+    const lines = code.split('\n').length;
+    const chars = code.length;
+    setLineCount(lines);
+    setCharCount(chars);
+    
+    // Calculate score based on character count (code golf style)
+    if (challenge && challenge.parChars) {
+      const parChars = challenge.parChars;
+      setParScore(parChars);
+      
+      // Calculate score relative to par
+      const scoreDiff = chars - parChars;
+      setScore({
+        characters: chars,
+        par: parChars,
+        difference: scoreDiff,
+        status: scoreDiff <= 0 ? 'under-par' : scoreDiff <= 10 ? 'at-par' : 'over-par'
+      });
+    }
   };
 
   const handleEditorDidMount = (editor) => {
@@ -321,6 +341,18 @@ const ChallengeDetail = () => {
         <div className="code-editor-container">
           <div className="editor-header">
             <h3>Your Solution</h3>
+            {score && (
+              <div className="code-golf-score">
+                <div className={`score-badge ${score.status}`}>
+                  <span className="score-label">Score:</span>
+                  <span className="score-value">{score.characters} chars</span>
+                  <span className="score-par">(Par: {score.par})</span>
+                  <span className={`score-diff ${score.status}`}>
+                    {score.difference > 0 ? `+${score.difference}` : score.difference}
+                  </span>
+                </div>
+              </div>
+            )}
             <div className="editor-actions">
               <button 
                 className={`run-btn ${isRunning ? 'running' : ''}`} 

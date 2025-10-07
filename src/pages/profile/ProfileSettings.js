@@ -10,8 +10,33 @@ import {
   FaLinkedinIn,
   FaArrowLeft,
   FaSave,
-  FaTimes
+  FaTimes,
+  FaShieldAlt,
+  FaBell,
+  FaPalette,
+  FaTrash,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaEye,
+  FaEyeSlash,
+  FaUpload,
+  FaExternalLinkAlt,
+  FaUserShield,
+  FaUsers,
+  FaEyeSlash as FaHide,
+  FaDownload,
+  FaComments,
+  FaClock,
+  FaCalendar,
+  FaTrophy,
+  FaChartLine,
+  FaFileExport,
+  FaInfoCircle,
+  FaBan,
+  FaUserTimes,
+  FaPlus
 } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../../styles/ProfileSettings.css';
 
 const ProfileSettings = () => {
@@ -31,11 +56,41 @@ const ProfileSettings = () => {
       linkedin: ''
     },
     avatar: null,
-    avatarPreview: ''
+    avatarPreview: '',
+    // Privacy & Safety
+    profileVisibility: 'public',
+    allowMessages: 'friends',
+    hideRealName: false,
+    parentEmail: '',
+    parentName: '',
+    allowParentAccess: true,
+    blockedUsers: [
+      { id: 1, username: 'spam_user', name: 'Spam User', blockedDate: '2024-01-15', reason: 'Spam messages' },
+      { id: 2, username: 'rude_coder', name: 'Rude Coder', blockedDate: '2024-01-10', reason: 'Inappropriate behavior' }
+    ],
+    // Notifications
+    emailNotifications: true,
+    challengeReminders: true,
+    eventNotifications: true,
+    communityUpdates: true,
+    achievementAlerts: true,
+    // Preferences
+    theme: 'light',
+    language: 'en',
+    difficultyLevel: 'intermediate',
+    emailFrequency: 'weekly'
   });
   const [activeTab, setActiveTab] = useState('profile');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false
+  });
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   // Load user data from API
   useEffect(() => {
@@ -97,9 +152,30 @@ const ProfileSettings = () => {
     }));
   };
 
+  // Password strength calculation
+  useEffect(() => {
+    if (!formData.newPassword) {
+      setPasswordStrength(0);
+      return;
+    }
+
+    let strength = 0;
+    if (formData.newPassword.length >= 8) strength += 1;
+    if (formData.newPassword.match(/[a-z]+/)) strength += 1;
+    if (formData.newPassword.match(/[A-Z]+/)) strength += 1;
+    if (formData.newPassword.match(/[0-9]+/)) strength += 1;
+    if (formData.newPassword.match(/[!@#$%^&*(),.?":{}|<>]+/)) strength += 1;
+
+    setPasswordStrength(strength);
+  }, [formData.newPassword]);
+
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({
@@ -109,6 +185,41 @@ const ProfileSettings = () => {
         }));
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      handleAvatarChange({ target: { files: [file] } });
+    }
+  };
+
+  const getPasswordStrengthLabel = () => {
+    switch (passwordStrength) {
+      case 0:
+      case 1:
+        return { label: 'Weak', color: 'red' };
+      case 2:
+      case 3:
+        return { label: 'Medium', color: 'yellow' };
+      case 4:
+      case 5:
+        return { label: 'Strong', color: 'green' };
+      default:
+        return { label: 'Weak', color: 'red' };
     }
   };
 
@@ -129,6 +240,15 @@ const ProfileSettings = () => {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleUnblockUser = (userId) => {
+    if (window.confirm('Are you sure you want to unblock this user?')) {
+      setFormData(prev => ({
+        ...prev,
+        blockedUsers: prev.blockedUsers.filter(user => user.id !== userId)
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -196,7 +316,8 @@ const ProfileSettings = () => {
       }));
       
       // Show success message
-      alert('Profile updated successfully!');
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error updating profile:', error);
       alert(error.message || 'Failed to update profile. Please try again.');
@@ -207,6 +328,22 @@ const ProfileSettings = () => {
 
   return (
     <div className="settings-container">
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div 
+            className="success-toast"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FaCheckCircle className="success-icon" />
+            <span>Profile updated successfully!</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="settings-header">
         <button 
           className="back-button"
@@ -215,7 +352,11 @@ const ProfileSettings = () => {
         >
           <FaArrowLeft /> Back
         </button>
-        <h1>Account Settings</h1>
+        <div className="header-branding">
+          <span className="logo-icon">🐍⛳</span>
+          <h1>PyGolfers Settings</h1>
+        </div>
+        <p className="header-subtitle">Customize your coding profile and preferences</p>
       </div>
       
       <div className="settings-layout">
@@ -240,6 +381,34 @@ const ProfileSettings = () => {
           >
             <FaGlobe className="tab-icon" />
             Social Links
+          </button>
+          <button 
+            className={`sidebar-tab ${activeTab === 'privacy' ? 'active' : ''}`}
+            onClick={() => setActiveTab('privacy')}
+          >
+            <FaShieldAlt className="tab-icon" />
+            Privacy & Safety
+          </button>
+          <button 
+            className={`sidebar-tab ${activeTab === 'notifications' ? 'active' : ''}`}
+            onClick={() => setActiveTab('notifications')}
+          >
+            <FaBell className="tab-icon" />
+            Notifications
+          </button>
+          <button 
+            className={`sidebar-tab ${activeTab === 'preferences' ? 'active' : ''}`}
+            onClick={() => setActiveTab('preferences')}
+          >
+            <FaPalette className="tab-icon" />
+            Preferences
+          </button>
+          <button 
+            className={`sidebar-tab ${activeTab === 'account' ? 'active' : ''}`}
+            onClick={() => setActiveTab('account')}
+          >
+            <FaTrash className="tab-icon" />
+            Account
           </button>
         </div>
         
@@ -293,39 +462,41 @@ const ProfileSettings = () => {
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="fullName">Full Name</label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
-                  />
+                  <div className="input-with-icon">
+                    <FaUser className="input-icon" />
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      placeholder="Full Name"
+                    />
+                  </div>
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
-                  <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    placeholder="Choose a username"
-                    disabled
-                  />
-                  <p className="input-hint">Username cannot be changed</p>
+                  <div className="input-with-icon">
+                    <FaUser className="input-icon" />
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                      placeholder="Username (cannot be changed)"
+                      disabled
+                    />
+                  </div>
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="bio">Bio</label>
                   <textarea
                     id="bio"
                     name="bio"
                     value={formData.bio || ''}
                     onChange={handleChange}
-                    placeholder="Tell us about yourself..."
+                    placeholder="Bio - Tell us about yourself..."
                     rows="4"
                     maxLength="200"
                   />
@@ -342,7 +513,6 @@ const ProfileSettings = () => {
                 <p className="section-description">Update your email and password</p>
                 
                 <div className="form-group">
-                  <label htmlFor="email">Email Address</label>
                   <div className="input-with-icon">
                     <FaEnvelope className="input-icon" />
                     <input
@@ -351,7 +521,7 @@ const ProfileSettings = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="Enter your email address"
+                      placeholder="Email Address"
                     />
                   </div>
                 </div>
@@ -361,7 +531,6 @@ const ProfileSettings = () => {
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="currentPassword">Current Password</label>
                   <div className="input-with-icon">
                     <FaLock className="input-icon" />
                     <input
@@ -370,7 +539,7 @@ const ProfileSettings = () => {
                       name="currentPassword"
                       value={formData.currentPassword}
                       onChange={handleChange}
-                      placeholder="Enter current password"
+                      placeholder="Current Password"
                     />
                   </div>
                   {errors.currentPassword && (
@@ -379,7 +548,6 @@ const ProfileSettings = () => {
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="newPassword">New Password</label>
                   <div className="input-with-icon">
                     <FaLock className="input-icon" />
                     <input
@@ -388,7 +556,7 @@ const ProfileSettings = () => {
                       name="newPassword"
                       value={formData.newPassword}
                       onChange={handleChange}
-                      placeholder="Enter new password"
+                      placeholder="New Password"
                     />
                   </div>
                   {errors.newPassword && (
@@ -397,7 +565,6 @@ const ProfileSettings = () => {
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm New Password</label>
                   <div className="input-with-icon">
                     <FaLock className="input-icon" />
                     <input
@@ -406,7 +573,7 @@ const ProfileSettings = () => {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleChange}
-                      placeholder="Confirm new password"
+                      placeholder="Confirm New Password"
                     />
                   </div>
                   {errors.confirmPassword && (
@@ -437,71 +604,520 @@ const ProfileSettings = () => {
                 <p className="section-description">Add links to your social profiles</p>
                 
                 <div className="form-group">
-                  <label htmlFor="website">
-                    <FaGlobe className="social-icon" />
-                    Website
-                  </label>
-                  <input
-                    type="url"
-                    id="website"
-                    name="website"
-                    value={formData.socialLinks.website}
-                    onChange={handleSocialLinkChange}
-                    placeholder="https://yourwebsite.com"
-                  />
+                  <div className="input-with-icon">
+                    <FaGlobe className="input-icon" />
+                    <input
+                      type="url"
+                      id="website"
+                      name="website"
+                      value={formData.socialLinks.website}
+                      onChange={handleSocialLinkChange}
+                      placeholder="Website - https://yourwebsite.com"
+                    />
+                  </div>
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="github">
-                    <FaGithub className="social-icon" />
-                    GitHub
-                  </label>
-                  <div className="input-with-prefix">
-                    <span className="input-prefix">github.com/</span>
+                  <div className="input-with-icon">
+                    <FaGithub className="input-icon" />
                     <input
                       type="text"
                       id="github"
                       name="github"
                       value={formData.socialLinks.github}
                       onChange={handleSocialLinkChange}
-                      placeholder="username"
+                      placeholder="GitHub - github.com/username"
                     />
                   </div>
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="twitter">
-                    <FaTwitter className="social-icon" />
-                    Twitter
-                  </label>
-                  <div className="input-with-prefix">
-                    <span className="input-prefix">twitter.com/</span>
+                  <div className="input-with-icon">
+                    <FaTwitter className="input-icon" />
                     <input
                       type="text"
                       id="twitter"
                       name="twitter"
                       value={formData.socialLinks.twitter}
                       onChange={handleSocialLinkChange}
-                      placeholder="username"
+                      placeholder="Twitter - twitter.com/username"
                     />
                   </div>
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="linkedin">
-                    <FaLinkedinIn className="social-icon" />
-                    LinkedIn
-                  </label>
-                  <div className="input-with-prefix">
-                    <span className="input-prefix">linkedin.com/in/</span>
+                  <div className="input-with-icon">
+                    <FaLinkedinIn className="input-icon" />
                     <input
                       type="text"
                       id="linkedin"
                       name="linkedin"
                       value={formData.socialLinks.linkedin}
                       onChange={handleSocialLinkChange}
-                      placeholder="username"
+                      placeholder="LinkedIn - linkedin.com/in/username"
                     />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Privacy & Safety Tab */}
+            {activeTab === 'privacy' && (
+              <div className="settings-section">
+                <h2>Privacy & Safety</h2>
+                <p className="section-description">Control who can see your profile and contact you</p>
+                
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaEye className="input-icon" />
+                    <select
+                      id="profileVisibility"
+                      name="profileVisibility"
+                      value={formData.profileVisibility}
+                      onChange={handleChange}
+                    >
+                      <option value="public">Public - Everyone can see my profile</option>
+                      <option value="friends">Friends Only - Only my friends can see my profile</option>
+                      <option value="private">Private - Only I can see my profile</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaComments className="input-icon" />
+                    <select
+                      id="allowMessages"
+                      name="allowMessages"
+                      value={formData.allowMessages}
+                      onChange={handleChange}
+                    >
+                      <option value="everyone">Everyone</option>
+                      <option value="friends">Friends Only</option>
+                      <option value="none">No one</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group checkbox-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="hideRealName"
+                      checked={formData.hideRealName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, hideRealName: e.target.checked }))}
+                    />
+                    <span className="checkmark"></span>
+                    <FaHide className="checkbox-icon" />
+                    Hide my real name from other users
+                  </label>
+                </div>
+
+                <div className="form-divider">
+                  <span>Parent/Guardian Information</span>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaEnvelope className="input-icon" />
+                    <input
+                      type="email"
+                      id="parentEmail"
+                      name="parentEmail"
+                      value={formData.parentEmail}
+                      onChange={handleChange}
+                      placeholder="Parent/Guardian Email"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaUser className="input-icon" />
+                    <input
+                      type="text"
+                      id="parentName"
+                      name="parentName"
+                      value={formData.parentName}
+                      onChange={handleChange}
+                      placeholder="Parent/Guardian Name"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group checkbox-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="allowParentAccess"
+                      checked={formData.allowParentAccess}
+                      onChange={(e) => setFormData(prev => ({ ...prev, allowParentAccess: e.target.checked }))}
+                    />
+                    <span className="checkmark"></span>
+                    <FaUserShield className="checkbox-icon" />
+                    Allow parent/guardian to view my progress and activity
+                  </label>
+                </div>
+
+                <div className="form-divider">
+                  <span>Blocked Users</span>
+                </div>
+
+                <div className="blocked-users-section">
+                  {formData.blockedUsers.length === 0 ? (
+                    <div className="empty-state">
+                      <FaBan className="empty-icon" />
+                      <p>No blocked users</p>
+                      <span>Users you block won't be able to message you or see your profile.</span>
+                    </div>
+                  ) : (
+                    <div className="blocked-users-list">
+                      {formData.blockedUsers.map(user => (
+                        <div key={user.id} className="blocked-user-item">
+                          <div className="user-info">
+                            <div className="user-avatar">
+                              <FaUser />
+                            </div>
+                            <div className="user-details">
+                              <h4>{user.name}</h4>
+                              <span className="username">@{user.username}</span>
+                              <div className="block-info">
+                                <span className="block-date">Blocked on {new Date(user.blockedDate).toLocaleDateString()}</span>
+                                <span className="block-reason">Reason: {user.reason}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <button 
+                            type="button"
+                            className="unblock-button"
+                            onClick={() => handleUnblockUser(user.id)}
+                            title="Unblock user"
+                          >
+                            <FaUserTimes />
+                            Unblock
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Notifications Tab */}
+            {activeTab === 'notifications' && (
+              <div className="settings-section">
+                <h2>Notification Preferences</h2>
+                <p className="section-description">Choose what notifications you want to receive</p>
+                
+                <div className="notification-group">
+                  <h3>Learning & Progress</h3>
+                  <div className="notification-items">
+                    <div className="form-group checkbox-group">
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          name="achievementAlerts"
+                          checked={formData.achievementAlerts}
+                          onChange={(e) => setFormData(prev => ({ ...prev, achievementAlerts: e.target.checked }))}
+                        />
+                        <span className="checkmark"></span>
+                        <FaTrophy className="checkbox-icon" />
+                        Achievement alerts - Get notified when you earn badges
+                      </label>
+                    </div>
+
+                    <div className="form-group checkbox-group">
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          name="challengeReminders"
+                          checked={formData.challengeReminders}
+                          onChange={(e) => setFormData(prev => ({ ...prev, challengeReminders: e.target.checked }))}
+                        />
+                        <span className="checkmark"></span>
+                        <FaClock className="checkbox-icon" />
+                        Challenge reminders - Daily coding reminders
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="notification-group">
+                  <h3>Social & Community</h3>
+                  <div className="notification-items">
+                    <div className="form-group checkbox-group">
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          name="communityUpdates"
+                          checked={formData.communityUpdates}
+                          onChange={(e) => setFormData(prev => ({ ...prev, communityUpdates: e.target.checked }))}
+                        />
+                        <span className="checkmark"></span>
+                        <FaUsers className="checkbox-icon" />
+                        Community updates - Forum posts and discussions
+                      </label>
+                    </div>
+
+                    <div className="form-group checkbox-group">
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          name="eventNotifications"
+                          checked={formData.eventNotifications}
+                          onChange={(e) => setFormData(prev => ({ ...prev, eventNotifications: e.target.checked }))}
+                        />
+                        <span className="checkmark"></span>
+                        <FaCalendar className="checkbox-icon" />
+                        Event notifications - Upcoming coding events
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="notification-group">
+                  <h3>Email Settings</h3>
+                  <div className="notification-items">
+                    <div className="form-group checkbox-group">
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          name="emailNotifications"
+                          checked={formData.emailNotifications}
+                          onChange={(e) => setFormData(prev => ({ ...prev, emailNotifications: e.target.checked }))}
+                        />
+                        <span className="checkmark"></span>
+                        <FaBell className="checkbox-icon" />
+                        Email notifications - Receive updates via email
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Preferences Tab */}
+            {activeTab === 'preferences' && (
+              <div className="settings-section">
+                <h2>Preferences</h2>
+                <p className="section-description">Customize your PyGolfers experience</p>
+                
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaPalette className="input-icon" />
+                    <select
+                      id="theme"
+                      name="theme"
+                      value={formData.theme}
+                      onChange={handleChange}
+                    >
+                      <option value="light">Light Mode</option>
+                      <option value="dark">Dark Mode</option>
+                      <option value="auto">Auto (System)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaGlobe className="input-icon" />
+                    <select
+                      id="language"
+                      name="language"
+                      value={formData.language}
+                      onChange={handleChange}
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                      <option value="fr">French</option>
+                      <option value="de">German</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaChartLine className="input-icon" />
+                    <select
+                      id="difficultyLevel"
+                      name="difficultyLevel"
+                      value={formData.difficultyLevel}
+                      onChange={handleChange}
+                    >
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaEnvelope className="input-icon" />
+                    <select
+                      id="emailFrequency"
+                      name="emailFrequency"
+                      value={formData.emailFrequency}
+                      onChange={handleChange}
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="never">Never</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-divider">
+                  <span>Code Editor Preferences</span>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaPalette className="input-icon" />
+                    <select
+                      id="editorTheme"
+                      name="editorTheme"
+                      value={formData.editorTheme || 'vs-dark'}
+                      onChange={handleChange}
+                    >
+                      <option value="vs-dark">VS Code Dark</option>
+                      <option value="vs-light">VS Code Light</option>
+                      <option value="monokai">Monokai</option>
+                      <option value="solarized-light">Solarized Light</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <div className="input-with-icon">
+                    <FaChartLine className="input-icon" />
+                    <select
+                      id="fontSize"
+                      name="fontSize"
+                      value={formData.fontSize || 'medium'}
+                      onChange={handleChange}
+                    >
+                      <option value="small">Small (12px)</option>
+                      <option value="medium">Medium (14px)</option>
+                      <option value="large">Large (16px)</option>
+                      <option value="xlarge">Extra Large (18px)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-divider">
+                  <span>Accessibility</span>
+                </div>
+
+                <div className="form-group checkbox-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="screenReaderSupport"
+                      checked={formData.screenReaderSupport || false}
+                      onChange={(e) => setFormData(prev => ({ ...prev, screenReaderSupport: e.target.checked }))}
+                    />
+                    <span className="checkmark"></span>
+                    <FaInfoCircle className="checkbox-icon" />
+                    Enable screen reader support
+                  </label>
+                </div>
+
+                <div className="form-group checkbox-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="reduceAnimations"
+                      checked={formData.reduceAnimations || false}
+                      onChange={(e) => setFormData(prev => ({ ...prev, reduceAnimations: e.target.checked }))}
+                    />
+                    <span className="checkmark"></span>
+                    <FaPalette className="checkbox-icon" />
+                    Reduce animations for better performance
+                  </label>
+                </div>
+              </div>
+            )}
+            
+            {/* Account Management Tab */}
+            {activeTab === 'account' && (
+              <div className="settings-section">
+                <h2>Account Management</h2>
+                <p className="section-description">Manage your account data and settings</p>
+                
+                <div className="form-divider">
+                  <span>Data & Privacy</span>
+                </div>
+
+                <div className="privacy-actions">
+                  <button 
+                    type="button" 
+                    className="btn-secondary"
+                    onClick={() => {
+                      // Handle data download
+                      console.log('Downloading user data...');
+                    }}
+                  >
+                    <FaDownload className="btn-icon" />
+                    Download My Data
+                  </button>
+                  
+                  <button 
+                    type="button" 
+                    className="btn-secondary"
+                    onClick={() => {
+                      // Handle progress export
+                      console.log('Exporting progress...');
+                    }}
+                  >
+                    <FaFileExport className="btn-icon" />
+                    Export Progress
+                  </button>
+                </div>
+
+                <div className="form-divider">
+                  <span>Danger Zone</span>
+                </div>
+
+                <div className="danger-zone">
+                  <div className="danger-action">
+                    <div className="danger-content">
+                      <h4>Deactivate Account</h4>
+                      <p>Temporarily disable your account. You can reactivate it anytime by logging back in.</p>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="btn-warning"
+                      onClick={() => {
+                        if (window.confirm('Are you sure you want to deactivate your account? You can reactivate it by logging back in.')) {
+                          console.log('Deactivating account...');
+                        }
+                      }}
+                    >
+                      Deactivate Account
+                    </button>
+                  </div>
+                  
+                  <div className="danger-action">
+                    <div className="danger-content">
+                      <h4>Delete Account</h4>
+                      <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="btn-danger"
+                      onClick={() => {
+                        if (window.confirm('Are you sure you want to permanently delete your account? This action cannot be undone!')) {
+                          if (window.confirm('This will delete ALL your data including progress, achievements, and challenges. Type "DELETE" to confirm.')) {
+                            console.log('Deleting account...');
+                          }
+                        }
+                      }}
+                    >
+                      Delete Account
+                    </button>
                   </div>
                 </div>
               </div>

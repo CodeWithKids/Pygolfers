@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { FaPaperPlane, FaPhone, FaEnvelope, FaMapMarkerAlt, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import { 
+  FaPaperPlane, 
+  FaPhone, 
+  FaEnvelope, 
+  FaMapMarkerAlt, 
+  FaSpinner, 
+  FaCheckCircle,
+  FaTools,
+  FaUser,
+  FaCreditCard,
+  FaShieldAlt,
+  FaQuestionCircle,
+  FaClock,
+  FaHeart,
+  FaPython
+} from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Contact.css';
 import '../styles/Layout.css';
@@ -8,16 +23,34 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    subject: '',
+    userType: 'student',
     message: ''
   });
   const [errors, setErrors] = useState({
     name: '',
     email: '',
+    subject: '',
+    userType: '',
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const contactReasons = [
+    { value: 'technical', label: '🔧 Technical Help', icon: FaTools },
+    { value: 'account', label: '👤 Account Issues', icon: FaUser },
+    { value: 'billing', label: '💳 Billing Question', icon: FaCreditCard },
+    { value: 'safety', label: '🛡️ Safety Concern', icon: FaShieldAlt },
+    { value: 'general', label: '💬 General Question', icon: FaQuestionCircle }
+  ];
+
+  const userTypes = [
+    { value: 'student', label: '👨‍🎓 Student (8-14 years)', icon: FaUser },
+    { value: 'parent', label: '👨‍👩‍👧‍👦 Parent/Guardian', icon: FaHeart },
+    { value: 'teacher', label: '👩‍🏫 Teacher/Educator', icon: FaPython }
+  ];
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,7 +68,8 @@ const Contact = () => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
-
+    if (!formData.subject) newErrors.subject = 'Please select a subject';
+    if (!formData.userType) newErrors.userType = 'Please select your role';
     if (!formData.message.trim()) newErrors.message = 'Message is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -64,8 +98,8 @@ const Contact = () => {
       console.log('Form submitted:', formData);
       
       // Reset form
-      setFormData({ name: '', email: '', message: '' });
-      setErrors({ name: '', email: '', message: '' });
+      setFormData({ name: '', email: '', subject: '', userType: 'student', message: '' });
+      setErrors({ name: '', email: '', subject: '', userType: '', message: '' });
       setIsSubmitted(true);
       
       // Reset success message after 5 seconds
@@ -94,10 +128,10 @@ const Contact = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1>Get in Touch</h1>
+              <h1>Got Questions About PyGolfers? 🐍⛳</h1>
               <div className="header-divider"></div>
               <p className="subtitle">
-                Have questions or want to collaborate? Drop us a message and we'll get back to you as soon as possible.
+                Our friendly team is here to help young coders and their families! Whether you need technical help, have questions about your account, or just want to say hello, we'd love to hear from you.
               </p>
             </motion.div>
           </div>
@@ -110,8 +144,8 @@ const Contact = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <div className="form-header">
-                <h2>Send Us a Message</h2>
-                <p>We typically respond within 24 hours</p>
+                <h2>Send Us a Message 💌</h2>
+                <p>We typically respond within 24 hours - faster for urgent safety concerns!</p>
               </div>
           <AnimatePresence mode="wait">
             {!isSubmitted ? (
@@ -160,6 +194,58 @@ const Contact = () => {
                   </div>
                   {errors.email && <span className="error-message">
                     <i className="error-icon">!</i> {errors.email}
+                  </span>}
+                </div>
+
+                {/* Subject Selection */}
+                <div className="form-group">
+                  <label className="form-label">What can we help you with? *</label>
+                  <div className="radio-group">
+                    {contactReasons.map((reason) => (
+                      <label key={reason.value} className="radio-option">
+                        <input
+                          type="radio"
+                          name="subject"
+                          value={reason.value}
+                          checked={formData.subject === reason.value}
+                          onChange={handleChange}
+                          onFocus={() => handleInputFocus('subject')}
+                        />
+                        <span className="radio-custom">
+                          <reason.icon />
+                          {reason.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.subject && <span className="error-message">
+                    <i className="error-icon">!</i> {errors.subject}
+                  </span>}
+                </div>
+
+                {/* User Type Selection */}
+                <div className="form-group">
+                  <label className="form-label">I am a: *</label>
+                  <div className="radio-group">
+                    {userTypes.map((type) => (
+                      <label key={type.value} className="radio-option">
+                        <input
+                          type="radio"
+                          name="userType"
+                          value={type.value}
+                          checked={formData.userType === type.value}
+                          onChange={handleChange}
+                          onFocus={() => handleInputFocus('userType')}
+                        />
+                        <span className="radio-custom">
+                          <type.icon />
+                          {type.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.userType && <span className="error-message">
+                    <i className="error-icon">!</i> {errors.userType}
                   </span>}
                 </div>
 
@@ -270,7 +356,7 @@ const Contact = () => {
           transition={{ delay: 0.3 }}
         >
           <h2>Contact Information</h2>
-          <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>
             We're here to help and answer any questions you might have. Reach out to us through any of these channels.
           </p>
           
@@ -284,9 +370,9 @@ const Contact = () => {
                 <FaPhone />
               </div>
               <div>
-                <h3 style={{ margin: '0 0 0.5rem', color: 'var(--text)' }}>Phone & WhatsApp</h3>
-                <p>+254 746 187 309</p>
-                <p style={{ fontSize: '0.9em', color: 'var(--text-light)', marginTop: '0.25rem' }}>Available 9:00 AM - 5:00 PM EAT</p>
+                <h3 style={{ margin: '0 0 0.5rem', color: 'var(--text-primary)' }}>Phone & WhatsApp</h3>
+                <p style={{ color: 'var(--text-primary)' }}>+254 746 187 309</p>
+                <p style={{ fontSize: '0.9em', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Available 9:00 AM - 5:00 PM EAT</p>
               </div>
             </motion.div>
             
@@ -299,8 +385,8 @@ const Contact = () => {
                 <FaEnvelope />
               </div>
               <div>
-                <h3 style={{ margin: '0 0 0.5rem', color: 'var(--text)' }}>Email Us</h3>
-                <p>info@codewithkids.africa</p>
+                <h3 style={{ margin: '0 0 0.5rem', color: 'var(--text-primary)' }}>Email Us</h3>
+                <p style={{ color: 'var(--text-primary)' }}>info@codewithkids.africa</p>
               </div>
             </motion.div>
             
@@ -313,12 +399,34 @@ const Contact = () => {
                 <FaMapMarkerAlt />
               </div>
               <div>
-                <h3 style={{ margin: '0 0 0.5rem', color: 'var(--text)' }}>Visit Us</h3>
-                <p>H138, Olympic Estate, Court C</p>
-                <p>Kibera, Nairobi, Kenya</p>
-                <p style={{ fontSize: '0.9em', color: 'var(--text-light)', marginTop: '0.25rem' }}>By appointment only</p>
+                <h3 style={{ margin: '0 0 0.5rem', color: 'var(--text-primary)' }}>Visit Us</h3>
+                <p style={{ color: 'var(--text-primary)' }}>H138, Olympic Estate, Court C</p>
+                <p style={{ color: 'var(--text-primary)' }}>Kibera, Nairobi, Kenya</p>
+                <p style={{ fontSize: '0.9em', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>By appointment only</p>
               </div>
             </motion.div>
+          </div>
+          
+          {/* Business Hours */}
+          <div className="business-hours">
+            <h3>📅 Business Hours</h3>
+            <div className="hours-list">
+              <div className="hours-item">
+                <span className="day">Monday - Friday</span>
+                <span className="time">9:00 AM - 5:00 PM EAT</span>
+              </div>
+              <div className="hours-item">
+                <span className="day">Saturday</span>
+                <span className="time">10:00 AM - 2:00 PM EAT</span>
+              </div>
+              <div className="hours-item">
+                <span className="day">Sunday</span>
+                <span className="time closed">Closed</span>
+              </div>
+            </div>
+            <p className="hours-note">
+              <FaClock /> We respond to urgent safety concerns 24/7
+            </p>
           </div>
         </motion.div>
       </div>

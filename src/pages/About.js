@@ -7,7 +7,12 @@ import {
   FaChild, 
   FaGithub, 
   FaTwitter, 
-  FaLinkedin 
+  FaLinkedin,
+  FaCode,
+  FaGlobe,
+  FaHeart,
+  FaShieldAlt,
+  FaChevronDown
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import './About.css';
@@ -85,13 +90,6 @@ const About = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        padding: '0 2rem 4rem',
-        width: '100%',
-        boxSizing: 'border-box'
-      }}
     >
       <section className="hero-section">
         <div className="container">
@@ -127,100 +125,84 @@ const About = () => {
         >
           <h2>Welcome to PyGolfers!</h2>
           <p>PyGolfers is a fun and friendly place where kids become coding champions! Our mission is to make learning Python exciting, creative, and rewarding for everyone ages 8–14.</p>
+          <p>Founded in 2023, we've created a safe, fun environment where young coders can develop their Python skills while competing with friends and earning cool achievement badges. Our platform is designed specifically for kids and families, with built-in safety features and parental controls.</p>
           <p>PyGolfers borrows the concept of golf—but with code! In traditional golf, the goal is to get the ball in the hole using as few strokes as possible. In PyGolfers, the "golf course" is a coding puzzle, and your "strokes" are lines of Python code. Just like in golf, the challenge is to solve each puzzle using the shortest, most efficient solution you can—the fewer lines of code you write, the better your score! This playful approach turns every Python puzzle into a fun game of skill and strategy, making coding feel like a creative adventure rather than just another lesson.</p>
         </motion.section>
 
+        {/* Stats Section */}
         <motion.section 
-          className="about-section"
+          className="stats-section"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          style={{
-            padding: '3rem 2rem'
-          }}
         >
-          <h2 style={{
-            textAlign: 'center',
-            marginBottom: '2.5rem',
-            fontSize: '2.25rem',
-            color: 'var(--dark)'
-          }}>
-            Why Choose <span style={{ color: 'var(--primary)' }}>PyGolfers</span>?
+          <div className="stats-container">
+            <h2>PyGolfers by the Numbers</h2>
+            <div className="stats-grid">
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <FaCode />
+                </div>
+                <div className="stat-number">500+</div>
+                <div className="stat-label">Challenges Solved</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <FaUsers />
+                </div>
+                <div className="stat-number">1,000+</div>
+                <div className="stat-label">Active Students</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <FaGlobe />
+                </div>
+                <div className="stat-number">50+</div>
+                <div className="stat-label">Countries</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon">
+                  <FaHeart />
+                </div>
+                <div className="stat-number">95%</div>
+                <div className="stat-label">Parent Satisfaction</div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        <motion.section 
+          className="features-section"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h2 className="section-title">
+            Why Choose <span className="highlight">PyGolfers</span>?
           </h2>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'nowrap',
-            justifyContent: 'center',
-            gap: '2rem',
-            overflowX: 'auto',
-            padding: '1rem 0',
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'var(--primary) transparent',
-            WebkitOverflowScrolling: 'touch',
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none'
-          }}>
+          <div className="features-grid">
             {features.map((feature) => (
               <motion.div 
                 key={feature.id}
-                style={{
-                  flex: '0 0 auto',
-                  width: '280px',
-                  background: 'white',
-                  borderRadius: 'var(--border-radius)',
-                  padding: '2rem',
-                  textAlign: 'center',
-                  boxShadow: 'var(--shadow-sm)',
-                  border: '1px solid var(--border-color)',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  minHeight: '300px'
-                }}
+                className="feature-card"
                 whileHover={{ 
                   transform: 'translateY(-5px)',
                   boxShadow: 'var(--shadow-md)'
                 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
-                <div style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '50%',
-                  background: 'var(--bg-tertiary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '1.5rem',
-                  color: 'var(--primary)',
-                  fontSize: '2rem'
-                }}>
-                  {React.cloneElement(feature.icon, { style: { fontSize: '2rem' } })}
+                <div className="feature-icon-container">
+                  {feature.icon}
                 </div>
-                <h3 style={{
-                  color: 'var(--dark)',
-                  marginBottom: '1rem',
-                  fontSize: '1.4rem',
-                  fontWeight: 600
-                }}>
+                <h3 className="feature-title">
                   {feature.title}
                 </h3>
-                <p style={{
-                  color: 'var(--text-secondary)',
-                  lineHeight: 1.6,
-                  margin: 0,
-                  flex: 1,
-                  display: 'flex',
-                  alignItems: 'center'
-                }}>
+                <p className="feature-description">
                   {feature.description}
                 </p>
               </motion.div>
             ))}
           </div>
-          {/* Hide scrollbar for Webkit browsers */}
-          <style jsx>{"\n            div::-webkit-scrollbar {\n              display: none;\n            }\n          "}</style>
         </motion.section>
 
         <motion.section 
@@ -481,6 +463,62 @@ const About = () => {
             ))}
           </div>
         </motion.section>
+
+        {/* Testimonials Section */}
+        <motion.section 
+          className="testimonials-section"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="testimonials-container">
+            <h2>What Kids & Parents Say</h2>
+            <div className="testimonials-grid">
+              <div className="testimonial-card">
+                <div className="quote-icon">"</div>
+                <div className="testimonial-content">
+                  <p>"PyGolfers made coding fun! I love the challenges and earning badges!"</p>
+                </div>
+                <div className="testimonial-author">
+                  <img src="https://i.pravatar.cc/150?img=1" alt="Alex" className="author-avatar" />
+                  <div className="author-info">
+                    <h4>Alex, age 12</h4>
+                    <span>Student</span>
+                    <div className="rating">⭐⭐⭐⭐⭐</div>
+                  </div>
+                </div>
+              </div>
+              <div className="testimonial-card">
+                <div className="quote-icon">"</div>
+                <div className="testimonial-content">
+                  <p>"My daughter went from hating coding to asking for more challenges every day!"</p>
+                </div>
+                <div className="testimonial-author">
+                  <img src="https://i.pravatar.cc/150?img=2" alt="Sarah" className="author-avatar" />
+                  <div className="author-info">
+                    <h4>Sarah M.</h4>
+                    <span>Parent</span>
+                    <div className="rating">⭐⭐⭐⭐⭐</div>
+                  </div>
+                </div>
+              </div>
+              <div className="testimonial-card">
+                <div className="quote-icon">"</div>
+                <div className="testimonial-content">
+                  <p>"The golf concept is brilliant! It makes coding feel like a game, not homework."</p>
+                </div>
+                <div className="testimonial-author">
+                  <img src="https://i.pravatar.cc/150?img=3" alt="Marcus" className="author-avatar" />
+                  <div className="author-info">
+                    <h4>Marcus, age 14</h4>
+                    <span>Student</span>
+                    <div className="rating">⭐⭐⭐⭐⭐</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
         
         <motion.section 
           className="about-section"
@@ -539,14 +577,93 @@ const About = () => {
           </div>
         </motion.section>
 
+        {/* FAQ Section */}
         <motion.section 
-          className="about-section"
+          className="faq-section"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          <h2>Meet the Creators</h2>
-          <p>PyGolfers was built by a team who loves coding, teaching, and making learning joyful. We believe everyone can be a coder—and we're here to help you on your journey.</p>
+          <div className="faq-container">
+            <h2>Frequently Asked Questions</h2>
+            <div className="faq-grid">
+              <div className="faq-item">
+                <h3>Is PyGolfers free?</h3>
+                <p>Yes! We offer free challenges and basic features. Premium features are available for advanced learners.</p>
+              </div>
+              <div className="faq-item">
+                <h3>What age is PyGolfers for?</h3>
+                <p>PyGolfers is designed for kids aged 8-14, but anyone can join and learn!</p>
+              </div>
+              <div className="faq-item">
+                <h3>Do I need Python experience?</h3>
+                <p>No! We have beginner-friendly challenges and tutorials to get you started.</p>
+              </div>
+              <div className="faq-item">
+                <h3>Is it safe for kids?</h3>
+                <p>Absolutely! We're COPPA compliant with parental controls and moderated community.</p>
+              </div>
+              <div className="faq-item">
+                <h3>Can parents track progress?</h3>
+                <p>Yes! Parents can view their child's achievements and progress with permission.</p>
+              </div>
+              <div className="faq-item">
+                <h3>How does code golf work?</h3>
+                <p>Like golf, you try to solve coding challenges using the fewest lines of code possible!</p>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Safety Section */}
+        <motion.section 
+          className="safety-section"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          <div className="safety-container">
+            <h2>🛡️ Safety First</h2>
+            <p>PyGolfers is COPPA compliant and designed with kids' safety in mind.</p>
+            <div className="safety-features">
+              <div className="safety-item">
+                <div className="safety-icon">
+                  <FaShieldAlt />
+                </div>
+                <div className="safety-content">
+                  <h4>Moderated Community</h4>
+                  <p>All content is reviewed by our team</p>
+                </div>
+              </div>
+              <div className="safety-item">
+                <div className="safety-icon">
+                  <FaChild />
+                </div>
+                <div className="safety-content">
+                  <h4>Parental Controls</h4>
+                  <p>Parents can monitor and control access</p>
+                </div>
+              </div>
+              <div className="safety-item">
+                <div className="safety-icon">
+                  <FaUsers />
+                </div>
+                <div className="safety-content">
+                  <h4>No Personal Data Sharing</h4>
+                  <p>We protect your privacy completely</p>
+                </div>
+              </div>
+              <div className="safety-item">
+                <div className="safety-icon">
+                  <FaHeart />
+                </div>
+                <div className="safety-content">
+                  <h4>Safe Learning Environment</h4>
+                  <p>Positive, supportive community for kids</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.section>
 
         <motion.section 
@@ -562,46 +679,46 @@ const About = () => {
             borderRadius: 'var(--border-radius)'
           }}
         >
-          <h2 style={{ color: 'white', marginBottom: '1rem' }}>Ready to Start Your Coding Journey?</h2>
-          <p style={{ maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>Join PyGolfers today and start solving fun Python challenges!</p>
-          <div style={{
-            display: 'flex',
-            gap: '1rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}>
-            <motion.a 
-              href="/signup" 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                padding: '0.75rem 2rem',
-                borderRadius: '8px',
-                background: 'var(--secondary)',
-                color: 'var(--dark)',
-                textDecoration: 'none',
-                fontWeight: 600,
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-              }}
-            >
-              Sign Up Now
-            </motion.a>
-            <motion.a 
-              href="/" 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                padding: '0.75rem 2rem',
-                borderRadius: '8px',
-                background: 'transparent',
-                border: '2px solid white',
-                color: 'white',
-                textDecoration: 'none',
-                fontWeight: 600
-              }}
-            >
-              Back to Home
-            </motion.a>
+          <h2 style={{ color: 'white', marginBottom: '1rem' }}>Ready to Become a Python Champion? 🏆</h2>
+          <p style={{ maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>Join 1,000+ kids learning to code with PyGolfers!</p>
+          
+          <div className="cta-options">
+            <div className="cta-card">
+              <h3>For Kids</h3>
+              <p>Start solving challenges today!</p>
+              <motion.a 
+                href="/signup" 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="cta-button primary"
+              >
+                Sign Up Free
+              </motion.a>
+            </div>
+            <div className="cta-card">
+              <h3>For Parents</h3>
+              <p>See what your child will learn</p>
+              <motion.a 
+                href="/contact" 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="cta-button secondary"
+              >
+                Learn More
+              </motion.a>
+            </div>
+            <div className="cta-card">
+              <h3>For Teachers</h3>
+              <p>Bring PyGolfers to your classroom</p>
+              <motion.a 
+                href="/contact" 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="cta-button secondary"
+              >
+                Get Started
+              </motion.a>
+            </div>
           </div>
         </motion.section>
       </main>

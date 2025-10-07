@@ -1,24 +1,5 @@
 /* Profile Page Styles */
-:root {
-  --primary: #36B6A8;
-  --primary-light: #e0f2f1;
-  --primary-dark: #2a8a7f;
-  --secondary: #F76C7B;
-  --bg-light: #F8FAFC;
-  --bg-secondary: #f0f9f8;
-  --bg-tertiary: #e6f3f2;
-  --text-primary: #1A202C;
-  --text-secondary: #4A5568;
-  --text-muted: #718096;
-  --border-color: #E2E8F0;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --border-radius: 16px;
-  --border-radius-sm: 8px;
-}
+/* Using PyGolfers theme colors from App.css */
 
 /* Base Styles */
 .profile-bio {
@@ -56,6 +37,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  background: var(--bg-secondary);
+  min-height: 100vh;
 }
 
 /* Header Section */
@@ -67,10 +50,10 @@
   text-align: center;
   margin: 0 auto 3rem;
   padding: 5rem 2rem 2.5rem;
-  border-radius: var(--border-radius);
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  background: var(--bg-primary);
+  box-shadow: 0 12px 30px rgba(54, 182, 168, 0.15);
+  border: 2px solid var(--border-color);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   position: relative;
@@ -84,7 +67,7 @@
   left: 0;
   right: 0;
   height: 6px;
-  background: var(--primary);
+  background: linear-gradient(90deg, var(--teal), var(--yellow), var(--pink));
 }
 
 
@@ -139,16 +122,16 @@
   height: 140px;
   border-radius: 50%;
   margin-bottom: 1.5rem;
-  background: var(--primary-light);
-  border: 4px solid white;
-  box-shadow: var(--shadow-md);
+  background: var(--bg-secondary);
+  border: 4px solid var(--teal);
+  box-shadow: 0 8px 25px rgba(54, 182, 168, 0.2);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-avatar:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 35px rgba(54, 182, 168, 0.3);
 }
 
 .avatar {
@@ -257,12 +240,69 @@
 
 .social-links a {
   color: var(--text-secondary);
-  font-size: 1.25rem;
-  transition: color 0.2s ease;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
 }
 
 .social-links a:hover {
-  color: var(--primary);
+  color: var(--teal);
+  background: var(--teal);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(54, 182, 168, 0.3);
+}
+
+.profile-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.profile-actions .btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-actions .btn-primary {
+  background: var(--teal);
+  color: white;
+  border: 2px solid var(--teal);
+}
+
+.profile-actions .btn-primary:hover {
+  background: var(--pink);
+  border-color: var(--pink);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(247, 108, 123, 0.3);
+}
+
+.profile-actions .btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.profile-actions .btn-secondary:hover {
+  background: var(--yellow);
+  color: var(--dark-blue);
+  border-color: var(--yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 212, 59, 0.3);
 }
 
 .edit-profile-btn {
@@ -352,40 +392,63 @@
 .profile-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
 
-.stat-item {
+.stat {
   text-align: center;
   min-width: 100px;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 1rem 1.5rem;
-  border-radius: var(--border-radius-sm);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  padding: 1.5rem 1rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(54, 182, 168, 0.1);
+  border: 2px solid var(--border-color);
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.stat-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  background: white;
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--teal);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(54, 182, 168, 0.2);
+  border-color: var(--teal);
+}
+
+.stat:hover::before {
+  opacity: 1;
+}
+
+.stat-icon {
+  color: var(--teal);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .stat-value {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: var(--primary);
-  color: transparent;
+  color: var(--teal);
   margin-bottom: 0.25rem;
   display: block;
   line-height: 1.2;
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;

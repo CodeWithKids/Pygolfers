@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaTimes, FaCheckCircle, FaUser, FaEnvelope, FaPhone, FaInfoCircle, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaTimes, FaCheckCircle, FaMapMarkerAlt } from 'react-icons/fa';
 
 const EventRegistrationModal = ({ event, currentUser, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -85,46 +85,39 @@ const EventRegistrationModal = ({ event, currentUser, onClose, onSubmit }) => {
               
               <form onSubmit={handleSubmit} className="registration-form">
                 <div className="form-group">
-                  <label htmlFor="name">
-                    <FaUser className="input-icon" /> Full Name
-                  </label>
                   <input
                     type="text"
                     id="name"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
+                    placeholder="Full Name"
                     required
                     disabled={!!currentUser}
                   />
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="email">
-                    <FaEnvelope className="input-icon" /> Email
-                  </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    placeholder="Email Address"
                     required
                     disabled={!!currentUser}
                   />
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="phone">
-                    <FaPhone className="input-icon" /> Phone Number (Optional)
-                  </label>
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="+254 700 000000"
+                    placeholder="Phone Number (Optional)"
                   />
                 </div>
                 

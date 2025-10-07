@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/Buttons.css";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaPlay, FaUser, FaCog, FaSignOutAlt, FaChevronDown, FaTrophy, FaCode, FaUsers, FaChartLine, FaStar, FaQuoteLeft, FaGithub, FaTwitter, FaDiscord } from "react-icons/fa";
+import { FaPlay, FaUser, FaCog, FaSignOutAlt, FaChevronDown, FaTrophy, FaCode, FaUsers, FaChartLine, FaStar, FaQuoteLeft, FaGithub, FaTwitter, FaDiscord, FaGraduationCap, FaChalkboardTeacher, FaUserFriends, FaShieldAlt, FaHeart, FaGamepad, FaMedal, FaRocket } from "react-icons/fa";
 import { motion } from 'framer-motion';
 import CodePreview from './components/CodePreview';
 import './components/CodePreview.css';
@@ -20,6 +20,8 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/profile/Profile";
 import ProfileSettings from "./pages/profile/ProfileSettings";
 import Events from "./pages/Events";
+import ParentDashboard from "./components/ParentDashboard";
+import CommunityForum from "./components/CommunityForum";
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   <motion.div 
@@ -77,73 +79,100 @@ const Home = () => {
   }, []);
 
   
+  const userTypes = [
+    {
+      role: 'Learner',
+      icon: FaGraduationCap,
+      title: 'I\'m a Learner',
+      description: 'Solve fun Python challenges and earn cool badges!',
+      color: '#3B82F6',
+      features: ['Code Golf Challenges', 'Achievement Badges', 'Leaderboards', 'Safe Community']
+    },
+    {
+      role: 'Teacher',
+      icon: FaChalkboardTeacher,
+      title: 'I\'m a Teacher',
+      description: 'Create classrooms and track student progress.',
+      color: '#8B5CF6',
+      features: ['Classroom Management', 'Student Analytics', 'Custom Challenges', 'Progress Reports']
+    },
+    {
+      role: 'Parent',
+      icon: FaUserFriends,
+      title: 'I\'m a Parent',
+      description: 'Support your child\'s coding journey safely.',
+      color: '#F59E0B',
+      features: ['Progress Monitoring', 'Safety Features', 'Achievement Tracking', 'Parent Dashboard']
+    }
+  ];
+
   const features = [
     {
-      icon: FaCode,
-      title: 'Sharpen Your Skills',
-      description: 'Improve your Python knowledge by solving creative challenges with minimal code.'
+      icon: FaGamepad,
+      title: 'Learn Through Play',
+      description: 'Turn coding into a fun game! Solve challenges with the fewest characters possible.'
     },
     {
       icon: FaTrophy,
-      title: 'Compete & Learn',
-      description: 'Climb the leaderboards and see how your solutions compare to others.'
+      title: 'Earn Cool Badges',
+      description: 'Collect achievement badges as you master new Python skills and techniques.'
     },
     {
       icon: FaUsers,
-      title: 'Join a Community',
-      description: 'Connect with fellow Python enthusiasts and learn from each other.'
+      title: 'Safe Community',
+      description: 'Connect with other young coders in a moderated, kid-friendly environment.'
     },
     {
-      icon: FaChartLine,
-      title: 'Track Progress',
-      description: 'Monitor your improvement with detailed statistics and achievements.'
+      icon: FaRocket,
+      title: 'Level Up Fast',
+      description: 'Track your progress and see how you\'re becoming a Python champion!'
     }
   ];
 
   const steps = [
     {
       number: '01',
-      title: 'Choose a Challenge',
-      description: 'Pick from our collection of Python challenges of varying difficulty levels.'
+      title: 'Pick a Fun Challenge',
+      description: 'Choose from our collection of kid-friendly Python challenges! Start easy and work your way up.'
     },
     {
       number: '02',
-      title: 'Write Your Solution',
-      description: 'Create the most concise Python solution you can think of.'
+      title: 'Write Your Code',
+      description: 'Create the shortest Python solution you can! The fewer characters, the better your score.'
     },
     {
       number: '03',
-      title: 'Submit & Compare',
-      description: 'See how your solution stacks up against others in the community.'
+      title: 'See Your Score',
+      description: 'Get instant feedback! See if you beat the "par" and how you compare to other kids.'
     },
     {
       number: '04',
-      title: 'Learn & Improve',
-      description: 'Study top solutions to learn new Python tricks and optimizations.'
+      title: 'Earn Badges & Level Up',
+      description: 'Collect cool achievement badges and watch your Python skills grow!'
     }
   ];
 
   const testimonials = [
     {
-      quote: "PyGolfers completely changed how I approach Python. I've become a much more efficient coder!",
-      author: 'Alex Johnson',
-      role: 'Python Developer',
-      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+      quote: "PyGolfers made Python so much fun! I love earning badges and competing with my friends. My code is getting shorter and shorter!",
+      author: 'Emma, Age 12',
+      role: 'Student',
+      avatar: 'https://i.pravatar.cc/150?img=1',
       rating: 5
     },
     {
-      quote: "The community is amazing and the challenges are addictive. Highly recommend for any Python enthusiast.",
-      author: 'Sam Wilson',
-      role: 'Data Scientist',
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+      quote: "As a teacher, I love how PyGolfers engages my students. They're excited about coding and actually look forward to our Python lessons!",
+      author: 'Ms. Rodriguez',
+      role: 'Computer Science Teacher',
+      avatar: 'https://i.pravatar.cc/150?img=2',
       rating: 5
     },
     {
-      quote: "I use PyGolfers to prepare for coding interviews. It's fun and educational!",
-      author: 'Taylor Smith',
-      role: 'CS Student',
-      avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
-      rating: 4
+      quote: "My daughter has learned so much Python through PyGolfers. The safety features give me peace of mind, and she loves the achievement system!",
+      author: 'Sarah Wilson',
+      role: 'Parent',
+      avatar: 'https://i.pravatar.cc/150?img=3',
+      rating: 5
     }
   ];
   
@@ -153,11 +182,11 @@ const Home = () => {
       <section className="hero">
         <div className="hero-content">
           <h1>
-            Master Python with <span className="highlight">Pygolfers</span>
+            Where Kids Become <span className="highlight">Python Champions</span>! 🐍⛳
           </h1>
           <p className="hero-subtitle">
-            Solve fun coding challenges with the fewest lines possible. 
-            Compete with friends, earn badges, and become a Python pro!
+            Master Python through fun code golf challenges! Write the shortest code possible, 
+            earn cool badges, and compete with friends in a safe, kid-friendly environment.
           </p>
           <div className="hero-buttons">
             <Link to="/challenges" className="hero-button primary-button">
@@ -169,16 +198,20 @@ const Home = () => {
           </div>
           <div className="hero-stats">
             <div className="stat-item">
-              <span className="stat-number">10K+</span>
-              <span className="stat-label">Developers</span>
+              <span className="stat-number">5K+</span>
+              <span className="stat-label">Young Coders</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">500+</span>
-              <span className="stat-label">Challenges</span>
+              <span className="stat-number">200+</span>
+              <span className="stat-label">Fun Challenges</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">50K+</span>
-              <span className="stat-label">Submissions</span>
+              <span className="stat-number">25K+</span>
+              <span className="stat-label">Solutions</span>
+            </div>
+            <div className="stat-item safety-badge">
+              <FaShieldAlt className="safety-icon" />
+              <span className="stat-label">COPPA Safe</span>
             </div>
           </div>
         </div>
@@ -194,8 +227,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* About Us Section */}
-      <section className="about-section">
+      {/* Who Is PyGolfers For Section */}
+      <section className="user-types-section">
         <div className="container">
           <motion.div 
             className="section-header"
@@ -204,32 +237,49 @@ const Home = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2>About PyGolfers</h2>
+            <h2>Who Is PyGolfers For?</h2>
+            <p>Join thousands of families learning Python together!</p>
           </motion.div>
-          <div className="about-content">
-            <motion.div 
-              className="about-text"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <p>Welcome to PyGolfers, where Python enthusiasts come together to master the art of writing concise and efficient code. Our platform is built on the principles of code golf - solving programming challenges with the fewest possible characters.</p>
-              <p>Founded in 2023, we've grown into a vibrant community of developers who believe that constraints breed creativity. Whether you're a beginner looking to improve your Python skills or an experienced coder seeking new challenges, PyGolfers offers something for everyone.</p>
-              <Link to="/about" className="about-button">Learn More About Us</Link>
-            </motion.div>
-            <motion.div 
-              className="about-image"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Python developers collaborating" />
-            </motion.div>
+          <div className="user-types-grid">
+            {userTypes.map((userType, index) => {
+              const IconComponent = userType.icon;
+              return (
+                <motion.div 
+                  key={userType.role}
+                  className="user-type-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className="user-type-icon" style={{ color: userType.color }}>
+                    <IconComponent />
+                  </div>
+                  <h3>{userType.title}</h3>
+                  <p className="user-type-description">{userType.description}</p>
+                  <ul className="user-type-features">
+                    {userType.features.map((feature, featureIndex) => (
+                      <li key={featureIndex}>
+                        <FaStar className="feature-bullet" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link 
+                    to="/register" 
+                    className="user-type-button"
+                    style={{ backgroundColor: userType.color }}
+                  >
+                    Get Started
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
+
 
       {/* Features Section */}
       <section className="features-section">
@@ -240,8 +290,8 @@ const Home = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2>Why Choose PyGolfers?</h2>
-          <p>Join thousands of Python developers who are improving their skills through code golf challenges</p>
+          <h2>Why Kids Love PyGolfers!</h2>
+          <p>Join thousands of young coders who are having fun while mastering Python</p>
         </motion.div>
         <div className="features-grid">
           {features.map((feature, index) => (
@@ -298,8 +348,8 @@ const Home = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2>What Our Users Say</h2>
-            <p>Join our community of passionate Python developers</p>
+            <h2>What Kids & Families Say</h2>
+            <p>Join our community of young coders and their families</p>
           </motion.div>
           <div className="testimonials-grid">
             {testimonials.map((testimonial, index) => (
@@ -468,7 +518,11 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
             aria-expanded={isMenuOpen}
             aria-controls="main-navigation"
           >
-            {isMenuOpen ? '✕' : ''}
+            <span className={`hamburger ${isMenuOpen ? 'active' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
           </button>
           
           <nav 
@@ -515,7 +569,6 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
                   onClick={closeMenu}
                   tabIndex={isMenuOpen ? 0 : -1}
                 >
-                  <FaTrophy style={{ marginRight: '5px' }} />
                   Leaderboard
                 </Link>
               </li>
@@ -527,6 +580,16 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
                   tabIndex={isMenuOpen ? 0 : -1}
                 >
                   Events
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/community" 
+                  className={`nav-link ${location.pathname === '/community' ? 'active' : ''}`} 
+                  onClick={closeMenu}
+                  tabIndex={isMenuOpen ? 0 : -1}
+                >
+                  Community
                 </Link>
               </li>
               <li>
@@ -681,9 +744,12 @@ const App = () => {
               <Leaderboard />
             </ProtectedRoute>
           } />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/settings" element={<ProfileSettings />} />
           <Route path="/events" element={<Events currentUser={currentUser} />} />
+          <Route path="/parent-dashboard" element={<ParentDashboard />} />
+          <Route path="/community" element={<CommunityForum />} />
         </Routes>
         <footer className="footer">
           <div className="footer-content container">

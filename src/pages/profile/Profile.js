@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React from 'react';
 import { 
   FaUser, 
   FaTrophy, 
@@ -12,82 +11,30 @@ import {
   FaTwitter,
   FaGlobe
 } from 'react-icons/fa';
+import AchievementSystem from '../../components/AchievementSystem';
 import '../../styles/Profile.css';
 
 const Profile = () => {
-  const { username } = useParams();
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        setIsLoading(true);
-        // The /api prefix will be proxied to http://localhost:3001 by setupProxy.js
-        const response = await fetch(`/api/users/${username}`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch user profile');
-        }
-        
-        const userData = await response.json();
-        setUser(userData);
-      } catch (err) {
-        console.error('Error fetching user profile:', err);
-        setError(err.message || 'Failed to load profile. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Only fetch if we have a username
-    if (username) {
-      fetchUserProfile();
-    } else {
-      setError('No username provided');
-      setIsLoading(false);
-    }
-  }, [username]);
-
-  if (isLoading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Loading profile...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="error-container">
-        <h2>Error loading profile</h2>
-        <p>{error}</p>
-        <button 
-          className="btn btn-primary" 
-          onClick={() => window.location.reload()}
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="not-found">
-        <h2>User not found</h2>
-        <button 
-          className="btn btn-secondary" 
-          onClick={() => navigate('/')}
-        >
-          Back to Home
-        </button>
-      </div>
-    );
-  }
+  // Mock user data for demonstration
+  const user = {
+    id: 1,
+    name: 'Alex Johnson',
+    username: 'alex_coder',
+    title: 'Python Enthusiast',
+    location: 'San Francisco, CA',
+    bio: 'I love coding in Python and solving code golf challenges! I\'ve been learning for 2 years and enjoy sharing solutions with the community.',
+    avatar: 'https://i.pravatar.cc/150?img=1',
+    joinedDate: '2023-01-15',
+    stats: {
+      rank: 15,
+      challengesCompleted: 42,
+      score: 1250
+    },
+    github: 'alexjohnson',
+    twitter: 'alex_codes',
+    website: 'alexjohnson.dev',
+    badges: ['Code Golf Champion', 'Speed Demon', 'Solution Sharer']
+  };
 
   return (
     <div className="profile-container">
@@ -145,16 +92,10 @@ const Profile = () => {
           </div>
           
           <div className="profile-actions">
-            <button 
-              className="btn btn-primary"
-              onClick={() => navigate(`/messages/${user.username}`)}
-            >
+            <button className="btn btn-primary">
               <FaEnvelope /> Message
             </button>
-            <button 
-              className="btn btn-secondary"
-              onClick={() => navigate(`/users/${user.username}/challenges`)}
-            >
+            <button className="btn btn-secondary">
               View Challenges
             </button>
           </div>
@@ -195,6 +136,13 @@ const Profile = () => {
           )}
         </div>
       </div>
+      
+      {/* Achievement System */}
+      <AchievementSystem 
+        user={user} 
+        challengesCompleted={user?.stats?.challengesCompleted || 0}
+        totalScore={user?.stats?.score || 0}
+      />
     </div>
   );
 };

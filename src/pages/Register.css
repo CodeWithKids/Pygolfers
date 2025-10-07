@@ -109,7 +109,7 @@ h1 {
 
 input {
   width: 100%;
-  padding: 0.875rem 1rem 0.875rem 2.75rem;
+  padding: 0.875rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 1rem;
@@ -495,5 +495,205 @@ input:focus + .input-icon {
   
   .success-actions .btn {
     width: 100%;
+  }
+}
+
+/* New Form Elements */
+.form-label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+/* Role Selection */
+.role-selection {
+  margin-bottom: 1rem;
+}
+
+.role-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.role-option {
+  cursor: pointer;
+  display: block;
+}
+
+.role-option input[type="radio"] {
+  display: none;
+}
+
+.role-card {
+  background: var(--bg-light);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.role-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(54, 182, 168, 0.15);
+}
+
+.role-option.selected .role-card {
+  border-color: var(--primary);
+  background: rgba(54, 182, 168, 0.05);
+  box-shadow: 0 8px 25px rgba(54, 182, 168, 0.2);
+}
+
+.role-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.role-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.role-info p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.popular-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--pink);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Age Verification */
+.age-display {
+  margin-top: 0.5rem;
+}
+
+.age-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.age-badge.valid {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.age-badge.invalid {
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Parental Consent Notice */
+.parental-consent-notice {
+  background: rgba(255, 212, 59, 0.1);
+  border: 2px solid var(--pink);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.consent-icon {
+  color: var(--pink);
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.consent-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.consent-content p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Help Text */
+.help-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.help-text svg {
+  color: var(--primary);
+}
+
+/* Enhanced Password Strength */
+.password-strength-meter {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.password-strength-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.password-strength-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.password-strength-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-width: 50px;
+}
+
+@media (max-width: 768px) {
+  .role-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .role-card {
+    padding: 1rem;
+  }
+  
+  .role-icon {
+    font-size: 2rem;
+  }
+  
+  .parental-consent-notice {
+    flex-direction: column;
+    text-align: center;
   }
 }

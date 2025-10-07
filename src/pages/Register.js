@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaArrowLeft, FaCheckCircle, FaSpinner } from 'react-icons/fa';
+import { 
+  FaArrowLeft, 
+  FaCheckCircle, 
+  FaSpinner,
+  FaCalendarAlt,
+  FaShieldAlt,
+  FaEye,
+  FaEyeSlash,
+  FaExclamationTriangle,
+  FaInfoCircle
+} from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Register.css';
 
@@ -10,7 +20,14 @@ const Register = () => {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'learner',
+    birthdate: '',
+    parentEmail: '',
+    gradeLevel: '',
+    schoolName: '',
+    subjectTaught: '',
+    verificationCode: ''
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,20 +36,36 @@ const Register = () => {
     username: false,
     email: false,
     password: false,
-    confirmPassword: false
+    confirmPassword: false,
+    birthdate: false,
+    parentEmail: false
   });
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [age, setAge] = useState(null);
+  const [requiresParentalConsent, setRequiresParentalConsent] = useState(false);
   
-  // Check if user is already logged in
+  // Calculate age when birthdate changes
   useEffect(() => {
-    // In a real app, you would check for an auth token here
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated) {
-      navigate('/');
+    if (formData.birthdate) {
+      const today = new Date();
+      const birthDate = new Date(formData.birthdate);
+      const calculatedAge = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        setAge(calculatedAge - 1);
+      } else {
+        setAge(calculatedAge);
+      }
+      
+      setRequiresParentalConsent(calculatedAge < 13);
+    } else {
+      setAge(null);
+      setRequiresParentalConsent(false);
     }
-  }, [navigate]);
+  }, [formData.birthdate]);
   
   // Handle password strength calculation
   useEffect(() => {
@@ -59,16 +92,29 @@ const Register = () => {
     }));
   };
 
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouched(prev => ({
+      ...prev,
+      [name]: true
+    }));
+  };
+
   const validateForm = () => {
     const newErrors = {};
     
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
     }
     
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    // Email validation based on role
+    if (formData.role === 'learner' && !formData.email) {
+      // Email optional for learners
+    } else if (formData.role !== 'learner' && !formData.email) {
+      newErrors.email = 'Email is required for teachers and parents';
+    } else if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
     
@@ -80,6 +126,34 @@ const Register = () => {
     
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    // Age verification for learners
+    if (formData.role === 'learner') {
+      if (!formData.birthdate) {
+        newErrors.birthdate = 'Date of birth is required';
+      } else if (age !== null && age < 8) {
+        newErrors.birthdate = 'You must be at least 8 years old to join PyGolfers';
+      } else if (age !== null && age > 14) {
+        newErrors.birthdate = 'PyGolfers is designed for kids aged 8-14';
+      }
+      
+      // Parental consent for kids under 13
+      if (requiresParentalConsent && !formData.parentEmail) {
+        newErrors.parentEmail = 'Parent/Guardian email is required for users under 13';
+      } else if (formData.parentEmail && !/\S+@\S+\.\S+/.test(formData.parentEmail)) {
+        newErrors.parentEmail = 'Parent email is invalid';
+      }
+    }
+    
+    // Additional validation for teachers
+    if (formData.role === 'teacher') {
+      if (!formData.schoolName.trim()) {
+        newErrors.schoolName = 'School/Organization name is required';
+      }
+      if (!formData.verificationCode.trim()) {
+        newErrors.verificationCode = 'Teacher verification code is required';
+      }
     }
     
     setErrors(newErrors);
@@ -213,13 +287,10 @@ const Register = () => {
               touched.username && formData.username ? 'touched' : ''
             }`}
           >
-            <div className="input-icon">
-              <FaUser />
-            </div>
             <input
               type="text"
               name="username"
-              placeholder="Choose a username"
+              placeholder="Username"
               value={formData.username}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -239,13 +310,10 @@ const Register = () => {
               touched.email && formData.email ? 'touched' : ''
             }`}
           >
-            <div className="input-icon">
-              <FaEnvelope />
-            </div>
             <input
               type="email"
               name="email"
-              placeholder="Your email address"
+              placeholder="Email (Optional for learners)"
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -260,19 +328,182 @@ const Register = () => {
             )}
           </div>
 
+          {/* Role Selection */}
+          <div className="form-group">
+            <label className="form-label">I am a:</label>
+            <div className="role-selection">
+              <div className="role-options">
+                <label className={`role-option ${formData.role === 'learner' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="learner"
+                    checked={formData.role === 'learner'}
+                    onChange={handleChange}
+                  />
+                  <div className="role-card">
+                    <div className="role-icon">👨‍🎓</div>
+                    <div className="role-info">
+                      <h4>Learner</h4>
+                      <p>Ages 8-14</p>
+                      <span className="popular-badge">Most Popular</span>
+                    </div>
+                  </div>
+                </label>
+                
+                <label className={`role-option ${formData.role === 'teacher' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="teacher"
+                    checked={formData.role === 'teacher'}
+                    onChange={handleChange}
+                  />
+                  <div className="role-card">
+                    <div className="role-icon">👩‍🏫</div>
+                    <div className="role-info">
+                      <h4>Teacher</h4>
+                      <p>Educator</p>
+                    </div>
+                  </div>
+                </label>
+                
+                <label className={`role-option ${formData.role === 'parent' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="parent"
+                    checked={formData.role === 'parent'}
+                    onChange={handleChange}
+                  />
+                  <div className="role-card">
+                    <div className="role-icon">👨‍👩‍👧‍👦</div>
+                    <div className="role-info">
+                      <h4>Parent</h4>
+                      <p>Guardian</p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Age Verification for Learners */}
+          {formData.role === 'learner' && (
+            <>
+              <div className={`form-group ${errors.birthdate ? 'error' : ''}`}>
+                <input
+                  type="date"
+                  name="birthdate"
+                  placeholder="Date of Birth"
+                  value={formData.birthdate}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  aria-invalid={!!errors.birthdate}
+                  aria-describedby={errors.birthdate ? 'birthdate-error' : undefined}
+                />
+                {errors.birthdate && (
+                  <span id="birthdate-error" className="error-message">
+                    {errors.birthdate}
+                  </span>
+                )}
+                {age !== null && (
+                  <div className="age-display">
+                    <span className={`age-badge ${age < 8 || age > 14 ? 'invalid' : 'valid'}`}>
+                      Age: {age} years old
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Parental Consent Notice */}
+              {requiresParentalConsent && (
+                <div className="parental-consent-notice">
+                  <FaShieldAlt className="consent-icon" />
+                  <div className="consent-content">
+                    <h4>Parental Consent Required</h4>
+                    <p>Since you're under 13, we need your parent or guardian's email address for COPPA compliance.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Parent Email for Kids Under 13 */}
+              {requiresParentalConsent && (
+                <div className={`form-group ${errors.parentEmail ? 'error' : ''}`}>
+                  <input
+                    type="email"
+                    name="parentEmail"
+                    placeholder="Parent/Guardian email address"
+                    value={formData.parentEmail}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    aria-invalid={!!errors.parentEmail}
+                    aria-describedby={errors.parentEmail ? 'parent-email-error' : undefined}
+                  />
+                  {errors.parentEmail && (
+                    <span id="parent-email-error" className="error-message">
+                      {errors.parentEmail}
+                    </span>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Teacher-specific fields */}
+          {formData.role === 'teacher' && (
+            <>
+              <div className={`form-group ${errors.schoolName ? 'error' : ''}`}>
+                <input
+                  type="text"
+                  name="schoolName"
+                  placeholder="School or Organization name"
+                  value={formData.schoolName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  aria-invalid={!!errors.schoolName}
+                  aria-describedby={errors.schoolName ? 'school-error' : undefined}
+                />
+                {errors.schoolName && (
+                  <span id="school-error" className="error-message">
+                    {errors.schoolName}
+                  </span>
+                )}
+              </div>
+
+              <div className={`form-group ${errors.verificationCode ? 'error' : ''}`}>
+                <input
+                  type="text"
+                  name="verificationCode"
+                  placeholder="Teacher verification code"
+                  value={formData.verificationCode}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  aria-invalid={!!errors.verificationCode}
+                  aria-describedby={errors.verificationCode ? 'verification-error' : undefined}
+                />
+                {errors.verificationCode && (
+                  <span id="verification-error" className="error-message">
+                    {errors.verificationCode}
+                  </span>
+                )}
+                <div className="help-text">
+                  <FaInfoCircle /> Contact us to get your teacher verification code
+                </div>
+              </div>
+            </>
+          )}
+
           <div
             className={`form-group ${errors.password ? 'error' : ''} ${
               touched.password && formData.password ? 'touched' : ''
             }`}
           >
-            <div className="input-icon">
-              <FaLock />
-            </div>
             <div className="password-input-wrapper">
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
-                placeholder="Create a password"
+                placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -286,7 +517,7 @@ const Register = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? '' : ''}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
 
@@ -321,14 +552,11 @@ const Register = () => {
               touched.confirmPassword && formData.confirmPassword ? 'touched' : ''
             }`}
           >
-            <div className="input-icon">
-              <FaLock />
-            </div>
             <div className="password-input-wrapper">
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
                 name="confirmPassword"
-                placeholder="Confirm your password"
+                placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -342,7 +570,7 @@ const Register = () => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
               >
-                {showConfirmPassword ? '' : ''}
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
             {errors.confirmPassword && (
@@ -372,12 +600,6 @@ const Register = () => {
           <p className="login-link">
             Already have an account? <Link to="/login">Log in</Link>
           </p>
-
-          <div className="divider">or</div>
-
-          <Link to="/login" className="btn btn-outline btn-block">
-            Sign in with Google
-          </Link>
         </form>
       </motion.div>
     </div>

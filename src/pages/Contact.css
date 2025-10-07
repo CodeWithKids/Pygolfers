@@ -1,25 +1,5 @@
-/* Contact Page Styles */
-:root {
-  --primary: #36B6A8;
-  --primary-light: #5fd1c4;
-  --primary-dark: #2a8e82;
-  --secondary: #6C63FF;
-  --accent: #FF6B6B;
-  --error: #FF6B6B;
-  --success: #4BB543;
-  --text: #2D3748;
-  --text-light: #718096;
-  --text-lighter: #A0AEC0;
-  --border: #E2E8F0;
-  --bg: #F8FAFC;
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --card-hover: rgba(255, 255, 255, 0.98);
-  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 15px 30px -5px rgba(0, 0, 0, 0.12), 0 10px 15px -8px rgba(0, 0, 0, 0.08);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --border-radius: 16px;
-  --border-radius-sm: 8px;
-}
+/* Contact Page Styles - Using PyGolfers Theme Colors */
+/* Using PyGolfers theme colors from App.css */
 
 @keyframes spin {
   from { transform: rotate(0deg); }
@@ -656,12 +636,11 @@
 
 /* Contact Info */
 .contact-info {
-  background: var(--card-bg);
+  background: var(--bg-primary);
   padding: 2.5rem;
   border-radius: 16px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 25px rgba(54, 182, 168, 0.1);
+  border: 2px solid var(--border-color);
   height: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
@@ -670,6 +649,25 @@
   position: relative;
   overflow: hidden;
   z-index: 1;
+}
+
+.contact-info h2 {
+  color: var(--teal);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.contact-info h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.contact-info p {
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.6;
 }
 
 /* Business Hours */
@@ -793,32 +791,49 @@
 
 /* Info Item adjustments */
 .info-item {
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--bg-secondary);
   border-radius: 12px;
   padding: 1.25rem;
   transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.info-item:hover {
+  background: var(--bg-primary);
+  border-color: var(--teal);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(54, 182, 168, 0.15);
 }
 
 .info-item h3 {
   margin: 0 0 0.5rem 0;
-  color: var(--text);
+  color: var(--text-primary);
   font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .info-item p {
   margin: 0.25rem 0;
-  color: var(--text-light);
+  color: var(--text-primary);
   font-size: 0.95rem;
   line-height: 1.5;
 }
 
 .info-item .info-icon {
-  width: 40px;
-  height: 40px;
-  font-size: 1rem;
-  margin-right: 1rem;
+  width: 50px;
+  height: 50px;
+  font-size: 1.2rem;
   flex-shrink: 0;
+  background: var(--teal);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .contact-info::before {
@@ -1149,3 +1164,150 @@
 .form-group:nth-child(2) { animation-delay: 0.2s; }
 .form-group:nth-child(3) { animation-delay: 0.3s; }
 .submit-btn { animation: fadeIn 0.5s 0.4s ease-out forwards; }
+
+/* New Form Elements */
+.form-label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.radio-option:hover {
+  border-color: var(--teal);
+  background: var(--bg-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(54, 182, 168, 0.1);
+}
+
+.radio-option input[type="radio"] {
+  display: none;
+}
+
+.radio-custom {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+  border-color: var(--teal);
+  background: rgba(54, 182, 168, 0.05);
+  box-shadow: 0 4px 12px rgba(54, 182, 168, 0.15);
+}
+
+/* Business Hours */
+.business-hours {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 8px 25px rgba(54, 182, 168, 0.1);
+}
+
+.business-hours h3 {
+  margin: 0 0 1rem 0;
+  color: var(--teal);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.hours-item:last-child {
+  border-bottom: none;
+}
+
+.hours-item .day {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hours-item .time {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.hours-item .time.closed {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.hours-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border-left: 4px solid var(--pink);
+}
+
+.hours-note svg {
+  color: var(--pink);
+}
+
+@media (max-width: 768px) {
+  .radio-group {
+    gap: 0.5rem;
+  }
+  
+  .radio-option {
+    padding: 0.75rem;
+  }
+  
+  .business-hours {
+    margin-top: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .hours-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}

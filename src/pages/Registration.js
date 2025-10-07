@@ -227,14 +227,13 @@ const Registration = () => {
 
         <form onSubmit={handleSubmit} className="registration-form registration-grid" autoComplete="on" aria-label="Registration Form">
           <div className="form-group">
-            <label htmlFor="fullName" className="form-label">Full Name</label>
             <div className="input-with-icon">
               <FaUser className="input-icon" />
               <input
                 type="text"
                 id="fullName"
                 name="fullName"
-                placeholder="Alex Johnson"
+                placeholder="Full Name"
                 value={formData.fullName}
                 onChange={handleChange}
                 className={`input-unified${errors.fullName ? ' error' : ''}`}
@@ -248,14 +247,13 @@ const Registration = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="username" className="form-label">Username</label>
             <div className="input-with-icon">
               <FaUser className="input-icon" />
               <input
                 type="text"
                 id="username"
                 name="username"
-                placeholder="cool_coder123"
+                placeholder="Username"
                 value={formData.username}
                 onChange={handleChange}
                 className={`input-unified${errors.username ? ' error' : ''}`}
@@ -269,14 +267,13 @@ const Registration = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email" className="form-label">Email {formData.role === 'learner' && '(Optional)'}</label>
             <div className="input-with-icon">
               <FaEnvelope className="input-icon" />
               <input
                 type="email"
                 id="email"
                 name="email"
-                placeholder="your@email.com"
+                placeholder={formData.role === 'learner' ? 'Email (Optional)' : 'Email Address'}
                 value={formData.email}
                 onChange={handleChange}
                 className={`input-unified${errors.email ? ' error' : ''}`}
@@ -291,14 +288,13 @@ const Registration = () => {
 
           <div className="password-row">
             <div className="form-group">
-              <label htmlFor="password" className="form-label">Password</label>
               <div className="input-with-icon">
                 <FaLock className="input-icon" />
                 <input
                   type="password"
                   id="password"
                   name="password"
-                  placeholder="••••••••"
+                  placeholder="Password"
                   value={formData.password}
                   onChange={handleChange}
                   className={`input-unified${errors.password ? ' error' : ''}`}
@@ -312,14 +308,13 @@ const Registration = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
               <div className="input-with-icon">
                 <FaLock className="input-icon" />
                 <input
                   type="password"
                   id="confirmPassword"
                   name="confirmPassword"
-                  placeholder="••••••••"
+                  placeholder="Confirm Password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className={`input-unified${errors.confirmPassword ? ' error' : ''}`}
@@ -330,9 +325,6 @@ const Registration = () => {
                 />
               </div>
               {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-              {errors.confirmPassword && (
-                <span className="error-message">{errors.confirmPassword}</span>
-              )}
             </div>
           </div>
 

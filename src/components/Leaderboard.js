@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaSortUp, FaSortDown, FaTrophy } from 'react-icons/fa';
+import { FaTrophy, FaCrown, FaMedal, FaSearch, FaFilter, FaChartLine, FaUsers, FaCode, FaStar } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import '../styles/Leaderboard.css';
 
 // Mock data for the leaderboard
@@ -12,6 +13,9 @@ const mockUsers = [
     score: 1250,
     solved: 42,
     joinDate: '2022-01-15',
+    rank: 1,
+    badge: 'Expert',
+    streak: 7,
   },
   {
     id: 2,
@@ -21,6 +25,9 @@ const mockUsers = [
     score: 1180,
     solved: 38,
     joinDate: '2022-02-20',
+    rank: 2,
+    badge: 'Advanced',
+    streak: 5,
   },
   {
     id: 3,
@@ -30,6 +37,9 @@ const mockUsers = [
     score: 1100,
     solved: 35,
     joinDate: '2022-03-10',
+    rank: 3,
+    badge: 'Advanced',
+    streak: 3,
   },
   {
     id: 4,
@@ -39,6 +49,9 @@ const mockUsers = [
     score: 980,
     solved: 32,
     joinDate: '2022-01-30',
+    rank: 4,
+    badge: 'Intermediate',
+    streak: 2,
   },
   {
     id: 5,
@@ -48,12 +61,16 @@ const mockUsers = [
     score: 920,
     solved: 30,
     joinDate: '2022-02-15',
+    rank: 5,
+    badge: 'Intermediate',
+    streak: 1,
   },
 ];
 
 const Leaderboard = () => {
   const [users, setUsers] = useState(mockUsers);
-  const [sortConfig, setSortConfig] = useState({ key: 'score', direction: 'desc' });
+  const [timeFilter, setTimeFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Handle window resize
@@ -66,99 +83,251 @@ const Leaderboard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+  // Filter users based on search and time filter
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.username.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
+
+  // Get top 3 for podium
+  const topThree = filteredUsers.slice(0, 3);
+  const remainingUsers = filteredUsers.slice(3);
+
+  // Calculate stats
+  const totalUsers = users.length;
+  const totalChallenges = users.reduce((sum, user) => sum + user.solved, 0);
+  const averageScore = Math.round(users.reduce((sum, user) => sum + user.score, 0) / users.length);
+
+  const getRankIcon = (rank) => {
+    switch (rank) {
+      case 1: return <FaCrown className="rank-icon gold" />;
+      case 2: return <FaMedal className="rank-icon silver" />;
+      case 3: return <FaMedal className="rank-icon bronze" />;
+      default: return <span className="rank-number">{rank}</span>;
     }
-    setSortConfig({ key, direction });
-
-    const sortedUsers = [...users].sort((a, b) => {
-      if (a[key] < b[key]) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-
-    setUsers(sortedUsers);
   };
 
-  const getSortIcon = (key) => {
-    if (sortConfig.key !== key) return null;
-    return sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />;
+  const getBadgeColor = (badge) => {
+    switch (badge) {
+      case 'Expert': return 'expert';
+      case 'Advanced': return 'advanced';
+      case 'Intermediate': return 'intermediate';
+      case 'Beginner': return 'beginner';
+      default: return 'beginner';
+    }
   };
 
   return (
     <div className="leaderboard-container">
-      <h2 className="leaderboard-header">
-        <FaTrophy style={{ marginRight: '10px' }} />
-        Leaderboard
-      </h2>
-      <table className="leaderboard-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>User</th>
-            <th 
-              onClick={() => handleSort('score')}
-              style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
+      {/* Header */}
+      <motion.div 
+        className="leaderboard-header"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="header-content">
+          <h1>
+            <span className="logo-icon">🐍⛳</span>
+            PyGolfers Leaderboard
+          </h1>
+          <p>Compete with friends and climb the ranks!</p>
+        </div>
+      </motion.div>
+
+      {/* Stats Cards */}
+      <motion.div 
+        className="stats-cards"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <div className="stat-card">
+          <FaUsers className="stat-icon" />
+          <div className="stat-content">
+            <span className="stat-value">{totalUsers}</span>
+            <span className="stat-label">Players</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <FaCode className="stat-icon" />
+          <div className="stat-content">
+            <span className="stat-value">{totalChallenges}</span>
+            <span className="stat-label">Solved</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <FaChartLine className="stat-icon" />
+          <div className="stat-content">
+            <span className="stat-value">{averageScore}</span>
+            <span className="stat-label">Avg Score</span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Filters */}
+      <motion.div 
+        className="filters-section"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <div className="time-filters">
+          {['all', 'today', 'week', 'month'].map(filter => (
+            <button
+              key={filter}
+              className={`filter-btn ${timeFilter === filter ? 'active' : ''}`}
+              onClick={() => setTimeFilter(filter)}
             >
-              {!isMobile ? 'Score' : '🏆'} {getSortIcon('score')}
-            </th>
-            <th 
-              onClick={() => handleSort('solved')}
-              style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
-            >
-              {!isMobile ? 'Solved' : '✅'} {getSortIcon('solved')}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, index) => (
-            <tr key={user.id}>
-              <td className="rank-cell">{index + 1}</td>
-              <td className="user-cell" style={{ padding: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <img 
-                    src={user.avatar} 
-                    alt={user.name} 
-                    className="avatar"
-                    style={{
-                      width: isMobile ? '32px' : '24px',
-                      height: isMobile ? '32px' : '24px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      border: '2px solid #4a90e2',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                      flexShrink: 0
-                    }}
-                  />
-                  <div style={{ minWidth: isMobile ? '100px' : 'auto' }}>
-                    <div style={{ 
-                      fontWeight: 500,
-                      fontSize: isMobile ? '0.9em' : '1em',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      maxWidth: isMobile ? '150px' : 'none'
-                    }}>
-                      {isMobile ? user.name.split(' ')[0] : user.name}
-                    </div>
-                    {!isMobile && (
-                      <div style={{ fontSize: '0.75em', color: '#666' }}>@{user.username}</div>
-                    )}
-                  </div>
-                </div>
-              </td>
-              <td className="score-cell">{user.score}</td>
-              <td>{user.solved}</td>
-            </tr>
+              {filter === 'all' ? 'All Time' : filter.charAt(0).toUpperCase() + filter.slice(1)}
+            </button>
           ))}
-        </tbody>
-      </table>
+        </div>
+        <div className="search-section">
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search players..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+      </motion.div>
+
+      {/* Podium for Top 3 */}
+      {topThree.length > 0 && (
+        <motion.div 
+          className="podium-section"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <h2 className="podium-title">🏆 Top Performers</h2>
+          <div className="podium">
+            {/* 2nd Place */}
+            {topThree[1] && (
+              <motion.div 
+                className="podium-place second"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <div className="podium-rank">🥈</div>
+                <div className="podium-user">
+                  <img src={topThree[1].avatar} alt={topThree[1].name} className="podium-avatar" />
+                  <h3>{topThree[1].name}</h3>
+                  <p className="podium-score">{topThree[1].score}</p>
+                  <span className={`badge ${getBadgeColor(topThree[1].badge)}`}>{topThree[1].badge}</span>
+                </div>
+              </motion.div>
+            )}
+
+            {/* 1st Place */}
+            {topThree[0] && (
+              <motion.div 
+                className="podium-place first"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                <div className="podium-rank">🥇</div>
+                <div className="podium-user">
+                  <img src={topThree[0].avatar} alt={topThree[0].name} className="podium-avatar" />
+                  <h3>{topThree[0].name}</h3>
+                  <p className="podium-score">{topThree[0].score}</p>
+                  <span className={`badge ${getBadgeColor(topThree[0].badge)}`}>{topThree[0].badge}</span>
+                </div>
+              </motion.div>
+            )}
+
+            {/* 3rd Place */}
+            {topThree[2] && (
+              <motion.div 
+                className="podium-place third"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+              >
+                <div className="podium-rank">🥉</div>
+                <div className="podium-user">
+                  <img src={topThree[2].avatar} alt={topThree[2].name} className="podium-avatar" />
+                  <h3>{topThree[2].name}</h3>
+                  <p className="podium-score">{topThree[2].score}</p>
+                  <span className={`badge ${getBadgeColor(topThree[2].badge)}`}>{topThree[2].badge}</span>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Rest of the Leaderboard */}
+      {remainingUsers.length > 0 && (
+        <motion.div 
+          className="leaderboard-table-section"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+        >
+          <h3 className="table-title">All Players</h3>
+          <div className="table-container">
+            <table className="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Player</th>
+                  <th>Score</th>
+                  <th>Solved</th>
+                  <th>Badge</th>
+                  <th>Streak</th>
+                </tr>
+              </thead>
+              <tbody>
+                {remainingUsers.map((user, index) => (
+                  <motion.tr 
+                    key={user.id}
+                    className="leaderboard-row"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.9 + index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <td className="rank-cell">
+                      {getRankIcon(user.rank)}
+                    </td>
+                    <td className="user-cell">
+                      <div className="user-info">
+                        <img src={user.avatar} alt={user.name} className="user-avatar" />
+                        <div className="user-details">
+                          <span className="user-name">{user.name}</span>
+                          <span className="user-username">@{user.username}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="score-cell">
+                      <span className="score-value">{user.score}</span>
+                    </td>
+                    <td className="solved-cell">
+                      <span className="solved-value">{user.solved}</span>
+                    </td>
+                    <td className="badge-cell">
+                      <span className={`badge ${getBadgeColor(user.badge)}`}>{user.badge}</span>
+                    </td>
+                    <td className="streak-cell">
+                      <div className="streak-info">
+                        <FaStar className="streak-icon" />
+                        <span>{user.streak}</span>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 };

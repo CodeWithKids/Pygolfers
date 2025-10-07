@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUser, FaLock, FaArrowRight, FaUserPlus } from 'react-icons/fa';
+import { FaArrowRight, FaUserPlus, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './Login.css';
@@ -15,6 +15,8 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginAttempts, setLoginAttempts] = useState(0);
   
   // Animation variants
   const containerVariants = {
@@ -52,7 +54,7 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = 'Username or email is required';
     }
     if (!formData.password) {
       newErrors.password = 'Password is required';
@@ -61,16 +63,42 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    // Clear errors when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsLoading(true);
-      // Simulate API call
+      
+      // Simulate API call with better error handling
       setTimeout(() => {
         console.log('Login attempt with:', formData);
-        setIsLoading(false);
-        // In a real app, set auth state here
-        navigate(from, { replace: true });
+        
+        // Simulate different scenarios
+        const isSuccessful = Math.random() > 0.3; // 70% success rate for demo
+        
+        if (isSuccessful) {
+          setIsLoading(false);
+          navigate(from, { replace: true });
+        } else {
+          // Simulate login failure
+          setLoginAttempts(prev => prev + 1);
+          setErrors({
+            api: loginAttempts >= 2 ? 
+              'Too many failed attempts. Please try again in 15 minutes.' :
+              'Invalid username or password. Please check your credentials.'
+          });
+          setIsLoading(false);
+        }
       }, 1000);
     }
   };
@@ -104,10 +132,26 @@ const Login = () => {
         </motion.div>
         )}
         
+        {errors.api && (
+          <motion.div 
+            className="login-alert" 
+            style={{
+              background: '#F76C7B', 
+              color: '#fff', 
+              borderRadius: '8px', 
+              padding: '0.75rem 1rem', 
+              marginBottom: '1rem', 
+              textAlign: 'center'
+            }}
+            variants={itemVariants}
+          >
+            {errors.api}
+          </motion.div>
+        )}
+        
         <motion.form className="login-form" onSubmit={handleSubmit} variants={itemVariants}>
           <motion.div className="form-group" variants={itemVariants}>
             <div className={`input-with-icon ${errors.username ? 'error' : ''}`}>
-              <FaUser className="input-icon" />
               <input
                 type="text"
                 name="username"
@@ -115,24 +159,49 @@ const Login = () => {
                 className="login-input"
                 value={formData.username}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                autoComplete="username"
+                autoFocus
+                aria-invalid={!!errors.username}
+                aria-describedby={errors.username ? 'username-error' : undefined}
               />
             </div>
-            {errors.username && <span className="error-message">{errors.username}</span>}
+            {errors.username && (
+              <span id="username-error" className="error-message" role="alert" aria-live="polite">
+                {errors.username}
+              </span>
+            )}
           </motion.div>
           
           <motion.div className="form-group" variants={itemVariants}>
             <div className={`input-with-icon ${errors.password ? 'error' : ''}`}>
-              <FaLock className="input-icon" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="Password"
                 className="login-input"
                 value={formData.password}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                autoComplete="current-password"
+                aria-invalid={!!errors.password}
+                aria-describedby={errors.password ? 'password-error' : undefined}
               />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                tabIndex="-1"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
-            {errors.password && <span className="error-message">{errors.password}</span>}
+            {errors.password && (
+              <span id="password-error" className="error-message" role="alert" aria-live="polite">
+                {errors.password}
+              </span>
+            )}
           </motion.div>
           
           <motion.button 

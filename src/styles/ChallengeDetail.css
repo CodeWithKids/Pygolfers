@@ -351,6 +351,75 @@ example pre {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
   background: var(--light-gray);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Code Golf Scoring */
+.code-golf-score {
+  display: flex;
+  align-items: center;
+}
+
+.score-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.score-badge.under-par {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.score-badge.at-par {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: white;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.score-badge.over-par {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.score-label {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.score-value {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.score-par {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.score-diff {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.score-diff.under-par {
+  color: #10B981;
+}
+
+.score-diff.at-par {
+  color: #F59E0B;
+}
+
+.score-diff.over-par {
+  color: #EF4444;
 }
 
 .editor-header h3 {
