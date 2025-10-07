@@ -34,7 +34,7 @@
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   border-radius: 2px;
 }
 

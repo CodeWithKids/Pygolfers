@@ -2,26 +2,11 @@
 .registration-form {
   font-family: 'Fredoka', Arial, sans-serif;
   color: #22223B;
-  background: #fff;
+  background: #f5f7fa;
   padding: 2.2rem 1.2rem 2rem 1.2rem;
   border-radius: 22px;
   box-shadow: 0 8px 32px 0 rgba(54,182,168,0.10), 0 1.5px 7px 0 rgba(247,108,123,0.03);
-  max-width: 440px;
-  margin: 2.5rem auto 0 auto;
-}
-.registration-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-
-/* Registration Form Unified Styles */
-.registration-form {
-  font-family: 'Fredoka', Arial, sans-serif;
-  color: #22223B;
-  background: #fff;
-  padding: 2.2rem 1.2rem 2rem 1.2rem;
-  border-radius: 22px;
-  box-shadow: 0 8px 32px 0 rgba(54,182,168,0.10), 0 1.5px 7px 0 rgba(247,108,123,0.03);
+  background: rgba(255,255,255,0.8);
   max-width: 440px;
   margin: 2.5rem auto 0 auto;
 }
@@ -113,7 +98,7 @@
   font-family: 'Fredoka', Arial, sans-serif;
   font-size: 1.09rem;
   font-weight: 500;
-  background: linear-gradient(90deg, #36B6A8 70%, #FFD43B 100%);
+  background: #36B6A8;
   color: #22223B;
   box-shadow: 0 2px 8px 0 rgba(54,182,168,0.07);
   border: none;

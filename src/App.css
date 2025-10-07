@@ -125,10 +125,7 @@ h6 {
 
 /* Heading Utility Classes */
 .heading-gradient {
-  background: linear-gradient(90deg, var(--teal), var(--pink));
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--teal);
   display: inline-block;
 }
 
@@ -162,7 +159,7 @@ h6 {
   bottom: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, var(--teal), transparent);
+  background: var(--teal);
   border-radius: 2px;
 }
 
@@ -698,7 +695,7 @@ html {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   transition: width 0.3s ease;
 }
 
@@ -829,7 +826,7 @@ html {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -848,7 +845,7 @@ html {
   display: flex;
   align-items: center;
   padding: 2rem 5% 3rem;
-  background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: #f0f9ff;
   position: relative;
   overflow: hidden;
   margin: 0;
@@ -866,11 +863,8 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 20%),
-    radial-gradient(circle at 20% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 20%);
+  background: rgba(14, 165, 233, 0.05);
   z-index: 0;
-  animation: gradientPulse 15s ease infinite alternate;
 }
 
 .hero-content {
@@ -891,11 +885,7 @@ html {
   font-weight: 800;
   line-height: 1.1;
   margin: 0 0 1rem 0;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  color: var(--teal);
   position: relative;
   display: inline-block;
   letter-spacing: -0.5px;
@@ -908,7 +898,7 @@ html {
   left: 0;
   width: 50px;
   height: 4px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   border-radius: 2px;
 }
 
@@ -948,7 +938,7 @@ html {
 }
 
 .primary-button {
-  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  background: var(--teal);
   color: white;
   border: none;
   box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
@@ -1034,7 +1024,7 @@ html {
   right: -10%;
   width: 70%;
   height: 200%;
-  background: radial-gradient(circle, rgba(54, 182, 168, 0.1) 0%, transparent 70%);
+  background: rgba(54, 182, 168, 0.05);
   z-index: 1;
 }
 
@@ -1073,7 +1063,7 @@ html {
   left: 0;
   right: 0;
   height: 200px;
-  background: linear-gradient(to bottom, #f8fafc, white);
+  background: #f8fafc;
   z-index: -1;
 }
 
@@ -1162,7 +1152,7 @@ html {
 
 .testimonials-section {
   padding: 6rem 5%;
-  background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+  background: #f8fafc;
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -1206,7 +1196,7 @@ html {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   opacity: 0.8;
   transition: all 0.4s ease;
 }
@@ -1325,7 +1315,7 @@ html {
   left: 0;
   right: 0;
   height: 400px;
-  background: linear-gradient(to bottom, #f8fafc, white);
+  background: #f8fafc;
   z-index: 0;
 }
 
@@ -1346,11 +1336,7 @@ html {
   font-size: 2.75rem;
   font-weight: 800;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  color: var(--teal);
   position: relative;
   display: inline-block;
 }
@@ -1363,7 +1349,7 @@ html {
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   border-radius: 2px;
 }
 
@@ -1403,7 +1389,7 @@ html {
 .step-number {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, var(--teal), var(--pink));
+  background: var(--teal);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -1424,7 +1410,7 @@ html {
   left: -5px;
   right: -5px;
   bottom: -5px;
-  background: linear-gradient(135deg, var(--teal), var(--pink));
+  background: var(--teal);
   border-radius: 50%;
   z-index: -1;
   opacity: 0.2;
@@ -1463,7 +1449,7 @@ html {
   transform: translateX(-50%);
   width: 40px;
   height: 3px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
   border-radius: 2px;
 }
 
@@ -1512,7 +1498,7 @@ html {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--teal), var(--pink));
+  background: var(--teal);
 }
 
 .footer .container {
@@ -1623,7 +1609,7 @@ html {
 /* CTA Section */
 .cta-section {
   padding: 6rem 5%;
-  background: linear-gradient(135deg, var(--teal) 0%, var(--dark-blue) 100%);
+  background: var(--teal);
   color: white;
   text-align: center;
   position: relative;
@@ -1698,7 +1684,7 @@ html {
 }
 
 .cta-button.primary {
-  background: linear-gradient(135deg, var(--teal), var(--pink));
+  background: var(--pink);
   color: white;
   box-shadow: 0 4px 20px rgba(54, 182, 168, 0.3);
   position: relative;
@@ -1712,7 +1698,7 @@ html {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--pink), var(--teal));
+  background: var(--teal);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: -1;

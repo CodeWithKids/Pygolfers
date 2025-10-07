@@ -53,7 +53,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at center, rgba(54, 182, 168, 0.05) 0%, rgba(255,255,255,0) 70%);
+  background: rgba(54, 182, 168, 0.05);
   z-index: -1;
   opacity: 0.7;
   animation: float 15s ease-in-out infinite alternate;
@@ -65,7 +65,7 @@
   position: relative;
   padding: 3rem 0;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+  background: rgba(255,255,255,0.9);
   border-radius: var(--border-radius);
   backdrop-filter: blur(10px);
   padding: 3rem 2rem;
@@ -97,7 +97,7 @@
 .header-divider {
   width: 80px;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  background: var(--primary);
   margin: 1.5rem auto;
   border-radius: 2px;
   position: relative;
@@ -111,7 +111,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+  background: rgba(255,255,255,0.7);
   animation: shine 3s infinite;
 }
 
@@ -128,23 +128,15 @@
   transform: translateX(-50%);
   width: 200px;
   height: 100%;
-  background: radial-gradient(circle, rgba(54,182,168,0.1) 0%, rgba(255,255,255,0) 70%);
+  background: rgba(54,182,168,0.1);
   pointer-events: none;
 }
 
-@keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
 
 .contact-header h1 {
   font-size: 3rem;
   margin: 0 0 1rem;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--primary);
   font-weight: 800;
   letter-spacing: -1px;
   line-height: 1.1;
@@ -274,7 +266,7 @@
   left: 0;
   width: 80px;
   height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: var(--primary);
   border-radius: 2px;
 }
 
@@ -455,7 +447,7 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: var(--primary);
   color: white;
   border: none;
   width: 100%;
@@ -485,7 +477,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  background: var(--secondary);
   opacity: 0;
   transition: var(--transition);
   z-index: -1;
@@ -512,7 +504,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  background: var(--primary);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: -1;
@@ -547,7 +539,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: rgba(255,255,255,0.2);
   transition: 0.5s;
   z-index: -1;
 }
@@ -614,7 +606,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #10b981, #34d399);
+  background: #10b981;
 }
 
 .back-button {
@@ -704,7 +696,7 @@
   left: 0;
   width: 40px;
   height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: var(--primary);
   border-radius: 2px;
 }
 
@@ -905,7 +897,7 @@
   flex-shrink: 0;
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: var(--primary);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -924,7 +916,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  background: var(--secondary);
   opacity: 0;
   transition: var(--transition);
   z-index: -1;
@@ -1014,7 +1006,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: var(--primary);
   opacity: 0;
   transition: var(--transition);
   z-index: -1;
@@ -1048,7 +1040,7 @@
 
 .social-link.instagram:hover .social-icon {
   color: white;
-  background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+  background: #E1306C;
 }
 
 .social-icon:hover {

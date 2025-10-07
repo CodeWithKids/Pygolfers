@@ -650,15 +650,6 @@ const App = () => {
     avatar: 'https://i.pravatar.cc/150?img=32',
     isAuthenticated: true
   });
-  // ...
-  
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-  
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
   return (
     <Router>
       <div className="App">
