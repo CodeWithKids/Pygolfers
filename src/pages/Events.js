@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaCalendarAlt, FaMapMarkerAlt, FaUsers, FaUserPlus, FaClock, FaRegClock, FaUserTie, FaThLarge, FaList, FaCalendar, FaTrophy, FaStar, FaRocket, FaGamepad } from 'react-icons/fa';
+import { FaSearch, FaCalendarAlt, FaMapMarkerAlt, FaUserPlus, FaClock, FaRegClock, FaUserTie, FaThLarge, FaList, FaCalendar, FaStar, FaGamepad } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import EventCard from '../components/events/EventCard';
 import EventFilters from '../components/events/EventFilters';
@@ -154,12 +154,6 @@ const Events = ({ currentUser }) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Calculate stats
-  const totalEvents = events.length;
-  const upcomingEventsCount = events.filter(event => event.status === 'open' || event.status === 'full').length;
-  const totalParticipants = events.reduce((sum, event) => sum + event.registeredParticipants, 0);
-  const onlineEventsCount = events.filter(event => event.location.toLowerCase() === 'online').length;
-
   // Group events by status
   const upcomingEvents = filteredEvents.filter(event => event.status === 'open' || event.status === 'full');
   const pastEvents = filteredEvents.filter(event => event.status === 'completed');
@@ -194,42 +188,6 @@ const Events = ({ currentUser }) => {
               </h1>
               <p>Join our community events to learn, compete, and connect with fellow Python enthusiasts!</p>
             </div>
-            
-            <motion.div 
-              className="hero-stats"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <div className="stat-card">
-                <FaCalendar className="stat-icon" />
-                <div className="stat-content">
-                  <span className="stat-number">{upcomingEventsCount}</span>
-                  <span className="stat-label">Upcoming Events</span>
-                </div>
-              </div>
-              <div className="stat-card">
-                <FaUsers className="stat-icon" />
-                <div className="stat-content">
-                  <span className="stat-number">{totalParticipants}</span>
-                  <span className="stat-label">Registered Members</span>
-                </div>
-              </div>
-              <div className="stat-card">
-                <FaRocket className="stat-icon" />
-                <div className="stat-content">
-                  <span className="stat-number">{onlineEventsCount}</span>
-                  <span className="stat-label">Online Events</span>
-                </div>
-              </div>
-              <div className="stat-card">
-                <FaTrophy className="stat-icon" />
-                <div className="stat-content">
-                  <span className="stat-number">{totalEvents}</span>
-                  <span className="stat-label">Total Events</span>
-                </div>
-              </div>
-            </motion.div>
           </motion.div>
         </div>
       </section>

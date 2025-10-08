@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaTrophy, FaCrown, FaMedal, FaSearch, FaFilter, FaChartLine, FaUsers, FaCode, FaStar } from 'react-icons/fa';
+import { FaTrophy, FaCrown, FaMedal, FaSearch, FaFilter, FaStar } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import '../styles/Leaderboard.css';
 
@@ -94,11 +94,6 @@ const Leaderboard = () => {
   const topThree = filteredUsers.slice(0, 3);
   const remainingUsers = filteredUsers.slice(3);
 
-  // Calculate stats
-  const totalUsers = users.length;
-  const totalChallenges = users.reduce((sum, user) => sum + user.solved, 0);
-  const averageScore = Math.round(users.reduce((sum, user) => sum + user.score, 0) / users.length);
-
   const getRankIcon = (rank) => {
     switch (rank) {
       case 1: return <FaCrown className="rank-icon gold" />;
@@ -136,35 +131,6 @@ const Leaderboard = () => {
         </div>
       </motion.div>
 
-      {/* Stats Cards */}
-      <motion.div 
-        className="stats-cards"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <div className="stat-card">
-          <FaUsers className="stat-icon" />
-          <div className="stat-content">
-            <span className="stat-value">{totalUsers}</span>
-            <span className="stat-label">Players</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <FaCode className="stat-icon" />
-          <div className="stat-content">
-            <span className="stat-value">{totalChallenges}</span>
-            <span className="stat-label">Solved</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <FaChartLine className="stat-icon" />
-          <div className="stat-content">
-            <span className="stat-value">{averageScore}</span>
-            <span className="stat-label">Avg Score</span>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Filters */}
       <motion.div 

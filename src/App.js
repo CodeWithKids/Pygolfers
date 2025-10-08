@@ -85,7 +85,7 @@ const Home = () => {
       icon: FaGraduationCap,
       title: 'I\'m a Learner',
       description: 'Solve fun Python challenges and earn cool badges!',
-      color: '#3B82F6',
+      color: '#36B6A8', // Teal - Primary color
       features: ['Code Golf Challenges', 'Achievement Badges', 'Leaderboards', 'Safe Community']
     },
     {
@@ -93,7 +93,7 @@ const Home = () => {
       icon: FaChalkboardTeacher,
       title: 'I\'m a Teacher',
       description: 'Create classrooms and track student progress.',
-      color: '#8B5CF6',
+      color: '#F76C7B', // Pink - Accent color
       features: ['Classroom Management', 'Student Analytics', 'Custom Challenges', 'Progress Reports']
     },
     {
@@ -101,7 +101,7 @@ const Home = () => {
       icon: FaUserFriends,
       title: 'I\'m a Parent',
       description: 'Support your child\'s coding journey safely.',
-      color: '#F59E0B',
+      color: '#FFD43B', // Yellow - Secondary color
       features: ['Progress Monitoring', 'Safety Features', 'Achievement Tracking', 'Parent Dashboard']
     }
   ];

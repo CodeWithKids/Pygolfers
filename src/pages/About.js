@@ -137,36 +137,70 @@ const About = () => {
           transition={{ delay: 0.3 }}
         >
           <div className="stats-container">
-            <h2>PyGolfers by the Numbers</h2>
+            <motion.h2
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              PyGolfers by the Numbers
+            </motion.h2>
             <div className="stats-grid">
-              <div className="stat-card">
+              <motion.div 
+                className="stat-card"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <div className="stat-icon">
                   <FaCode />
                 </div>
                 <div className="stat-number">500+</div>
                 <div className="stat-label">Challenges Solved</div>
-              </div>
-              <div className="stat-card">
+              </motion.div>
+              <motion.div 
+                className="stat-card"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <div className="stat-icon">
                   <FaUsers />
                 </div>
                 <div className="stat-number">1,000+</div>
                 <div className="stat-label">Active Students</div>
-              </div>
-              <div className="stat-card">
+              </motion.div>
+              <motion.div 
+                className="stat-card"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <div className="stat-icon">
                   <FaGlobe />
                 </div>
                 <div className="stat-number">50+</div>
                 <div className="stat-label">Countries</div>
-              </div>
-              <div className="stat-card">
+              </motion.div>
+              <motion.div 
+                className="stat-card"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <div className="stat-icon">
                   <FaHeart />
                 </div>
                 <div className="stat-number">95%</div>
                 <div className="stat-label">Parent Satisfaction</div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </motion.section>
@@ -417,7 +451,7 @@ const About = () => {
                     }}
                     onMouseOver={(e) => {
                       e.currentTarget.style.color = 'white';
-                      e.currentTarget.style.background = '#1DA1F2';
+                      e.currentTarget.style.background = '#36B6A8';
                       e.currentTarget.style.transform = 'translateY(-3px)';
                     }}
                     onMouseOut={(e) => {
@@ -447,7 +481,7 @@ const About = () => {
                     }}
                     onMouseOver={(e) => {
                       e.currentTarget.style.color = 'white';
-                      e.currentTarget.style.background = '#0077B5';
+                      e.currentTarget.style.background = '#F76C7B';
                       e.currentTarget.style.transform = 'translateY(-3px)';
                     }}
                     onMouseOut={(e) => {

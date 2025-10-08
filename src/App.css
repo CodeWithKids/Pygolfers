@@ -930,7 +930,7 @@ html {
   display: flex;
   align-items: center;
   padding: 2rem 5% 3rem;
-  background: #f0f9ff;
+  background: var(--bg-secondary);
   position: relative;
   overflow: hidden;
   margin: 0;
@@ -948,7 +948,7 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(14, 165, 233, 0.05);
+  background: rgba(54, 182, 168, 0.05);
   z-index: 0;
 }
 
