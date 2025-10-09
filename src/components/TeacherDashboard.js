@@ -24,6 +24,7 @@ const TeacherDashboard = () => {
   const [showCreateClassroom, setShowCreateClassroom] = useState(false);
   const [showCreateChallenge, setShowCreateChallenge] = useState(false);
   const [analytics, setAnalytics] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [newClassroom, setNewClassroom] = useState({
     name: '',
     description: '',
@@ -94,6 +95,8 @@ const TeacherDashboard = () => {
         { name: 'Alice Johnson', score: 82, challengesCompleted: 8 }
       ]
     });
+    
+    setIsLoading(false);
   }, []);
 
   const handleCreateClassroom = (e) => {
@@ -196,7 +199,7 @@ const TeacherDashboard = () => {
     const classroom = classrooms.find(c => c.id === classroomId);
     if (!classroom) return;
     
-    const csvData = classroom.students.map(student => ({
+    const csvData = (classroom.students || []).map(student => ({
       name: student.name,
       progress: student.progress,
       challengesCompleted: student.challengesCompleted,
@@ -217,100 +220,204 @@ const TeacherDashboard = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  if (isLoading) {
+    return (
+      <div className="teacher-dashboard">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading Teacher Dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="teacher-dashboard">
+      {/* Header Section */}
       <div className="dashboard-header">
-        <h1>Teacher Dashboard</h1>
+        <div className="header-welcome">
+          <h1>Welcome back, Teacher!</h1>
+          <p>Manage your classrooms and track student progress</p>
+        </div>
         <div className="header-actions">
+          <button 
+            className="btn btn-secondary"
+            onClick={() => setShowCreateChallenge(true)}
+          >
+            <FaPlus /> Create Challenge
+          </button>
           <button 
             className="btn btn-primary"
             onClick={() => setShowCreateClassroom(true)}
           >
             <FaPlus /> Create Classroom
           </button>
+          <button className="btn btn-secondary">
+            <FaDownload /> Export Data
+          </button>
         </div>
       </div>
 
-      {/* Analytics Overview */}
-      <div className="analytics-overview">
-        <div className="analytics-card">
-          <div className="analytics-icon">
-            <FaUsers />
-          </div>
-          <div className="analytics-content">
-            <h3>{analytics.totalStudents}</h3>
-            <p>Total Students</p>
-          </div>
-        </div>
+      {/* Main Dashboard Grid */}
+      <div className="dashboard-grid">
         
-        <div className="analytics-card">
-          <div className="analytics-icon">
-            <FaCode />
+        {/* Quick Stats Section */}
+        <div className="dashboard-section quick-stats-section">
+          <div className="section-header">
+            <h2>Quick Stats</h2>
           </div>
-          <div className="analytics-content">
-            <h3>{analytics.totalChallenges}</h3>
-            <p>Total Challenges</p>
-          </div>
-        </div>
-        
-        <div className="analytics-card">
-          <div className="analytics-icon">
-            <FaChartLine />
-          </div>
-          <div className="analytics-content">
-            <h3>{analytics.avgProgress}%</h3>
-            <p>Average Progress</p>
-          </div>
-        </div>
-        
-        <div className="analytics-card">
-          <div className="analytics-icon">
-            <FaTrophy />
-          </div>
-          <div className="analytics-content">
-            <h3>{analytics.topPerformers.length}</h3>
-            <p>Top Performers</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Classrooms Grid */}
-      <div className="classrooms-section">
-        <h2>My Classrooms</h2>
-        <div className="classrooms-grid">
-          {classrooms.map(classroom => (
-            <div key={classroom.id} className="classroom-card">
-              <div className="classroom-header">
-                <h3>{classroom.name}</h3>
-                <div className="classroom-code">
-                  Code: <span className="code">{classroom.code}</span>
-                </div>
+          <div className="quick-stats-grid">
+            <div className="quick-stat-card">
+              <div className="stat-icon">
+                <FaUsers />
               </div>
-              
-              <div className="classroom-info">
-                <p><strong>Grade:</strong> {classroom.grade}</p>
-                <p><strong>Subject:</strong> {classroom.subject}</p>
-                <p><strong>Students:</strong> {classroom.students.length}</p>
-                <p><strong>Challenges:</strong> {classroom.challenges.length}</p>
-              </div>
-              
-              <div className="classroom-actions">
-                <button 
-                  className="btn btn-primary"
-                  onClick={() => setSelectedClassroom(classroom)}
-                >
-                  <FaEye /> View Details
-                </button>
-                <button 
-                  className="btn btn-secondary"
-                  onClick={() => exportStudentProgress(classroom.id)}
-                >
-                  <FaDownload /> Export Progress
-                </button>
+              <div className="stat-content">
+                <h3>{analytics.totalStudents}</h3>
+                <p>Total Students</p>
               </div>
             </div>
-          ))}
+            <div className="quick-stat-card">
+              <div className="stat-icon">
+                <FaCode />
+              </div>
+              <div className="stat-content">
+                <h3>{analytics.totalChallenges}</h3>
+                <p>Total Challenges</p>
+              </div>
+            </div>
+            <div className="quick-stat-card">
+              <div className="stat-icon">
+                <FaChartLine />
+              </div>
+              <div className="stat-content">
+                <h3>{analytics.avgProgress}%</h3>
+                <p>Average Progress</p>
+              </div>
+            </div>
+            <div className="quick-stat-card">
+              <div className="stat-icon">
+                <FaTrophy />
+              </div>
+              <div className="stat-content">
+                <h3>{analytics.topPerformers?.length || 0}</h3>
+                <p>Top Performers</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Recent Activity Section */}
+        <div className="dashboard-section activity-section">
+          <div className="section-header">
+            <h2>Recent Activity</h2>
+            <button className="btn btn-secondary btn-sm">
+              <FaEye /> View All
+            </button>
+          </div>
+          <div className="activity-list">
+            <div className="activity-item">
+              <div className="activity-icon">
+                <FaTrophy />
+              </div>
+              <div className="activity-content">
+                <h4>New Achievement Unlocked</h4>
+                <p>Alice Johnson completed "Variables & Types" challenge</p>
+                <span className="activity-time">2 hours ago</span>
+              </div>
+            </div>
+            <div className="activity-item">
+              <div className="activity-icon">
+                <FaUsers />
+              </div>
+              <div className="activity-content">
+                <h4>New Student Joined</h4>
+                <p>Bob Smith joined "Python Explorers" classroom</p>
+                <span className="activity-time">1 day ago</span>
+              </div>
+            </div>
+            <div className="activity-item">
+              <div className="activity-icon">
+                <FaCode />
+              </div>
+              <div className="activity-content">
+                <h4>Challenge Created</h4>
+                <p>New challenge "Loops & Conditions" added</p>
+                <span className="activity-time">2 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Classrooms Section */}
+        <div className="dashboard-section classrooms-section">
+          <div className="section-header">
+            <h2>My Classrooms</h2>
+            <button className="btn btn-secondary btn-sm">
+              <FaEye /> View All
+            </button>
+          </div>
+          <div className="classrooms-grid">
+            {classrooms && classrooms.map(classroom => (
+              <div key={classroom.id} className="classroom-card">
+                <div className="classroom-header">
+                  <h3>{classroom.name}</h3>
+                  <div className="classroom-code">
+                    Code: <span className="code">{classroom.code}</span>
+                  </div>
+                </div>
+                
+                <div className="classroom-info">
+                  <p><strong>Grade:</strong> {classroom.grade}</p>
+                  <p><strong>Subject:</strong> {classroom.subject}</p>
+                  <p><strong>Students:</strong> {classroom.students?.length || 0}</p>
+                  <p><strong>Challenges:</strong> {classroom.challenges?.length || 0}</p>
+                </div>
+                
+                <div className="classroom-actions">
+                  <button 
+                    className="btn btn-primary"
+                    onClick={() => setSelectedClassroom(classroom)}
+                  >
+                    <FaEye /> View Details
+                  </button>
+                  <button 
+                    className="btn btn-secondary"
+                    onClick={() => exportStudentProgress(classroom.id)}
+                  >
+                    <FaDownload /> Export Progress
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Top Performers Section */}
+        <div className="dashboard-section performers-section">
+          <div className="section-header">
+            <h2>Top Performers</h2>
+            <button className="btn btn-secondary btn-sm">
+              <FaEye /> View All
+            </button>
+          </div>
+          <div className="performers-list">
+            {analytics.topPerformers && analytics.topPerformers.map((performer, index) => (
+              <div key={index} className="performer-card">
+                <div className="performer-rank">
+                  {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                </div>
+                <div className="performer-info">
+                  <h4>{performer.name}</h4>
+                  <p>{performer.challengesCompleted} challenges completed</p>
+                </div>
+                <div className="performer-score">
+                  <span className="score">{performer.score}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
 
       {/* Classroom Detail Modal */}
@@ -337,7 +444,7 @@ const TeacherDashboard = () => {
               <div className="tab-content">
                 <div className="students-section">
                   <div className="section-header">
-                    <h3>Students ({selectedClassroom.students.length})</h3>
+                    <h3>Students ({selectedClassroom.students?.length || 0})</h3>
                     <button 
                       className="btn btn-primary"
                       onClick={() => setShowCreateChallenge(true)}
@@ -358,7 +465,7 @@ const TeacherDashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {selectedClassroom.students.map(student => (
+                        {selectedClassroom.students && selectedClassroom.students.map(student => (
                           <tr key={student.id}>
                             <td>{student.name}</td>
                             <td>
@@ -532,7 +639,7 @@ const TeacherDashboard = () => {
                   </button>
                 </div>
                 
-                {newChallenge.testCases.map((testCase, index) => (
+                {newChallenge.testCases && newChallenge.testCases.map((testCase, index) => (
                   <div key={index} className="test-case-item">
                     <div className="form-group">
                       <label>Input</label>
@@ -572,7 +679,7 @@ const TeacherDashboard = () => {
                   </button>
                 </div>
                 
-                {newChallenge.hints.map((hint, index) => (
+                {newChallenge.hints && newChallenge.hints.map((hint, index) => (
                   <div key={index} className="hint-item">
                     <input 
                       type="text" 
@@ -600,7 +707,7 @@ const TeacherDashboard = () => {
                   </button>
                 </div>
                 
-                {newChallenge.learningObjectives.map((objective, index) => (
+                {newChallenge.learningObjectives && newChallenge.learningObjectives.map((objective, index) => (
                   <div key={index} className="objective-item">
                     <input 
                       type="text" 

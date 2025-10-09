@@ -21,6 +21,7 @@ import Profile from "./pages/profile/Profile";
 import ProfileSettings from "./pages/profile/ProfileSettings";
 import Events from "./pages/Events";
 import ParentDashboard from "./components/ParentDashboard";
+import TeacherDashboard from "./components/TeacherDashboard";
 import CommunityForum from "./components/CommunityForum";
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
@@ -592,6 +593,34 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
                   Community
                 </Link>
               </li>
+              
+              {/* Role-based Dashboard Links */}
+              {currentUser.isAuthenticated && currentUser.role === 'teacher' && (
+                <li>
+                  <Link 
+                    to="/teacher-dashboard" 
+                    className={`nav-link ${location.pathname === '/teacher-dashboard' ? 'active' : ''}`} 
+                    onClick={closeMenu}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              )}
+              
+              {currentUser.isAuthenticated && currentUser.role === 'parent' && (
+                <li>
+                  <Link 
+                    to="/parent-dashboard" 
+                    className={`nav-link ${location.pathname === '/parent-dashboard' ? 'active' : ''}`} 
+                    onClick={closeMenu}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              )}
+              
               <li>
                 <Link 
                   to="/contact" 
@@ -700,6 +729,34 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
               )}
             </div>
           )}
+          
+          {/* Development Account Switcher */}
+          {currentUser.isAuthenticated && (
+            <div className="account-switcher">
+              <span className="switcher-label">Switch Account:</span>
+              <button 
+                className={`switcher-btn ${currentUser.role === 'student' ? 'active' : ''}`}
+                onClick={() => switchAccount('student')}
+                title="Switch to Student account"
+              >
+                Student
+              </button>
+              <button 
+                className={`switcher-btn ${currentUser.role === 'teacher' ? 'active' : ''}`}
+                onClick={() => switchAccount('teacher')}
+                title="Switch to Teacher account - Access Teacher Dashboard"
+              >
+                Teacher
+              </button>
+              <button 
+                className={`switcher-btn ${currentUser.role === 'parent' ? 'active' : ''}`}
+                onClick={() => switchAccount('parent')}
+                title="Switch to Parent account - Access Parent Dashboard"
+              >
+                Parent
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
@@ -707,12 +764,41 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
 };
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState({
-    id: '1',
-    username: 'pygolfer123',
-    avatar: 'https://i.pravatar.cc/150?img=32',
-    isAuthenticated: true
-  });
+  // Dummy accounts for testing
+  const dummyAccounts = {
+    student: {
+      id: '1',
+      username: 'student123',
+      name: 'Alex Johnson',
+      role: 'student',
+      avatar: 'https://i.pravatar.cc/150?img=32',
+      isAuthenticated: true
+    },
+    teacher: {
+      id: '2',
+      username: 'teacher123',
+      name: 'Dr. Sarah Williams',
+      role: 'teacher',
+      avatar: 'https://i.pravatar.cc/150?img=44',
+      isAuthenticated: true
+    },
+    parent: {
+      id: '3',
+      username: 'parent123',
+      name: 'Michael Chen',
+      role: 'parent',
+      avatar: 'https://i.pravatar.cc/150?img=22',
+      isAuthenticated: true
+    }
+  };
+
+  const [currentUser, setCurrentUser] = useState(dummyAccounts.teacher); // Default to teacher for testing
+
+  // Function to switch between dummy accounts
+  const switchAccount = (accountType) => {
+    setCurrentUser(dummyAccounts[accountType]);
+  };
+
   return (
     <Router>
       <div className="App">
@@ -749,6 +835,7 @@ const App = () => {
           <Route path="/settings" element={<ProfileSettings />} />
           <Route path="/events" element={<Events currentUser={currentUser} />} />
           <Route path="/parent-dashboard" element={<ParentDashboard />} />
+          <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
           <Route path="/community" element={<CommunityForum />} />
         </Routes>
         <footer className="footer">

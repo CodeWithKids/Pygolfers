@@ -239,18 +239,18 @@ const Leaderboard = () => {
         >
           <h3 className="table-title">All Players</h3>
           <div className="table-container">
-            <table className="leaderboard-table">
-              <thead>
-                <tr>
+      <table className="leaderboard-table">
+        <thead>
+          <tr>
                   <th>Rank</th>
                   <th>Player</th>
                   <th>Score</th>
                   <th>Solved</th>
                   <th>Badge</th>
                   <th>Streak</th>
-                </tr>
-              </thead>
-              <tbody>
+          </tr>
+        </thead>
+        <tbody>
                 {remainingUsers.map((user, index) => (
                   <motion.tr 
                     key={user.id}
@@ -269,9 +269,9 @@ const Leaderboard = () => {
                         <div className="user-details">
                           <span className="user-name">{user.name}</span>
                           <span className="user-username">@{user.username}</span>
-                        </div>
-                      </div>
-                    </td>
+                  </div>
+                </div>
+              </td>
                     <td className="score-cell">
                       <span className="score-value">{user.score}</span>
                     </td>
@@ -288,9 +288,9 @@ const Leaderboard = () => {
                       </div>
                     </td>
                   </motion.tr>
-                ))}
-              </tbody>
-            </table>
+          ))}
+        </tbody>
+      </table>
           </div>
         </motion.div>
       )}
