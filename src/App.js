@@ -372,7 +372,7 @@ const Home = () => {
   );
 };
 
-const NavBar = ({ currentUser, setCurrentUser }) => {
+const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
@@ -1108,7 +1108,7 @@ const App = () => {
   return (
     <Router>
       <div className="App">
-        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} switchAccount={switchAccount} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

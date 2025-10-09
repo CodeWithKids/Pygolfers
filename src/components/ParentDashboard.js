@@ -34,7 +34,15 @@ import {
   FaFire,
   FaThumbsUp,
   FaQuestionCircle,
-  FaInfoCircle
+  FaInfoCircle,
+  FaUser,
+  FaChartBar,
+  FaCalendar,
+  FaBook,
+  FaMedal,
+  FaTimes,
+  FaChevronDown,
+  FaChevronUp
 } from 'react-icons/fa';
 import './ParentDashboard.css';
 
@@ -44,6 +52,22 @@ const ParentDashboard = () => {
   const [timeRange, setTimeRange] = useState('week');
   const [notifications, setNotifications] = useState([]);
   const [showDetailedReport, setShowDetailedReport] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showAddChild, setShowAddChild] = useState(false);
+  const [showChildProfile, setShowChildProfile] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [realtimeData, setRealtimeData] = useState({
+    childrenOnline: 0,
+    challengesCompleted: 0,
+    achievementsEarned: 0,
+    totalTimeSpent: 0
+  });
+  const [newChild, setNewChild] = useState({
+    name: '',
+    age: '',
+    grade: '',
+    email: ''
+  });
 
   // Mock data for demonstration
   useEffect(() => {
@@ -139,7 +163,61 @@ const ParentDashboard = () => {
       { id: 3, type: 'streak', message: 'Emma is on a 5-day coding streak!', date: '2024-01-13', read: true },
       { id: 4, type: 'milestone', message: 'Emma has completed 18 challenges total', date: '2024-01-12', read: true }
     ]);
+
+    // Mock real-time data
+    setRealtimeData({
+      childrenOnline: 2,
+      challengesCompleted: 28,
+      achievementsEarned: 12,
+      totalTimeSpent: 24
+    });
   }, []);
+
+  const addChild = () => {
+    if (newChild.name && newChild.age && newChild.grade) {
+      const child = {
+        id: children.length + 1,
+        name: newChild.name,
+        age: parseInt(newChild.age),
+        grade: newChild.grade,
+        avatar: `https://i.pravatar.cc/150?img=${children.length + 3}`,
+        joinDate: new Date().toISOString().split('T')[0],
+        totalChallenges: 0,
+        completedChallenges: 0,
+        achievements: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        totalTimeSpent: 0,
+        averageScore: 0,
+        favoriteTopics: [],
+        recentActivity: [],
+        progressData: {
+          week: [0, 0, 0, 0, 0, 0, 0],
+          month: Array(30).fill(0),
+          year: Array(12).fill(0)
+        },
+        challenges: [],
+        achievements: []
+      };
+      setChildren([...children, child]);
+      setNewChild({ name: '', age: '', grade: '', email: '' });
+      setShowAddChild(false);
+    }
+  };
+
+  const getUnreadNotificationCount = () => {
+    return notifications.filter(notif => !notif.read).length;
+  };
+
+  const markNotificationAsRead = (notificationId) => {
+    setNotifications(notifications.map(notif => 
+      notif.id === notificationId ? { ...notif, read: true } : notif
+    ));
+  };
+
+  const markAllNotificationsAsRead = () => {
+    setNotifications(notifications.map(notif => ({ ...notif, read: true })));
+  };
 
   const getProgressPercentage = (child) => {
     return Math.round((child.completedChallenges / child.totalChallenges) * 100);
@@ -195,12 +273,6 @@ const ParentDashboard = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  const markNotificationAsRead = (notificationId) => {
-    setNotifications(notifications.map(notif => 
-      notif.id === notificationId ? { ...notif, read: true } : notif
-    ));
-  };
-
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'achievement': return <FaTrophy />;
@@ -223,14 +295,97 @@ const ParentDashboard = () => {
   return (
     <div className="parent-dashboard">
       <div className="dashboard-header">
-        <h1>Parent Dashboard</h1>
-        <div className="header-actions">
-          <button 
-            className="btn btn-primary"
-            onClick={() => setShowDetailedReport(true)}
-          >
-            <FaDownload /> Detailed Report
-          </button>
+        <div className="header-content">
+          <div className="header-welcome">
+            <h1>Welcome back, Parent!</h1>
+            <p>Track your children's coding progress and achievements</p>
+            <div className="realtime-stats">
+              <div className="realtime-stat">
+                <FaUser className="realtime-icon" />
+                <div className="realtime-text">
+                  <span className="stat-number">{realtimeData.childrenOnline}</span>
+                  <span className="stat-label">Children Online</span>
+                </div>
+              </div>
+              <div className="realtime-stat">
+                <FaCode className="realtime-icon" />
+                <div className="realtime-text">
+                  <span className="stat-number">{realtimeData.challengesCompleted}</span>
+                  <span className="stat-label">Challenges Completed</span>
+                </div>
+              </div>
+              <div className="realtime-stat">
+                <FaTrophy className="realtime-icon" />
+                <div className="realtime-text">
+                  <span className="stat-number">{realtimeData.achievementsEarned}</span>
+                  <span className="stat-label">Achievements Earned</span>
+                </div>
+              </div>
+              <div className="realtime-stat">
+                <FaClock className="realtime-icon" />
+                <div className="realtime-text">
+                  <span className="stat-number">{realtimeData.totalTimeSpent}h</span>
+                  <span className="stat-label">Total Time Spent</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="header-actions">
+            <div className="nav-notifications">
+              <button 
+                className="notification-btn"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
+                <FaBell />
+                {getUnreadNotificationCount() > 0 && (
+                  <span className="notification-badge">{getUnreadNotificationCount()}</span>
+                )}
+              </button>
+              {showNotifications && (
+                <div className="notifications-dropdown">
+                  <div className="notifications-header">
+                    <h4>Notifications</h4>
+                    <button 
+                      className="btn btn-sm btn-link"
+                      onClick={markAllNotificationsAsRead}
+                    >
+                      Mark all read
+                    </button>
+                  </div>
+                  <div className="notifications-list">
+                    {notifications.slice(0, 5).map(notification => (
+                      <div 
+                        key={notification.id}
+                        className={`notification-item ${notification.read ? 'read' : 'unread'}`}
+                        onClick={() => markNotificationAsRead(notification.id)}
+                      >
+                        <div className="notification-icon">
+                          {getNotificationIcon(notification.type)}
+                        </div>
+                        <div className="notification-content">
+                          <p>{notification.message}</p>
+                          <span className="notification-time">{notification.date}</span>
+                        </div>
+                        {!notification.read && <div className="unread-indicator"></div>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <button 
+              className="btn btn-primary"
+              onClick={() => setShowAddChild(true)}
+            >
+              <FaUserPlus /> Add Child
+            </button>
+            <button 
+              className="btn btn-secondary"
+              onClick={() => setShowDetailedReport(true)}
+            >
+              <FaDownload /> Detailed Report
+            </button>
+          </div>
         </div>
       </div>
 
@@ -549,6 +704,86 @@ const ParentDashboard = () => {
                   <FaDownload /> Export Report
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Child Modal */}
+      {showAddChild && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2>Add New Child</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowAddChild(false)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Child's Name</label>
+                <input
+                  type="text"
+                  value={newChild.name}
+                  onChange={(e) => setNewChild({...newChild, name: e.target.value})}
+                  placeholder="Enter child's name"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Age</label>
+                <input
+                  type="number"
+                  value={newChild.age}
+                  onChange={(e) => setNewChild({...newChild, age: e.target.value})}
+                  placeholder="Enter age"
+                  className="form-input"
+                  min="5"
+                  max="18"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Grade</label>
+                <input
+                  type="text"
+                  value={newChild.grade}
+                  onChange={(e) => setNewChild({...newChild, grade: e.target.value})}
+                  placeholder="e.g., 5th Grade"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Email (Optional)</label>
+                <input
+                  type="email"
+                  value={newChild.email}
+                  onChange={(e) => setNewChild({...newChild, email: e.target.value})}
+                  placeholder="Enter email address"
+                  className="form-input"
+                />
+              </div>
+            </div>
+            
+            <div className="modal-actions">
+              <button 
+                className="btn btn-secondary" 
+                onClick={() => setShowAddChild(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn btn-primary"
+                onClick={addChild}
+              >
+                <FaUserPlus /> Add Child
+              </button>
             </div>
           </div>
         </div>
