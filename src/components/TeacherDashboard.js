@@ -39,7 +39,12 @@ import {
   FaPause,
   FaStop,
   FaVolumeUp,
-  FaVolumeMute
+  FaVolumeMute,
+  FaArrowUp,
+  FaCalendarAlt,
+  FaShareAlt,
+  FaUserPlus,
+  FaLink
 } from 'react-icons/fa';
 import './TeacherDashboard.css';
 
@@ -65,6 +70,30 @@ const TeacherDashboard = () => {
   const [showChallengeDetails, setShowChallengeDetails] = useState(false);
   const [showProgressDetails, setShowProgressDetails] = useState(false);
   const [showAchievementDetails, setShowAchievementDetails] = useState(false);
+  const [showAssignChallenge, setShowAssignChallenge] = useState(null);
+  const [showChallengeSelection, setShowChallengeSelection] = useState(false);
+  const [selectedChallenges, setSelectedChallenges] = useState([]);
+  const [showCreateEvent, setShowCreateEvent] = useState(false);
+  const [teacherEvents, setTeacherEvents] = useState([]);
+  const [showAddStudent, setShowAddStudent] = useState(false);
+  const [showClassroomCode, setShowClassroomCode] = useState(false);
+  const [activeClassroomTab, setActiveClassroomTab] = useState('students');
+  const [newStudent, setNewStudent] = useState({
+    name: '',
+    email: '',
+    grade: '',
+    studentId: ''
+  });
+  const [announcement, setAnnouncement] = useState({
+    subject: '',
+    message: '',
+    recipients: 'all', // 'all', 'classrooms', 'students'
+    selectedClassrooms: [],
+    selectedStudents: [],
+    deliveryMethod: 'immediate', // 'immediate', 'scheduled'
+    scheduledDate: '',
+    priority: 'normal' // 'low', 'normal', 'high'
+  });
   const [realtimeData, setRealtimeData] = useState({
     onlineStudents: 0,
     activeChallenges: 0,
@@ -158,6 +187,50 @@ const TeacherDashboard = () => {
         createdAt: '2024-01-10'
       }
     ];
+
+    // Mock teacher events data
+    const mockEvents = [
+      {
+        id: 1,
+        title: "Python Coding Workshop",
+        description: "Introduction to Python programming for beginners",
+        date: "2024-01-15",
+        time: "10:00 AM",
+        location: "Virtual",
+        maxParticipants: 30,
+        currentParticipants: 15,
+        status: "upcoming",
+        type: "workshop",
+        createdBy: "teacher123"
+      },
+      {
+        id: 2,
+        title: "Algorithm Challenge Competition",
+        description: "Competitive programming event for advanced students",
+        date: "2024-01-20",
+        time: "2:00 PM",
+        location: "School Lab",
+        maxParticipants: 20,
+        currentParticipants: 20,
+        status: "full",
+        type: "competition",
+        createdBy: "teacher123"
+      },
+      {
+        id: 3,
+        title: "Code Review Session",
+        description: "Peer code review and feedback session",
+        date: "2024-01-10",
+        time: "3:00 PM",
+        location: "Virtual",
+        maxParticipants: 15,
+        currentParticipants: 12,
+        status: "completed",
+        type: "session",
+        createdBy: "teacher123"
+      }
+    ];
+    setTeacherEvents(mockEvents);
 
     // Mock analytics
     const mockAnalytics = {
@@ -343,10 +416,34 @@ const TeacherDashboard = () => {
     );
   };
 
-  const sendAnnouncement = (announcement) => {
+  const sendAnnouncement = (e) => {
+    e.preventDefault();
+    
+    // Validate form
+    if (!announcement.subject.trim() || !announcement.message.trim()) {
+      alert('Please fill in both subject and message');
+      return;
+    }
+    
     // Mock announcement sending
     console.log('Sending announcement:', announcement);
+    
+    // Reset form
+    setAnnouncement({
+      subject: '',
+      message: '',
+      recipients: 'all',
+      selectedClassrooms: [],
+      selectedStudents: [],
+      deliveryMethod: 'immediate',
+      scheduledDate: '',
+      priority: 'normal'
+    });
+    
     setShowAnnouncementModal(false);
+    
+    // Show success message (could be replaced with toast notification)
+    alert('Announcement sent successfully!');
   };
 
   const generateClassroomCode = () => {
@@ -376,6 +473,101 @@ const TeacherDashboard = () => {
     link.download = `analytics-${activeTab}-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
+  };
+
+  const assignSelectedChallenges = () => {
+    if (!selectedClassroom || selectedChallenges.length === 0) return;
+    
+    const updatedClassrooms = classrooms.map(c => 
+      c.id === selectedClassroom.id 
+        ? { 
+            ...c, 
+            challenges: [
+              ...(c.challenges || []), 
+              ...selectedChallenges.map(challenge => ({
+                ...challenge,
+                id: Date.now() + Math.random(), // Ensure unique IDs
+                completions: 0,
+                avgScore: 0
+              }))
+            ]
+          }
+        : c
+    );
+    
+    setClassrooms(updatedClassrooms);
+    setSelectedClassroom({ 
+      ...selectedClassroom, 
+      challenges: [
+        ...(selectedClassroom.challenges || []), 
+        ...selectedChallenges.map(challenge => ({
+          ...challenge,
+          id: Date.now() + Math.random(),
+          completions: 0,
+          avgScore: 0
+        }))
+      ]
+    });
+    
+    setSelectedChallenges([]);
+    setShowChallengeSelection(false);
+    
+    alert(`Successfully assigned ${selectedChallenges.length} challenge(s) to ${selectedClassroom.name}!`);
+  };
+
+  const createEvent = (eventData) => {
+    const newEvent = {
+      id: Date.now(),
+      ...eventData,
+      createdBy: "teacher123",
+      currentParticipants: 0,
+      status: "upcoming"
+    };
+    
+    setTeacherEvents(prev => [...prev, newEvent]);
+    setShowCreateEvent(false);
+    
+    alert(`Event "${newEvent.title}" created successfully!`);
+  };
+
+  const addStudentToClassroom = (e) => {
+    e.preventDefault();
+    if (!selectedClassroom) return;
+    
+    const student = {
+      id: Date.now(),
+      ...newStudent,
+      progress: 0,
+      challengesCompleted: 0,
+      lastActive: new Date().toISOString().split('T')[0],
+      joinedDate: new Date().toISOString().split('T')[0]
+    };
+    
+    const updatedClassrooms = classrooms.map(c => 
+      c.id === selectedClassroom.id 
+        ? { ...c, students: [...(c.students || []), student] }
+        : c
+    );
+    
+    setClassrooms(updatedClassrooms);
+    setSelectedClassroom({ 
+      ...selectedClassroom, 
+      students: [...(selectedClassroom.students || []), student]
+    });
+    
+    setNewStudent({ name: '', email: '', grade: '', studentId: '' });
+    setShowAddStudent(false);
+    
+    alert(`Student "${student.name}" added to ${selectedClassroom.name} successfully!`);
+  };
+
+  const copyClassroomCode = (code) => {
+    navigator.clipboard.writeText(code);
+    alert(`Classroom code "${code}" copied to clipboard!`);
+  };
+
+  const generateStudentId = () => {
+    return `STU${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
   };
 
   const exportStudentProgress = (classroomId) => {
@@ -420,14 +612,14 @@ const TeacherDashboard = () => {
       <div className="dashboard-header">
         <div className="header-welcome">
           <h1>Welcome back, Teacher!</h1>
-          <p>Manage your classrooms and track student progress</p>
+          <p>Track your classroom performance and student progress</p>
           <div className="header-stats">
             <div className="header-stat">
               <span className="stat-number">{analytics.totalStudents || 0}</span>
               <span className="stat-label">Total Students</span>
             </div>
             <div className="header-stat">
-              <span className="stat-number">{analytics.activeChallenges || 0}</span>
+              <span className="stat-number">{analytics.totalChallenges || 0}</span>
               <span className="stat-label">Active Challenges</span>
             </div>
             <div className="header-stat">
@@ -435,20 +627,28 @@ const TeacherDashboard = () => {
               <span className="stat-label">Avg Progress</span>
             </div>
           </div>
+          <div className="realtime-stats">
+            <div className="realtime-stat">
+              <FaUsers className="realtime-icon" />
+              <span className="realtime-text">{realtimeData.onlineStudents} students online</span>
+            </div>
+            <div className="realtime-stat">
+              <FaCode className="realtime-icon" />
+              <span className="realtime-text">{realtimeData.activeChallenges} active challenges</span>
+            </div>
+            <div className="realtime-stat">
+              <FaClipboardList className="realtime-icon" />
+              <span className="realtime-text">{realtimeData.pendingSubmissions} pending submissions</span>
+            </div>
+            {realtimeData.systemAlerts && realtimeData.systemAlerts.length > 0 && (
+              <div className="realtime-stat alert">
+                <FaExclamationTriangle className="realtime-icon" />
+                <span className="realtime-text">{realtimeData.systemAlerts[0].message}</span>
+              </div>
+            )}
+          </div>
         </div>
         <div className="header-actions">
-          <button 
-            className="btn btn-notification"
-            onClick={() => setShowNotifications(!showNotifications)}
-            title="Notifications"
-          >
-            <FaBell />
-            {notifications.filter(n => !n.read).length > 0 && (
-              <span className="notification-badge">
-                {notifications.filter(n => !n.read).length}
-              </span>
-            )}
-          </button>
           <button 
             className="btn btn-secondary"
             onClick={() => setShowCreateChallenge(true)}
@@ -464,66 +664,6 @@ const TeacherDashboard = () => {
         </div>
       </div>
 
-      {/* Notifications Dropdown */}
-      {showNotifications && (
-        <div className="notifications-dropdown">
-          <div className="notifications-header">
-            <h3>Notifications</h3>
-            <button 
-              className="btn btn-link"
-              onClick={markAllNotificationsAsRead}
-            >
-              Mark all as read
-            </button>
-          </div>
-          <div className="notifications-list">
-            {notifications.map(notification => (
-              <div 
-                key={notification.id}
-                className={`notification-item ${notification.read ? 'read' : 'unread'}`}
-                onClick={() => markNotificationAsRead(notification.id)}
-              >
-                <div className="notification-icon">
-                  {notification.type === 'submission' && <FaCode />}
-                  {notification.type === 'achievement' && <FaTrophy />}
-                  {notification.type === 'system' && <FaBell />}
-                </div>
-                <div className="notification-content">
-                  <h4>{notification.title}</h4>
-                  <p>{notification.message}</p>
-                  <span className="notification-time">
-                    {formatTimeAgo(notification.timestamp)}
-                  </span>
-                </div>
-                {!notification.read && <div className="unread-indicator" />}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Real-time Activity Bar */}
-      <div className="realtime-bar">
-        <div className="realtime-item">
-          <FaUsers className="realtime-icon" />
-          <span>{realtimeData.onlineStudents} students online</span>
-        </div>
-        <div className="realtime-item">
-          <FaCode className="realtime-icon" />
-          <span>{realtimeData.activeChallenges} active challenges</span>
-        </div>
-        <div className="realtime-item">
-          <FaClock className="realtime-icon" />
-          <span>{realtimeData.pendingSubmissions} pending submissions</span>
-        </div>
-        {realtimeData.systemAlerts.length > 0 && (
-          <div className="realtime-item alert">
-            <FaExclamationTriangle className="realtime-icon" />
-            <span>{realtimeData.systemAlerts[0].message}</span>
-          </div>
-        )}
-      </div>
-
       {/* Main Dashboard Grid */}
       <div className="dashboard-grid">
         
@@ -534,13 +674,13 @@ const TeacherDashboard = () => {
             <div className="section-actions">
               <div className="time-filter">
                 <button className={`time-btn ${activeTab === 'week' ? 'active' : ''}`} onClick={() => setActiveTab('week')}>
-                  Week
+                  <FaCalendar /> Week
                 </button>
                 <button className={`time-btn ${activeTab === 'month' ? 'active' : ''}`} onClick={() => setActiveTab('month')}>
-                  Month
+                  <FaCalendar /> Month
                 </button>
                 <button className={`time-btn ${activeTab === 'year' ? 'active' : ''}`} onClick={() => setActiveTab('year')}>
-                  Year
+                  <FaCalendar /> Year
                 </button>
               </div>
               <button className="btn btn-link" onClick={() => window.location.reload()}>
@@ -552,140 +692,170 @@ const TeacherDashboard = () => {
             </div>
           </div>
           
-          <div className="analytics-grid">
-            <div className="analytics-card primary">
-              <div className="analytics-header">
-                <div className="analytics-icon">
-                  <FaUsers />
-                </div>
-                <div className="analytics-menu">
-                  <button className="menu-btn" onClick={() => setShowStudentDetails(!showStudentDetails)}>
-                    <FaEye />
-                  </button>
-                </div>
+          <div className="analytics-list">
+            <div className="analytics-table">
+              <div className="table-header">
+                <div className="col-title">Metric</div>
+                <div className="col-stats">Current Value</div>
+                <div className="col-stats">Progress</div>
+                <div className="col-stats">Trend</div>
+                <div className="col-actions">Actions</div>
               </div>
-              <div className="analytics-content">
-                <h3>{analytics.totalStudents || 0}</h3>
-                <p>Total Students</p>
-                <div className="analytics-progress">
+              
+              <div className="analytics-row" onClick={() => setShowStudentDetails(!showStudentDetails)}>
+                <div className="col-title">
+                  <div className="analytics-info">
+                    <div className="analytics-icon primary">
+                      <FaUsers />
+                    </div>
+                    <div className="analytics-details">
+                      <h4>Total Students</h4>
+                      <p>Active this week: 75% (3 of 4 students)</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-stats">
+                  <span className="stat-value">{analytics.totalStudents || 0}</span>
+                </div>
+                <div className="col-stats">
                   <div className="progress-bar">
                     <div className="progress-fill" style={{width: '75%'}}></div>
                   </div>
-                  <span className="progress-text">75% active this week</span>
                 </div>
-                <div className="analytics-trend">
-                  <span className="trend-indicator positive">+12%</span>
-                  <span className="trend-label">vs last month</span>
+                <div className="col-stats">
+                  <span className="trend-indicator positive">
+                    <FaArrowUp /> +12%
+                  </span>
+                </div>
+                <div className="col-actions">
+                  <div className="action-buttons">
+                    <button 
+                      className="btn btn-sm btn-outline"
+                      onClick={(e) => { e.stopPropagation(); setShowStudentDetails(!showStudentDetails); }}
+                      title="View Details"
+                    >
+                      <FaEye />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="analytics-card secondary">
-              <div className="analytics-header">
-                <div className="analytics-icon">
-                  <FaCode />
+              <div className="analytics-row" onClick={() => setShowChallengeDetails(!showChallengeDetails)}>
+                <div className="col-title">
+                  <div className="analytics-info">
+                    <div className="analytics-icon secondary">
+                      <FaCode />
+                    </div>
+                    <div className="analytics-details">
+                      <h4>Total Challenges</h4>
+                      <p>Completion rate: 60% (3 of 5 challenges)</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="analytics-menu">
-                  <button className="menu-btn" onClick={() => setShowChallengeDetails(!showChallengeDetails)}>
-                    <FaEye />
-                  </button>
+                <div className="col-stats">
+                  <span className="stat-value">{analytics.totalChallenges || 0}</span>
                 </div>
-              </div>
-              <div className="analytics-content">
-                <h3>{analytics.totalChallenges || 0}</h3>
-                <p>Total Challenges</p>
-                <div className="analytics-progress">
+                <div className="col-stats">
                   <div className="progress-bar">
                     <div className="progress-fill" style={{width: '60%'}}></div>
                   </div>
-                  <span className="progress-text">60% completion rate</span>
                 </div>
-                <div className="analytics-trend">
-                  <span className="trend-indicator positive">+5</span>
-                  <span className="trend-label">this week</span>
+                <div className="col-stats">
+                  <span className="trend-indicator positive">
+                    <FaArrowUp /> +5
+                  </span>
+                </div>
+                <div className="col-actions">
+                  <div className="action-buttons">
+                    <button 
+                      className="btn btn-sm btn-outline"
+                      onClick={(e) => { e.stopPropagation(); setShowChallengeDetails(!showChallengeDetails); }}
+                      title="View Details"
+                    >
+                      <FaEye />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="analytics-card accent">
-              <div className="analytics-header">
-                <div className="analytics-icon">
-                  <FaChartLine />
+              <div className="analytics-row" onClick={() => setShowProgressDetails(!showProgressDetails)}>
+                <div className="col-title">
+                  <div className="analytics-info">
+                    <div className="analytics-icon accent">
+                      <FaChartLine />
+                    </div>
+                    <div className="analytics-details">
+                      <h4>Average Progress</h4>
+                      <p>Class average (above 70% target)</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="analytics-menu">
-                  <button className="menu-btn" onClick={() => setShowProgressDetails(!showProgressDetails)}>
-                    <FaEye />
-                  </button>
+                <div className="col-stats">
+                  <span className="stat-value">{analytics.avgProgress || 0}%</span>
                 </div>
-              </div>
-              <div className="analytics-content">
-                <h3>{analytics.avgProgress || 0}%</h3>
-                <p>Average Progress</p>
-                <div className="analytics-progress">
+                <div className="col-stats">
                   <div className="progress-bar">
                     <div className="progress-fill" style={{width: `${analytics.avgProgress || 0}%`}}></div>
                   </div>
-                  <span className="progress-text">Class average</span>
                 </div>
-                <div className="analytics-trend">
-                  <span className="trend-indicator positive">+8%</span>
-                  <span className="trend-label">improvement</span>
+                <div className="col-stats">
+                  <span className="trend-indicator positive">
+                    <FaArrowUp /> +8%
+                  </span>
+                </div>
+                <div className="col-actions">
+                  <div className="action-buttons">
+                    <button 
+                      className="btn btn-sm btn-outline"
+                      onClick={(e) => { e.stopPropagation(); setShowProgressDetails(!showProgressDetails); }}
+                      title="View Details"
+                    >
+                      <FaEye />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="analytics-card success">
-              <div className="analytics-header">
-                <div className="analytics-icon">
-                  <FaTrophy />
+              <div className="analytics-row" onClick={() => setShowAchievementDetails(!showAchievementDetails)}>
+                <div className="col-title">
+                  <div className="analytics-info">
+                    <div className="analytics-icon success">
+                      <FaTrophy />
+                    </div>
+                    <div className="analytics-details">
+                      <h4>Top Performers</h4>
+                      <p>90% above average (3 of 5 students)</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="analytics-menu">
-                  <button className="menu-btn" onClick={() => setShowAchievementDetails(!showAchievementDetails)}>
-                    <FaEye />
-                  </button>
+                <div className="col-stats">
+                  <span className="stat-value">{analytics.topPerformers?.length || 0}</span>
                 </div>
-              </div>
-              <div className="analytics-content">
-                <h3>{analytics.topPerformers?.length || 0}</h3>
-                <p>Top Performers</p>
-                <div className="analytics-progress">
+                <div className="col-stats">
                   <div className="progress-bar">
                     <div className="progress-fill" style={{width: '90%'}}></div>
                   </div>
-                  <span className="progress-text">90% above average</span>
                 </div>
-                <div className="analytics-trend">
-                  <span className="trend-indicator positive">+3</span>
-                  <span className="trend-label">new achievers</span>
+                <div className="col-stats">
+                  <span className="trend-indicator positive">
+                    <FaArrowUp /> +3
+                  </span>
+                </div>
+                <div className="col-actions">
+                  <div className="action-buttons">
+                    <button 
+                      className="btn btn-sm btn-outline"
+                      onClick={(e) => { e.stopPropagation(); setShowAchievementDetails(!showAchievementDetails); }}
+                      title="View Details"
+                    >
+                      <FaEye />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Detailed Analytics Charts */}
-          <div className="analytics-charts">
-            <div className="chart-section">
-              <h3>Student Progress Over Time</h3>
-              <div className="chart-container">
-                <div className="chart-placeholder">
-                  <FaChartBar className="chart-icon" />
-                  <p>Progress chart visualization</p>
-                  <small>Interactive chart showing student progress trends</small>
-                </div>
-              </div>
-            </div>
-            
-            <div className="chart-section">
-              <h3>Challenge Completion Rates</h3>
-              <div className="chart-container">
-                <div className="chart-placeholder">
-                  <FaChartLine className="chart-icon" />
-                  <p>Completion rate visualization</p>
-                  <small>Breakdown by difficulty and topic</small>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Classrooms Section */}
@@ -699,85 +869,342 @@ const TeacherDashboard = () => {
               >
                 <FaPlus /> Create Classroom
               </button>
-              <button className="btn btn-secondary btn-sm">
-                <FaEye /> View All
-              </button>
             </div>
           </div>
-          <div className="classrooms-grid">
-            {classrooms && classrooms.map(classroom => (
-              <div key={classroom.id} className="classroom-card">
-                <div className="classroom-header">
-                  <h3>{classroom.name}</h3>
-                  <div className="classroom-code">
-                    Code: <span className="code">{classroom.code}</span>
+          
+          <div className="classrooms-list">
+            {classrooms && classrooms.length > 0 ? (
+              <div className="classrooms-table">
+                <div className="table-header">
+                  <div className="col-title">Classroom</div>
+                  <div className="col-stats">Students</div>
+                  <div className="col-stats">Challenges</div>
+                  <div className="col-stats">Grade</div>
+                  <div className="col-actions">Actions</div>
+                </div>
+                {classrooms.map(classroom => (
+                  <div key={classroom.id} className="classroom-row">
+                  <div className="col-title">
+                    <div className="classroom-info">
+                      <div className="classroom-icon">
+                        <FaGraduationCap />
+                      </div>
+                      <div className="classroom-details">
+                        <h4 
+                          className="classroom-name-link"
+                          onClick={() => setSelectedClassroom(classroom)}
+                          title="Click to view classroom details"
+                        >
+                          {classroom.name}
+                        </h4>
+                        <p>Code: {classroom.code} • {classroom.subject}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="classroom-info">
-                  <p><strong>Grade:</strong> {classroom.grade}</p>
-                  <p><strong>Subject:</strong> {classroom.subject}</p>
-                  <p><strong>Students:</strong> {classroom.students?.length || 0}</p>
-                  <p><strong>Challenges:</strong> {classroom.challenges?.length || 0}</p>
-                </div>
-                
-                <div className="classroom-actions">
-                  <button 
-                    className="btn btn-primary"
-                    onClick={() => setSelectedClassroom(classroom)}
-                  >
-                    <FaEye /> View Details
-                  </button>
-                  <button 
-                    className="btn btn-secondary"
-                    onClick={() => exportStudentProgress(classroom.id)}
-                  >
-                    <FaDownload /> Export Progress
-                  </button>
-                </div>
+                    <div className="col-stats">
+                      <span className="stat-value">{classroom.students?.length || 0}</span>
+                    </div>
+                    <div className="col-stats">
+                      <span className="stat-value">{classroom.challenges?.length || 0}</span>
+                    </div>
+                    <div className="col-stats">
+                      <span className="stat-value">{classroom.grade}</span>
+                    </div>
+                    <div className="col-actions">
+                      <div className="action-buttons">
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => setSelectedClassroom(classroom)}
+                          title="View Details"
+                        >
+                          <FaEye />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => exportStudentProgress(classroom.id)}
+                          title="Export Progress"
+                        >
+                          <FaDownload />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => console.log('Edit classroom', classroom.id)}
+                          title="Edit Classroom"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-danger"
+                          onClick={() => console.log('Delete classroom', classroom.id)}
+                          title="Delete Classroom"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="empty-state">
+                <div className="empty-icon">
+                  <FaGraduationCap />
+                </div>
+                <h3>No Classrooms Yet</h3>
+                <p>Create your first classroom to start teaching!</p>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => setShowCreateClassroom(true)}
+                >
+                  <FaPlus /> Create Your First Classroom
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Top Performers Section */}
-        <div className="dashboard-section top-performers-section">
+
+        {/* Challenges Section */}
+        <div className="dashboard-section challenges-section">
+        <div className="section-header">
+          <h2>My Challenges</h2>
+          <div className="section-actions">
+            <button 
+              className="btn btn-secondary"
+              onClick={() => {
+                // Select all challenges for bulk assignment
+                const allChallenges = classrooms.flatMap(classroom => classroom.challenges || []);
+                setSelectedChallenges(allChallenges);
+                setShowChallengeSelection(true);
+              }}
+              disabled={classrooms.flatMap(classroom => classroom.challenges || []).length === 0}
+            >
+              <FaUserCheck /> Bulk Assign
+            </button>
+            <button 
+              className="btn btn-primary"
+              onClick={() => setShowCreateChallenge(true)}
+            >
+              <FaPlus /> Create Challenge
+            </button>
+          </div>
+        </div>
+          
+          <div className="challenges-list">
+            {classrooms.flatMap(classroom => classroom.challenges || []).length > 0 ? (
+              <div className="challenges-table">
+                <div className="table-header">
+                  <div className="col-title">Challenge</div>
+                  <div className="col-difficulty">Difficulty</div>
+                  <div className="col-stats">Completions</div>
+                  <div className="col-stats">Avg Score</div>
+                  <div className="col-actions">Actions</div>
+                </div>
+                {classrooms.flatMap(classroom => classroom.challenges || []).map(challenge => (
+                  <div key={challenge.id} className="challenge-row">
+                    <div className="col-title">
+                      <div className="challenge-info">
+                        <div className="challenge-icon">
+                          <FaCode />
+                        </div>
+                        <div className="challenge-details">
+                          <h4>{challenge.title}</h4>
+                          <p>Par: {challenge.par || 3}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-difficulty">
+                      <span className={`difficulty-badge ${challenge.difficulty}`}>
+                        {challenge.difficulty}
+                      </span>
+                    </div>
+                    <div className="col-stats">
+                      <span className="stat-value">{challenge.completions || 0}</span>
+                    </div>
+                    <div className="col-stats">
+                      <span className="stat-value">{challenge.avgScore || 0}%</span>
+                    </div>
+                    <div className="col-actions">
+                      <div className="action-buttons">
+                        <button 
+                          className="btn btn-sm btn-primary"
+                          onClick={() => setShowAssignChallenge(challenge)}
+                          title="Assign to Classroom"
+                        >
+                          <FaUserCheck />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => console.log('Edit challenge', challenge.id)}
+                          title="Edit Challenge"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => console.log('View challenge', challenge.id)}
+                          title="View Details"
+                        >
+                          <FaEye />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => {
+                            const assignedClassrooms = classrooms.filter(c => 
+                              c.challenges?.some(ch => ch.title === challenge.title)
+                            );
+                            alert(`This challenge is assigned to: ${assignedClassrooms.map(c => c.name).join(', ') || 'No classrooms'}`);
+                          }}
+                          title="View in Classrooms"
+                        >
+                          <FaGraduationCap />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-danger"
+                          onClick={() => console.log('Delete challenge', challenge.id)}
+                          title="Delete Challenge"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <div className="empty-icon">
+                  <FaCode />
+                </div>
+                <h3>No Challenges Yet</h3>
+                <p>Create your first coding challenge to get started!</p>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => setShowCreateChallenge(true)}
+                >
+                  <FaPlus /> Create Your First Challenge
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Teacher Events Section */}
+        <div className="dashboard-section teacher-events-section">
           <div className="section-header">
-            <h2>Top Performers</h2>
+            <h2>My Events</h2>
             <div className="section-actions">
-              <button className="btn btn-link">
-                <FaEye /> View All
+              <button 
+                className="btn btn-primary"
+                onClick={() => setShowCreateEvent(true)}
+              >
+                <FaPlus /> Create Event
               </button>
             </div>
           </div>
-          <div className="performers-grid">
-            {analytics.topPerformers && analytics.topPerformers.slice(0, 3).map((performer, index) => (
-              <div key={performer.id} className={`performer-card rank-${index + 1}`}>
-                <div className="performer-rank">
-                  {index === 0 && <FaTrophy className="trophy gold" />}
-                  {index === 1 && <FaTrophy className="trophy silver" />}
-                  {index === 2 && <FaTrophy className="trophy bronze" />}
-                  <span className="rank-number">#{index + 1}</span>
+          
+          <div className="events-list">
+            {teacherEvents && teacherEvents.length > 0 ? (
+              <div className="events-table">
+                <div className="table-header">
+                  <div className="col-title">Event</div>
+                  <div className="col-stats">Date & Time</div>
+                  <div className="col-stats">Participants</div>
+                  <div className="col-stats">Status</div>
+                  <div className="col-actions">Actions</div>
                 </div>
-                <div className="performer-avatar">
-                  <img 
-                    src={performer.avatar || `https://i.pravatar.cc/150?img=${performer.id}`} 
-                    alt={performer.name}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="performer-info">
-                  <h4>{performer.name}</h4>
-                  <p className="performer-score">{performer.score} points</p>
-                  <p className="performer-challenges">{performer.challengesCompleted} challenges completed</p>
-                </div>
-                <div className="performer-actions">
-                  <button className="btn btn-sm btn-outline">
-                    <FaEye /> View Profile
-                  </button>
-                </div>
+                {teacherEvents.map(event => (
+                  <div key={event.id} className="event-row">
+                    <div className="col-title">
+                      <div className="event-info">
+                        <div className="event-icon">
+                          <FaCalendarAlt />
+                        </div>
+                        <div className="event-details">
+                          <h4>{event.title}</h4>
+                          <p>{event.description}</p>
+                          <div className="event-meta">
+                            <span className="event-type">{event.type}</span>
+                            <span className="event-location">{event.location}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-stats">
+                      <div className="datetime-info">
+                        <span className="date">{event.date}</span>
+                        <span className="time">{event.time}</span>
+                      </div>
+                    </div>
+                    <div className="col-stats">
+                      <div className="participants-info">
+                        <span className="participants-count">{event.currentParticipants}/{event.maxParticipants}</span>
+                        <div className="progress-bar">
+                          <div 
+                            className="progress-fill" 
+                            style={{ width: `${(event.currentParticipants / event.maxParticipants) * 100}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-stats">
+                      <span className={`status-badge ${event.status}`}>
+                        {event.status}
+                      </span>
+                    </div>
+                    <div className="col-actions">
+                      <div className="action-buttons">
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => console.log('View event', event.id)}
+                          title="View Details"
+                        >
+                          <FaEye />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => console.log('Edit event', event.id)}
+                          title="Edit Event"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-outline"
+                          onClick={() => console.log('Manage participants', event.id)}
+                          title="Manage Participants"
+                        >
+                          <FaUsers />
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-danger"
+                          onClick={() => {
+                            setTeacherEvents(prev => prev.filter(e => e.id !== event.id));
+                            alert(`Event "${event.title}" deleted successfully!`);
+                          }}
+                          title="Delete Event"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="empty-state">
+                <div className="empty-icon">
+                  <FaCalendarAlt />
+                </div>
+                <h3>No Events Yet</h3>
+                <p>Create your first event to engage with students!</p>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => setShowCreateEvent(true)}
+                >
+                  <FaPlus /> Create Your First Event
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -799,21 +1226,58 @@ const TeacherDashboard = () => {
             
             <div className="modal-body">
               <div className="classroom-tabs">
-                <div className="tab active">Students</div>
-                <div className="tab">Challenges</div>
-                <div className="tab">Analytics</div>
+                <div 
+                  className={`tab ${activeClassroomTab === 'students' ? 'active' : ''}`}
+                  onClick={() => setActiveClassroomTab('students')}
+                >
+                  Students
+                </div>
+                <div 
+                  className={`tab ${activeClassroomTab === 'challenges' ? 'active' : ''}`}
+                  onClick={() => setActiveClassroomTab('challenges')}
+                >
+                  Challenges
+                </div>
+                <div 
+                  className={`tab ${activeClassroomTab === 'analytics' ? 'active' : ''}`}
+                  onClick={() => setActiveClassroomTab('analytics')}
+                >
+                  Analytics
+                </div>
               </div>
               
               <div className="tab-content">
-                <div className="students-section">
+                {activeClassroomTab === 'students' && (
+                  <div className="students-section">
                   <div className="section-header">
                     <h3>Students ({selectedClassroom.students?.length || 0})</h3>
-                    <button 
-                      className="btn btn-primary"
-                      onClick={() => setShowCreateChallenge(true)}
-                    >
-                      <FaPlus /> Add Challenge
-                    </button>
+                    <div className="section-actions">
+                      <button 
+                        className="btn btn-outline"
+                        onClick={() => setShowClassroomCode(true)}
+                        title="Share Classroom Code"
+                      >
+                        <FaShareAlt /> Share Code
+                      </button>
+                      <button 
+                        className="btn btn-secondary"
+                        onClick={() => setShowAddStudent(true)}
+                      >
+                        <FaUserPlus /> Add Student
+                      </button>
+                      <button 
+                        className="btn btn-secondary"
+                        onClick={() => setShowChallengeSelection(true)}
+                      >
+                        <FaUserCheck /> Assign Challenges
+                      </button>
+                      <button 
+                        className="btn btn-outline"
+                        onClick={() => setShowCreateChallenge(true)}
+                      >
+                        <FaPlus /> Create Challenge
+                      </button>
+                    </div>
                   </div>
                   
                   <div className="students-table">
@@ -852,7 +1316,293 @@ const TeacherDashboard = () => {
                       </tbody>
                     </table>
                   </div>
-                </div>
+                  </div>
+                )}
+
+                {activeClassroomTab === 'challenges' && (
+                  <div className="challenges-section">
+                    <div className="section-header">
+                      <h3>Classroom Challenges ({selectedClassroom.challenges?.length || 0})</h3>
+                      <div className="section-actions">
+                        <button 
+                          className="btn btn-outline"
+                          onClick={() => setShowChallengeSelection(true)}
+                        >
+                          <FaUserCheck /> Assign Challenges
+                        </button>
+                        <button 
+                          className="btn btn-outline"
+                          onClick={() => setShowCreateChallenge(true)}
+                        >
+                          <FaPlus /> Create Challenge
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="challenges-list">
+                      {selectedClassroom.challenges && selectedClassroom.challenges.length > 0 ? (
+                        <div className="challenges-table">
+                          <div className="table-header">
+                            <div className="col-title">Challenge</div>
+                            <div className="col-stats">Difficulty</div>
+                            <div className="col-stats">Completions</div>
+                            <div className="col-stats">Avg Score</div>
+                            <div className="col-actions">Actions</div>
+                          </div>
+                          {selectedClassroom.challenges.map(challenge => (
+                            <div key={challenge.id} className="challenge-row">
+                              <div className="col-title">
+                                <div className="challenge-info">
+                                  <div className="challenge-icon">
+                                    <FaCode />
+                                  </div>
+                                  <div className="challenge-details">
+                                    <h4>{challenge.title}</h4>
+                                    <p>Par: {challenge.par || 3}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-stats">
+                                <span className={`difficulty-badge ${challenge.difficulty}`}>
+                                  {challenge.difficulty}
+                                </span>
+                              </div>
+                              <div className="col-stats">
+                                <span className="stat-value">{challenge.completions || 0}</span>
+                              </div>
+                              <div className="col-stats">
+                                <span className="stat-value">{challenge.avgScore || 0}%</span>
+                              </div>
+                              <div className="col-actions">
+                                <div className="action-buttons">
+                                  <button 
+                                    className="btn btn-sm btn-outline"
+                                    onClick={() => console.log('View challenge', challenge.id)}
+                                    title="View Details"
+                                  >
+                                    <FaEye />
+                                  </button>
+                                  <button 
+                                    className="btn btn-sm btn-outline"
+                                    onClick={() => console.log('Edit challenge', challenge.id)}
+                                    title="Edit Challenge"
+                                  >
+                                    <FaEdit />
+                                  </button>
+                                  <button 
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() => console.log('Delete challenge', challenge.id)}
+                                    title="Delete Challenge"
+                                  >
+                                    <FaTrash />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="empty-state">
+                          <div className="empty-icon">
+                            <FaCode />
+                          </div>
+                          <h3>No Challenges Assigned</h3>
+                          <p>Assign challenges to this classroom to get started!</p>
+                          <button 
+                            className="btn btn-primary"
+                            onClick={() => setShowChallengeSelection(true)}
+                          >
+                            <FaUserCheck /> Assign Challenges
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {activeClassroomTab === 'analytics' && (
+                  <div className="analytics-section">
+                    <div className="section-header">
+                      <h3>Classroom Analytics</h3>
+                      <div className="section-actions">
+                        <button className="btn btn-outline">
+                          <FaFileExport /> Export Data
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="analytics-list">
+                      <div className="analytics-table">
+                        <div className="table-header">
+                          <div className="col-title">Metric</div>
+                          <div className="col-stats">Current Value</div>
+                          <div className="col-stats">Progress</div>
+                          <div className="col-stats">Status</div>
+                          <div className="col-actions">Actions</div>
+                        </div>
+                        
+                        <div className="analytics-row">
+                          <div className="col-title">
+                            <div className="analytics-info">
+                              <div className="analytics-icon primary">
+                                <FaUsers />
+                              </div>
+                              <div className="analytics-details">
+                                <h4>Total Students</h4>
+                                <p>All students enrolled in this classroom</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="stat-value">{selectedClassroom.students?.length || 0}</span>
+                          </div>
+                          <div className="col-stats">
+                            <div className="progress-bar">
+                              <div className="progress-fill" style={{width: '100%'}}></div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="status-badge completed">Active</span>
+                          </div>
+                          <div className="col-actions">
+                            <div className="action-buttons">
+                              <button 
+                                className="btn btn-sm btn-outline"
+                                onClick={() => setActiveClassroomTab('students')}
+                                title="View Students"
+                              >
+                                <FaEye />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="analytics-row">
+                          <div className="col-title">
+                            <div className="analytics-info">
+                              <div className="analytics-icon secondary">
+                                <FaCode />
+                              </div>
+                              <div className="analytics-details">
+                                <h4>Assigned Challenges</h4>
+                                <p>Challenges assigned to this classroom</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="stat-value">{selectedClassroom.challenges?.length || 0}</span>
+                          </div>
+                          <div className="col-stats">
+                            <div className="progress-bar">
+                              <div className="progress-fill" style={{width: '75%'}}></div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="status-badge upcoming">Active</span>
+                          </div>
+                          <div className="col-actions">
+                            <div className="action-buttons">
+                              <button 
+                                className="btn btn-sm btn-outline"
+                                onClick={() => setActiveClassroomTab('challenges')}
+                                title="View Challenges"
+                              >
+                                <FaEye />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="analytics-row">
+                          <div className="col-title">
+                            <div className="analytics-info">
+                              <div className="analytics-icon accent">
+                                <FaChartLine />
+                              </div>
+                              <div className="analytics-details">
+                                <h4>Average Progress</h4>
+                                <p>Class average completion rate</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="stat-value">
+                              {selectedClassroom.students ? 
+                                Math.round(selectedClassroom.students.reduce((sum, student) => sum + (student.progress || 0), 0) / selectedClassroom.students.length) || 0 
+                                : 0
+                              }%
+                            </span>
+                          </div>
+                          <div className="col-stats">
+                            <div className="progress-bar">
+                              <div className="progress-fill" style={{
+                                width: `${selectedClassroom.students ? 
+                                  Math.round(selectedClassroom.students.reduce((sum, student) => sum + (student.progress || 0), 0) / selectedClassroom.students.length) || 0 
+                                  : 0
+                                }%`
+                              }}></div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="status-badge upcoming">In Progress</span>
+                          </div>
+                          <div className="col-actions">
+                            <div className="action-buttons">
+                              <button 
+                                className="btn btn-sm btn-outline"
+                                onClick={() => console.log('View detailed progress')}
+                                title="View Details"
+                              >
+                                <FaEye />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="analytics-row">
+                          <div className="col-title">
+                            <div className="analytics-info">
+                              <div className="analytics-icon success">
+                                <FaTrophy />
+                              </div>
+                              <div className="analytics-details">
+                                <h4>Completed Challenges</h4>
+                                <p>Total challenge completions by students</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="stat-value">
+                              {selectedClassroom.students ? 
+                                selectedClassroom.students.reduce((sum, student) => sum + (student.challengesCompleted || 0), 0) 
+                                : 0
+                              }
+                            </span>
+                          </div>
+                          <div className="col-stats">
+                            <div className="progress-bar">
+                              <div className="progress-fill" style={{width: '60%'}}></div>
+                            </div>
+                          </div>
+                          <div className="col-stats">
+                            <span className="status-badge completed">Completed</span>
+                          </div>
+                          <div className="col-actions">
+                            <div className="action-buttons">
+                              <button 
+                                className="btn btn-sm btn-outline"
+                                onClick={() => console.log('View completions')}
+                                title="View Details"
+                              >
+                                <FaEye />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1098,6 +1848,854 @@ const TeacherDashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Assign Challenge Modal */}
+      {showAssignChallenge && (
+        <div className="modal-overlay">
+          <div className="modal-content assign-challenge-modal">
+            <div className="modal-header">
+              <h2>Assign Challenge: {showAssignChallenge.title}</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowAssignChallenge(null)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="challenge-preview">
+                <div className="challenge-info">
+                  <div className="challenge-meta">
+                    <span className={`difficulty-badge ${showAssignChallenge.difficulty}`}>
+                      {showAssignChallenge.difficulty}
+                    </span>
+                    <span className="par-info">Par: {showAssignChallenge.par || 3}</span>
+                  </div>
+                  <p className="challenge-description">
+                    {showAssignChallenge.description || 'No description available'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="assignment-form">
+                <h4>Select Classrooms</h4>
+                <div className="classroom-selection">
+                  {classrooms.map(classroom => (
+                    <div key={classroom.id} className="classroom-option">
+                      <label className="checkbox-label">
+                        <input 
+                          type="checkbox" 
+                          value={classroom.id}
+                          checked={classroom.challenges?.some(ch => ch.id === showAssignChallenge.id) || false}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              // Add challenge to classroom
+                              setClassrooms(prev => prev.map(c => 
+                                c.id === classroom.id 
+                                  ? { ...c, challenges: [...(c.challenges || []), { ...showAssignChallenge, id: Date.now() + Math.random() }] }
+                                  : c
+                              ));
+                            } else {
+                              // Remove challenge from classroom
+                              setClassrooms(prev => prev.map(c => 
+                                c.id === classroom.id 
+                                  ? { ...c, challenges: (c.challenges || []).filter(ch => ch.title !== showAssignChallenge.title) }
+                                  : c
+                              ));
+                            }
+                          }}
+                        />
+                        <div className="classroom-details">
+                          <h5>{classroom.name}</h5>
+                          <p>{classroom.students?.length || 0} students • Grade {classroom.grade}</p>
+                          {classroom.challenges?.some(ch => ch.title === showAssignChallenge.title) && (
+                            <span className="already-assigned">✓ Already assigned</span>
+                          )}
+                        </div>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="assignment-settings">
+                  <h4>Assignment Settings</h4>
+                  <div className="form-group">
+                    <label>Due Date</label>
+                    <input 
+                      type="datetime-local" 
+                      className="form-input"
+                      defaultValue={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Max Attempts</label>
+                    <select className="form-input">
+                      <option value="unlimited">Unlimited</option>
+                      <option value="3">3 attempts</option>
+                      <option value="5">5 attempts</option>
+                      <option value="10">10 attempts</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Points</label>
+                    <input 
+                      type="number" 
+                      className="form-input"
+                      defaultValue={showAssignChallenge.par * 10}
+                      min="1"
+                      max="100"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="modal-actions">
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={() => setShowAssignChallenge(null)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-primary"
+                onClick={() => {
+                  const assignedCount = classrooms.filter(c => 
+                    c.challenges?.some(ch => ch.title === showAssignChallenge.title)
+                  ).length;
+                  console.log(`Challenge assigned to ${assignedCount} classroom(s)`);
+                  setShowAssignChallenge(null);
+                }}
+              >
+                <FaUserCheck /> Assign Challenge
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Announcement Modal */}
+      {showAnnouncementModal && (
+        <div className="modal-overlay">
+          <div className="modal-content announcement-modal">
+            <div className="modal-header">
+              <h2>Send Announcement</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowAnnouncementModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={sendAnnouncement}>
+              <div className="modal-body">
+                {/* Recipients Selection */}
+                <div className="form-section">
+                  <h4>Recipients</h4>
+                  <div className="recipient-options">
+                    <label className="radio-label">
+                      <input 
+                        type="radio" 
+                        name="recipients" 
+                        value="all"
+                        checked={announcement.recipients === 'all'}
+                        onChange={(e) => setAnnouncement(prev => ({ ...prev, recipients: e.target.value }))}
+                      />
+                      <span>All Students</span>
+                    </label>
+                    <label className="radio-label">
+                      <input 
+                        type="radio" 
+                        name="recipients" 
+                        value="classrooms"
+                        checked={announcement.recipients === 'classrooms'}
+                        onChange={(e) => setAnnouncement(prev => ({ ...prev, recipients: e.target.value }))}
+                      />
+                      <span>Specific Classrooms</span>
+                    </label>
+                    <label className="radio-label">
+                      <input 
+                        type="radio" 
+                        name="recipients" 
+                        value="students"
+                        checked={announcement.recipients === 'students'}
+                        onChange={(e) => setAnnouncement(prev => ({ ...prev, recipients: e.target.value }))}
+                      />
+                      <span>Individual Students</span>
+                    </label>
+                  </div>
+                  
+                  {/* Classroom Selection */}
+                  {announcement.recipients === 'classrooms' && (
+                    <div className="selection-list">
+                      <h5>Select Classrooms:</h5>
+                      {classrooms.map(classroom => (
+                        <label key={classroom.id} className="checkbox-label">
+                          <input 
+                            type="checkbox" 
+                            value={classroom.id}
+                            checked={announcement.selectedClassrooms.includes(classroom.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setAnnouncement(prev => ({
+                                  ...prev,
+                                  selectedClassrooms: [...prev.selectedClassrooms, classroom.id]
+                                }));
+                              } else {
+                                setAnnouncement(prev => ({
+                                  ...prev,
+                                  selectedClassrooms: prev.selectedClassrooms.filter(id => id !== classroom.id)
+                                }));
+                              }
+                            }}
+                          />
+                          <div className="selection-details">
+                            <h6>{classroom.name}</h6>
+                            <p>{classroom.students?.length || 0} students • Grade {classroom.grade}</p>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Student Selection */}
+                  {announcement.recipients === 'students' && (
+                    <div className="selection-list">
+                      <h5>Select Students:</h5>
+                      {classrooms.flatMap(classroom => classroom.students || []).map(student => (
+                        <label key={student.id} className="checkbox-label">
+                          <input 
+                            type="checkbox" 
+                            value={student.id}
+                            checked={announcement.selectedStudents.includes(student.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setAnnouncement(prev => ({
+                                  ...prev,
+                                  selectedStudents: [...prev.selectedStudents, student.id]
+                                }));
+                              } else {
+                                setAnnouncement(prev => ({
+                                  ...prev,
+                                  selectedStudents: prev.selectedStudents.filter(id => id !== student.id)
+                                }));
+                              }
+                            }}
+                          />
+                          <div className="selection-details">
+                            <h6>{student.name}</h6>
+                            <p>Progress: {student.progress || 0}%</p>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Announcement Content */}
+                <div className="form-section">
+                  <h4>Announcement Details</h4>
+                  <div className="form-group">
+                    <label>Subject *</label>
+                    <input 
+                      type="text" 
+                      className="form-input"
+                      value={announcement.subject}
+                      onChange={(e) => setAnnouncement(prev => ({ ...prev, subject: e.target.value }))}
+                      placeholder="Enter announcement subject"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Message *</label>
+                    <textarea 
+                      className="form-input form-textarea"
+                      value={announcement.message}
+                      onChange={(e) => setAnnouncement(prev => ({ ...prev, message: e.target.value }))}
+                      placeholder="Enter your announcement message"
+                      rows="6"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Priority</label>
+                    <select 
+                      className="form-input"
+                      value={announcement.priority}
+                      onChange={(e) => setAnnouncement(prev => ({ ...prev, priority: e.target.value }))}
+                    >
+                      <option value="low">Low Priority</option>
+                      <option value="normal">Normal Priority</option>
+                      <option value="high">High Priority</option>
+                    </select>
+                  </div>
+                </div>
+                
+                {/* Delivery Options */}
+                <div className="form-section">
+                  <h4>Delivery Options</h4>
+                  <div className="delivery-options">
+                    <label className="radio-label">
+                      <input 
+                        type="radio" 
+                        name="deliveryMethod" 
+                        value="immediate"
+                        checked={announcement.deliveryMethod === 'immediate'}
+                        onChange={(e) => setAnnouncement(prev => ({ ...prev, deliveryMethod: e.target.value }))}
+                      />
+                      <span>Send Immediately</span>
+                    </label>
+                    <label className="radio-label">
+                      <input 
+                        type="radio" 
+                        name="deliveryMethod" 
+                        value="scheduled"
+                        checked={announcement.deliveryMethod === 'scheduled'}
+                        onChange={(e) => setAnnouncement(prev => ({ ...prev, deliveryMethod: e.target.value }))}
+                      />
+                      <span>Schedule for Later</span>
+                    </label>
+                  </div>
+                  
+                  {announcement.deliveryMethod === 'scheduled' && (
+                    <div className="form-group">
+                      <label>Scheduled Date & Time</label>
+                      <input 
+                        type="datetime-local" 
+                        className="form-input"
+                        value={announcement.scheduledDate}
+                        onChange={(e) => setAnnouncement(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                        min={new Date().toISOString().slice(0, 16)}
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Preview */}
+                <div className="form-section">
+                  <h4>Preview</h4>
+                  <div className="announcement-preview">
+                    <div className="preview-header">
+                      <h5>{announcement.subject || 'Announcement Subject'}</h5>
+                      <span className={`priority-badge ${announcement.priority}`}>
+                        {announcement.priority}
+                      </span>
+                    </div>
+                    <div className="preview-content">
+                      <p>{announcement.message || 'Your announcement message will appear here...'}</p>
+                    </div>
+                    <div className="preview-footer">
+                      <small>
+                        Recipients: {
+                          announcement.recipients === 'all' ? 'All Students' :
+                          announcement.recipients === 'classrooms' ? `${announcement.selectedClassrooms.length} Classrooms` :
+                          `${announcement.selectedStudents.length} Students`
+                        }
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="modal-actions">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => setShowAnnouncementModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                >
+                  <FaEnvelope /> Send Announcement
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Challenge Selection Modal */}
+      {showChallengeSelection && selectedClassroom && (
+        <div className="modal-overlay">
+          <div className="modal-content challenge-selection-modal">
+            <div className="modal-header">
+              <h2>Assign Challenges to {selectedClassroom.name}</h2>
+              <button 
+                className="close-btn"
+                onClick={() => {
+                  setShowChallengeSelection(false);
+                  setSelectedChallenges([]);
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="challenge-selection-section">
+                <h4>Available Challenges</h4>
+                <p>Select challenges from your library to assign to this classroom:</p>
+                
+                <div className="challenges-selection-list">
+                  {classrooms.flatMap(classroom => classroom.challenges || []).length > 0 ? (
+                    <div className="challenges-grid">
+                      {classrooms.flatMap(classroom => classroom.challenges || []).map(challenge => (
+                        <div key={challenge.id} className="challenge-selection-card">
+                          <div className="challenge-checkbox">
+                            <input 
+                              type="checkbox" 
+                              id={`challenge-${challenge.id}`}
+                              checked={selectedChallenges.some(c => c.id === challenge.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedChallenges(prev => [...prev, challenge]);
+                                } else {
+                                  setSelectedChallenges(prev => prev.filter(c => c.id !== challenge.id));
+                                }
+                              }}
+                            />
+                            <label htmlFor={`challenge-${challenge.id}`} className="checkbox-label">
+                              <div className="challenge-info">
+                                <div className="challenge-icon">
+                                  <FaCode />
+                                </div>
+                                <div className="challenge-details">
+                                  <h5>{challenge.title}</h5>
+                                  <p>{challenge.description || 'No description available'}</p>
+                                  <div className="challenge-meta">
+                                    <span className={`difficulty-badge ${challenge.difficulty}`}>
+                                      {challenge.difficulty}
+                                    </span>
+                                    <span className="par-info">Par: {challenge.par || 3}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="empty-state">
+                      <div className="empty-icon">
+                        <FaCode />
+                      </div>
+                      <h3>No Challenges Available</h3>
+                      <p>Create some challenges first to assign them to classrooms.</p>
+                      <button 
+                        className="btn btn-primary"
+                        onClick={() => {
+                          setShowChallengeSelection(false);
+                          setShowCreateChallenge(true);
+                        }}
+                      >
+                        <FaPlus /> Create Challenge
+                      </button>
+                    </div>
+                  )}
+                </div>
+                
+                {selectedChallenges.length > 0 && (
+                  <div className="selected-challenges-summary">
+                    <h4>Selected Challenges ({selectedChallenges.length})</h4>
+                    <div className="selected-list">
+                      {selectedChallenges.map(challenge => (
+                        <div key={challenge.id} className="selected-challenge">
+                          <span>{challenge.title}</span>
+                          <button 
+                            className="btn btn-sm btn-danger"
+                            onClick={() => setSelectedChallenges(prev => prev.filter(c => c.id !== challenge.id))}
+                          >
+                            <FaTimesCircle />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="modal-actions">
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={() => {
+                  setShowChallengeSelection(false);
+                  setSelectedChallenges([]);
+                }}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-primary"
+                onClick={assignSelectedChallenges}
+                disabled={selectedChallenges.length === 0}
+              >
+                <FaUserCheck /> Assign {selectedChallenges.length} Challenge{selectedChallenges.length !== 1 ? 's' : ''}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Event Modal */}
+      {showCreateEvent && (
+        <div className="modal-overlay">
+          <div className="modal-content create-event-modal">
+            <div className="modal-header">
+              <h2>Create New Event</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowCreateEvent(false)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              const eventData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                date: formData.get('date'),
+                time: formData.get('time'),
+                location: formData.get('location'),
+                maxParticipants: parseInt(formData.get('maxParticipants')),
+                type: formData.get('type')
+              };
+              createEvent(eventData);
+            }}>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label>Event Title *</label>
+                  <input 
+                    type="text" 
+                    name="title"
+                    className="form-input"
+                    placeholder="Enter event title"
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Description *</label>
+                  <textarea 
+                    name="description"
+                    className="form-input form-textarea"
+                    placeholder="Describe your event"
+                    rows="4"
+                    required
+                  />
+                </div>
+                
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Date *</label>
+                    <input 
+                      type="date" 
+                      name="date"
+                      className="form-input"
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Time *</label>
+                    <input 
+                      type="time" 
+                      name="time"
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className="form-group">
+                  <label>Location *</label>
+                  <input 
+                    type="text" 
+                    name="location"
+                    className="form-input"
+                    placeholder="e.g., Virtual, School Lab, Room 101"
+                    required
+                  />
+                </div>
+                
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Event Type *</label>
+                    <select name="type" className="form-input" required>
+                      <option value="">Select event type</option>
+                      <option value="workshop">Workshop</option>
+                      <option value="competition">Competition</option>
+                      <option value="session">Session</option>
+                      <option value="seminar">Seminar</option>
+                      <option value="meetup">Meetup</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Max Participants *</label>
+                    <input 
+                      type="number" 
+                      name="maxParticipants"
+                      className="form-input"
+                      min="1"
+                      max="100"
+                      defaultValue="20"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="modal-actions">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => setShowCreateEvent(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                >
+                  <FaPlus /> Create Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Student Modal */}
+      {showAddStudent && selectedClassroom && (
+        <div className="modal-overlay">
+          <div className="modal-content add-student-modal">
+            <div className="modal-header">
+              <h2>Add Student to {selectedClassroom.name}</h2>
+              <button 
+                className="close-btn"
+                onClick={() => {
+                  setShowAddStudent(false);
+                  setNewStudent({ name: '', email: '', grade: '', studentId: '' });
+                }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={addStudentToClassroom}>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label>Student Name *</label>
+                  <input 
+                    type="text" 
+                    className="form-input"
+                    value={newStudent.name}
+                    onChange={(e) => setNewStudent(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Enter student's full name"
+                    required
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Email Address *</label>
+                  <input 
+                    type="email" 
+                    className="form-input"
+                    value={newStudent.email}
+                    onChange={(e) => setNewStudent(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="Enter student's email"
+                    required
+                  />
+                </div>
+                
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Grade Level *</label>
+                    <select 
+                      className="form-input"
+                      value={newStudent.grade}
+                      onChange={(e) => setNewStudent(prev => ({ ...prev, grade: e.target.value }))}
+                      required
+                    >
+                      <option value="">Select grade</option>
+                      <option value="6">Grade 6</option>
+                      <option value="7">Grade 7</option>
+                      <option value="8">Grade 8</option>
+                      <option value="9">Grade 9</option>
+                      <option value="10">Grade 10</option>
+                      <option value="11">Grade 11</option>
+                      <option value="12">Grade 12</option>
+                    </select>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Student ID</label>
+                    <div className="input-with-button">
+                      <input 
+                        type="text" 
+                        className="form-input"
+                        value={newStudent.studentId}
+                        onChange={(e) => setNewStudent(prev => ({ ...prev, studentId: e.target.value }))}
+                        placeholder="Auto-generated if empty"
+                      />
+                      <button 
+                        type="button"
+                        className="btn btn-outline btn-sm"
+                        onClick={() => setNewStudent(prev => ({ ...prev, studentId: generateStudentId() }))}
+                      >
+                        Generate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="form-info">
+                  <p><strong>Note:</strong> Students can also join this classroom using the classroom code: <code>{selectedClassroom.code}</code></p>
+                </div>
+              </div>
+              
+              <div className="modal-actions">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => {
+                    setShowAddStudent(false);
+                    setNewStudent({ name: '', email: '', grade: '', studentId: '' });
+                  }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                >
+                  <FaUserPlus /> Add Student
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Share Classroom Code Modal */}
+      {showClassroomCode && selectedClassroom && (
+        <div className="modal-overlay">
+          <div className="modal-content share-code-modal">
+            <div className="modal-header">
+              <h2>Share Classroom Code</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowClassroomCode(false)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="classroom-code-section">
+                <div className="code-display">
+                  <h3>{selectedClassroom.name}</h3>
+                  <div className="code-container">
+                    <span className="classroom-code">{selectedClassroom.code}</span>
+                    <button 
+                      className="btn btn-primary"
+                      onClick={() => copyClassroomCode(selectedClassroom.code)}
+                    >
+                      <FaShareAlt /> Copy Code
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="sharing-instructions">
+                  <h4>How students can join:</h4>
+                  <ol>
+                    <li>Students visit the PyGolfers website</li>
+                    <li>They click on "Join Classroom" or "Enter Code"</li>
+                    <li>They enter the classroom code: <strong>{selectedClassroom.code}</strong></li>
+                    <li>They complete the registration process</li>
+                    <li>They will automatically be added to this classroom</li>
+                  </ol>
+                </div>
+                
+                <div className="classroom-info">
+                  <h4>Classroom Information:</h4>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">Classroom Name:</span>
+                      <span className="info-value">{selectedClassroom.name}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Subject:</span>
+                      <span className="info-value">{selectedClassroom.subject}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Grade Level:</span>
+                      <span className="info-value">{selectedClassroom.grade}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Current Students:</span>
+                      <span className="info-value">{selectedClassroom.students?.length || 0}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="share-options">
+                  <h4>Share via:</h4>
+                  <div className="share-buttons">
+                    <button 
+                      className="btn btn-outline"
+                      onClick={() => {
+                        const text = `Join my PyGolfers classroom "${selectedClassroom.name}" using code: ${selectedClassroom.code}`;
+                        navigator.clipboard.writeText(text);
+                        alert('Message copied to clipboard!');
+                      }}
+                    >
+                      <FaEnvelope /> Copy Message
+                    </button>
+                    <button 
+                      className="btn btn-outline"
+                      onClick={() => {
+                        const url = `${window.location.origin}/join-classroom?code=${selectedClassroom.code}`;
+                        navigator.clipboard.writeText(url);
+                        alert('Join link copied to clipboard!');
+                      }}
+                    >
+                      <FaLink /> Copy Join Link
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="modal-actions">
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={() => setShowClassroomCode(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

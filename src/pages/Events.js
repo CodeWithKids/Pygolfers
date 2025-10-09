@@ -61,6 +61,52 @@ const mockEvents = [
     image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
     status: 'completed'
   },
+  // Teacher-created events
+  {
+    id: 5,
+    title: 'Python Coding Workshop',
+    description: 'Introduction to Python programming for beginners',
+    date: '2024-01-15',
+    time: '10:00',
+    location: 'Virtual',
+    organizer: 'Dr. Sarah Williams',
+    maxParticipants: 30,
+    registeredParticipants: 15,
+    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+    status: 'open',
+    createdBy: 'teacher123',
+    type: 'workshop'
+  },
+  {
+    id: 6,
+    title: 'Algorithm Challenge Competition',
+    description: 'Competitive programming event for advanced students',
+    date: '2024-01-20',
+    time: '14:00',
+    location: 'School Lab',
+    organizer: 'Dr. Sarah Williams',
+    maxParticipants: 20,
+    registeredParticipants: 20,
+    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+    status: 'full',
+    createdBy: 'teacher123',
+    type: 'competition'
+  },
+  {
+    id: 7,
+    title: 'Code Review Session',
+    description: 'Peer code review and feedback session',
+    date: '2024-01-10',
+    time: '15:00',
+    location: 'Virtual',
+    organizer: 'Dr. Sarah Williams',
+    maxParticipants: 15,
+    registeredParticipants: 12,
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+    status: 'completed',
+    createdBy: 'teacher123',
+    type: 'session'
+  },
 ];
 
 const Events = ({ currentUser }) => {
