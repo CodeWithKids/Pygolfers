@@ -14,7 +14,32 @@ import {
   FaSearch,
   FaGraduationCap,
   FaBookOpen,
-  FaAward
+  FaAward,
+  FaBell,
+  FaCalendar,
+  FaFileAlt,
+  FaCog,
+  FaUserCheck,
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaChartBar,
+  FaClipboardList,
+  FaComments,
+  FaEnvelope,
+  FaVideo,
+  FaShare,
+  FaCopy,
+  FaQrcode,
+  FaPrint,
+  FaFileExport,
+  FaFileImport,
+  FaSync,
+  FaPlay,
+  FaPause,
+  FaStop,
+  FaVolumeUp,
+  FaVolumeMute
 } from 'react-icons/fa';
 import './TeacherDashboard.css';
 
@@ -25,6 +50,27 @@ const TeacherDashboard = () => {
   const [showCreateChallenge, setShowCreateChallenge] = useState(false);
   const [analytics, setAnalytics] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Teacher-specific state management
+  const [notifications, setNotifications] = useState([]);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterBy, setFilterBy] = useState('all');
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+  const [showGradeModal, setShowGradeModal] = useState(false);
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
+  const [showStudentDetails, setShowStudentDetails] = useState(false);
+  const [showChallengeDetails, setShowChallengeDetails] = useState(false);
+  const [showProgressDetails, setShowProgressDetails] = useState(false);
+  const [showAchievementDetails, setShowAchievementDetails] = useState(false);
+  const [realtimeData, setRealtimeData] = useState({
+    onlineStudents: 0,
+    activeChallenges: 0,
+    pendingSubmissions: 0,
+    systemAlerts: []
+  });
   const [newClassroom, setNewClassroom] = useState({
     name: '',
     description: '',
@@ -43,6 +89,37 @@ const TeacherDashboard = () => {
 
   // Mock data for demonstration
   useEffect(() => {
+    // Mock notifications
+    const mockNotifications = [
+      {
+        id: 1,
+        type: 'submission',
+        title: 'New Challenge Submission',
+        message: 'Emma Johnson submitted "Hello World" challenge',
+        timestamp: new Date(Date.now() - 5 * 60 * 1000),
+        read: false,
+        priority: 'high'
+      },
+      {
+        id: 2,
+        type: 'achievement',
+        title: 'Student Achievement',
+        message: 'Alex Smith earned the "Code Master" badge',
+        timestamp: new Date(Date.now() - 15 * 60 * 1000),
+        read: false,
+        priority: 'medium'
+      },
+      {
+        id: 3,
+        type: 'system',
+        title: 'System Update',
+        message: 'New features available in the code editor',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+        read: true,
+        priority: 'low'
+      }
+    ];
+
     const mockClassrooms = [
       {
         id: 1,
@@ -81,22 +158,50 @@ const TeacherDashboard = () => {
         createdAt: '2024-01-10'
       }
     ];
-    
-    setClassrooms(mockClassrooms);
-    
+
     // Mock analytics
-    setAnalytics({
+    const mockAnalytics = {
       totalStudents: 5,
       totalChallenges: 5,
       avgProgress: 70,
       topPerformers: [
-        { name: 'Carol Davis', score: 95, challengesCompleted: 12 },
-        { name: 'Emma Brown', score: 88, challengesCompleted: 10 },
-        { name: 'Alice Johnson', score: 82, challengesCompleted: 8 }
+        { id: 1, name: 'Carol Davis', score: 95, challengesCompleted: 12, avatar: 'https://i.pravatar.cc/150?img=1' },
+        { id: 2, name: 'Emma Brown', score: 88, challengesCompleted: 10, avatar: 'https://i.pravatar.cc/150?img=2' },
+        { id: 3, name: 'Alice Johnson', score: 82, challengesCompleted: 8, avatar: 'https://i.pravatar.cc/150?img=3' }
+      ]
+    };
+    
+    // Set initial data
+    setClassrooms(mockClassrooms);
+    setAnalytics(mockAnalytics);
+    setNotifications(mockNotifications);
+    
+    // Set real-time data
+    setRealtimeData({
+      onlineStudents: 23,
+      activeChallenges: 5,
+      pendingSubmissions: 8,
+      systemAlerts: [
+        { type: 'warning', message: 'High server load detected' },
+        { type: 'info', message: 'New challenge template available' }
       ]
     });
     
     setIsLoading(false);
+  }, []);
+
+  // Real-time updates simulation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRealtimeData(prev => ({
+        ...prev,
+        onlineStudents: Math.floor(Math.random() * 30) + 15,
+        activeChallenges: Math.floor(Math.random() * 8) + 2,
+        pendingSubmissions: Math.floor(Math.random() * 15) + 3
+      }));
+    }, 10000); // Update every 10 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleCreateClassroom = (e) => {
@@ -195,6 +300,84 @@ const TeacherDashboard = () => {
     setNewChallenge({ ...newChallenge, learningObjectives: updatedObjectives });
   };
 
+  // Teacher-specific utility functions
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case 'easy': return '#4CAF50';
+      case 'medium': return '#FF9800';
+      case 'hard': return '#F44336';
+      default: return '#9E9E9E';
+    }
+  };
+
+  const getProgressColor = (progress) => {
+    if (progress >= 80) return '#4CAF50';
+    if (progress >= 60) return '#FF9800';
+    return '#F44336';
+  };
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const diff = now - new Date(timestamp);
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return 'Just now';
+  };
+
+  const markNotificationAsRead = (notificationId) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === notificationId ? { ...notif, read: true } : notif
+      )
+    );
+  };
+
+  const markAllNotificationsAsRead = () => {
+    setNotifications(prev => 
+      prev.map(notif => ({ ...notif, read: true }))
+    );
+  };
+
+  const sendAnnouncement = (announcement) => {
+    // Mock announcement sending
+    console.log('Sending announcement:', announcement);
+    setShowAnnouncementModal(false);
+  };
+
+  const generateClassroomCode = () => {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    // Could add a toast notification here
+  };
+
+  const exportAnalytics = () => {
+    const analyticsData = {
+      totalStudents: analytics.totalStudents,
+      totalChallenges: analytics.totalChallenges,
+      avgProgress: analytics.avgProgress,
+      topPerformers: analytics.topPerformers,
+      exportDate: new Date().toISOString(),
+      timeRange: activeTab
+    };
+    
+    const dataStr = JSON.stringify(analyticsData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `analytics-${activeTab}-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const exportStudentProgress = (classroomId) => {
     const classroom = classrooms.find(c => c.id === classroomId);
     if (!classroom) return;
@@ -233,13 +416,39 @@ const TeacherDashboard = () => {
 
   return (
     <div className="teacher-dashboard">
-      {/* Header Section */}
+      {/* Enhanced Header Section */}
       <div className="dashboard-header">
         <div className="header-welcome">
           <h1>Welcome back, Teacher!</h1>
           <p>Manage your classrooms and track student progress</p>
+          <div className="header-stats">
+            <div className="header-stat">
+              <span className="stat-number">{analytics.totalStudents || 0}</span>
+              <span className="stat-label">Total Students</span>
+            </div>
+            <div className="header-stat">
+              <span className="stat-number">{analytics.activeChallenges || 0}</span>
+              <span className="stat-label">Active Challenges</span>
+            </div>
+            <div className="header-stat">
+              <span className="stat-number">{analytics.avgProgress || 0}%</span>
+              <span className="stat-label">Avg Progress</span>
+            </div>
+          </div>
         </div>
         <div className="header-actions">
+          <button 
+            className="btn btn-notification"
+            onClick={() => setShowNotifications(!showNotifications)}
+            title="Notifications"
+          >
+            <FaBell />
+            {notifications.filter(n => !n.read).length > 0 && (
+              <span className="notification-badge">
+                {notifications.filter(n => !n.read).length}
+              </span>
+            )}
+          </button>
           <button 
             className="btn btn-secondary"
             onClick={() => setShowCreateChallenge(true)}
@@ -247,102 +456,233 @@ const TeacherDashboard = () => {
             <FaPlus /> Create Challenge
           </button>
           <button 
-            className="btn btn-primary"
-            onClick={() => setShowCreateClassroom(true)}
+            className="btn btn-secondary"
+            onClick={() => setShowAnnouncementModal(true)}
           >
-            <FaPlus /> Create Classroom
-          </button>
-          <button className="btn btn-secondary">
-            <FaDownload /> Export Data
+            <FaEnvelope /> Announcement
           </button>
         </div>
+      </div>
+
+      {/* Notifications Dropdown */}
+      {showNotifications && (
+        <div className="notifications-dropdown">
+          <div className="notifications-header">
+            <h3>Notifications</h3>
+            <button 
+              className="btn btn-link"
+              onClick={markAllNotificationsAsRead}
+            >
+              Mark all as read
+            </button>
+          </div>
+          <div className="notifications-list">
+            {notifications.map(notification => (
+              <div 
+                key={notification.id}
+                className={`notification-item ${notification.read ? 'read' : 'unread'}`}
+                onClick={() => markNotificationAsRead(notification.id)}
+              >
+                <div className="notification-icon">
+                  {notification.type === 'submission' && <FaCode />}
+                  {notification.type === 'achievement' && <FaTrophy />}
+                  {notification.type === 'system' && <FaBell />}
+                </div>
+                <div className="notification-content">
+                  <h4>{notification.title}</h4>
+                  <p>{notification.message}</p>
+                  <span className="notification-time">
+                    {formatTimeAgo(notification.timestamp)}
+                  </span>
+                </div>
+                {!notification.read && <div className="unread-indicator" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Real-time Activity Bar */}
+      <div className="realtime-bar">
+        <div className="realtime-item">
+          <FaUsers className="realtime-icon" />
+          <span>{realtimeData.onlineStudents} students online</span>
+        </div>
+        <div className="realtime-item">
+          <FaCode className="realtime-icon" />
+          <span>{realtimeData.activeChallenges} active challenges</span>
+        </div>
+        <div className="realtime-item">
+          <FaClock className="realtime-icon" />
+          <span>{realtimeData.pendingSubmissions} pending submissions</span>
+        </div>
+        {realtimeData.systemAlerts.length > 0 && (
+          <div className="realtime-item alert">
+            <FaExclamationTriangle className="realtime-icon" />
+            <span>{realtimeData.systemAlerts[0].message}</span>
+          </div>
+        )}
       </div>
 
       {/* Main Dashboard Grid */}
       <div className="dashboard-grid">
         
-        {/* Quick Stats Section */}
-        <div className="dashboard-section quick-stats-section">
+        {/* Enhanced Analytics Overview */}
+        <div className="dashboard-section analytics-overview">
           <div className="section-header">
-            <h2>Quick Stats</h2>
+            <h2>Analytics Overview</h2>
+            <div className="section-actions">
+              <div className="time-filter">
+                <button className={`time-btn ${activeTab === 'week' ? 'active' : ''}`} onClick={() => setActiveTab('week')}>
+                  Week
+                </button>
+                <button className={`time-btn ${activeTab === 'month' ? 'active' : ''}`} onClick={() => setActiveTab('month')}>
+                  Month
+                </button>
+                <button className={`time-btn ${activeTab === 'year' ? 'active' : ''}`} onClick={() => setActiveTab('year')}>
+                  Year
+                </button>
+              </div>
+              <button className="btn btn-link" onClick={() => window.location.reload()}>
+                <FaSync /> Refresh
+              </button>
+              <button className="btn btn-link" onClick={() => exportAnalytics()}>
+                <FaFileExport /> Export
+              </button>
+            </div>
           </div>
-          <div className="quick-stats-grid">
-            <div className="quick-stat-card">
-              <div className="stat-icon">
-                <FaUsers />
+          
+          <div className="analytics-grid">
+            <div className="analytics-card primary">
+              <div className="analytics-header">
+                <div className="analytics-icon">
+                  <FaUsers />
+                </div>
+                <div className="analytics-menu">
+                  <button className="menu-btn" onClick={() => setShowStudentDetails(!showStudentDetails)}>
+                    <FaEye />
+                  </button>
+                </div>
               </div>
-              <div className="stat-content">
-                <h3>{analytics.totalStudents}</h3>
+              <div className="analytics-content">
+                <h3>{analytics.totalStudents || 0}</h3>
                 <p>Total Students</p>
+                <div className="analytics-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width: '75%'}}></div>
+                  </div>
+                  <span className="progress-text">75% active this week</span>
+                </div>
+                <div className="analytics-trend">
+                  <span className="trend-indicator positive">+12%</span>
+                  <span className="trend-label">vs last month</span>
+                </div>
               </div>
             </div>
-            <div className="quick-stat-card">
-              <div className="stat-icon">
-                <FaCode />
+
+            <div className="analytics-card secondary">
+              <div className="analytics-header">
+                <div className="analytics-icon">
+                  <FaCode />
+                </div>
+                <div className="analytics-menu">
+                  <button className="menu-btn" onClick={() => setShowChallengeDetails(!showChallengeDetails)}>
+                    <FaEye />
+                  </button>
+                </div>
               </div>
-              <div className="stat-content">
-                <h3>{analytics.totalChallenges}</h3>
+              <div className="analytics-content">
+                <h3>{analytics.totalChallenges || 0}</h3>
                 <p>Total Challenges</p>
+                <div className="analytics-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width: '60%'}}></div>
+                  </div>
+                  <span className="progress-text">60% completion rate</span>
+                </div>
+                <div className="analytics-trend">
+                  <span className="trend-indicator positive">+5</span>
+                  <span className="trend-label">this week</span>
+                </div>
               </div>
             </div>
-            <div className="quick-stat-card">
-              <div className="stat-icon">
-                <FaChartLine />
+
+            <div className="analytics-card accent">
+              <div className="analytics-header">
+                <div className="analytics-icon">
+                  <FaChartLine />
+                </div>
+                <div className="analytics-menu">
+                  <button className="menu-btn" onClick={() => setShowProgressDetails(!showProgressDetails)}>
+                    <FaEye />
+                  </button>
+                </div>
               </div>
-              <div className="stat-content">
-                <h3>{analytics.avgProgress}%</h3>
+              <div className="analytics-content">
+                <h3>{analytics.avgProgress || 0}%</h3>
                 <p>Average Progress</p>
+                <div className="analytics-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width: `${analytics.avgProgress || 0}%`}}></div>
+                  </div>
+                  <span className="progress-text">Class average</span>
+                </div>
+                <div className="analytics-trend">
+                  <span className="trend-indicator positive">+8%</span>
+                  <span className="trend-label">improvement</span>
+                </div>
               </div>
             </div>
-            <div className="quick-stat-card">
-              <div className="stat-icon">
-                <FaTrophy />
+
+            <div className="analytics-card success">
+              <div className="analytics-header">
+                <div className="analytics-icon">
+                  <FaTrophy />
+                </div>
+                <div className="analytics-menu">
+                  <button className="menu-btn" onClick={() => setShowAchievementDetails(!showAchievementDetails)}>
+                    <FaEye />
+                  </button>
+                </div>
               </div>
-              <div className="stat-content">
+              <div className="analytics-content">
                 <h3>{analytics.topPerformers?.length || 0}</h3>
                 <p>Top Performers</p>
+                <div className="analytics-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width: '90%'}}></div>
+                  </div>
+                  <span className="progress-text">90% above average</span>
+                </div>
+                <div className="analytics-trend">
+                  <span className="trend-indicator positive">+3</span>
+                  <span className="trend-label">new achievers</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Recent Activity Section */}
-        <div className="dashboard-section activity-section">
-          <div className="section-header">
-            <h2>Recent Activity</h2>
-            <button className="btn btn-secondary btn-sm">
-              <FaEye /> View All
-            </button>
-          </div>
-          <div className="activity-list">
-            <div className="activity-item">
-              <div className="activity-icon">
-                <FaTrophy />
-              </div>
-              <div className="activity-content">
-                <h4>New Achievement Unlocked</h4>
-                <p>Alice Johnson completed "Variables & Types" challenge</p>
-                <span className="activity-time">2 hours ago</span>
+          {/* Detailed Analytics Charts */}
+          <div className="analytics-charts">
+            <div className="chart-section">
+              <h3>Student Progress Over Time</h3>
+              <div className="chart-container">
+                <div className="chart-placeholder">
+                  <FaChartBar className="chart-icon" />
+                  <p>Progress chart visualization</p>
+                  <small>Interactive chart showing student progress trends</small>
+                </div>
               </div>
             </div>
-            <div className="activity-item">
-              <div className="activity-icon">
-                <FaUsers />
-              </div>
-              <div className="activity-content">
-                <h4>New Student Joined</h4>
-                <p>Bob Smith joined "Python Explorers" classroom</p>
-                <span className="activity-time">1 day ago</span>
-              </div>
-            </div>
-            <div className="activity-item">
-              <div className="activity-icon">
-                <FaCode />
-              </div>
-              <div className="activity-content">
-                <h4>Challenge Created</h4>
-                <p>New challenge "Loops & Conditions" added</p>
-                <span className="activity-time">2 days ago</span>
+            
+            <div className="chart-section">
+              <h3>Challenge Completion Rates</h3>
+              <div className="chart-container">
+                <div className="chart-placeholder">
+                  <FaChartLine className="chart-icon" />
+                  <p>Completion rate visualization</p>
+                  <small>Breakdown by difficulty and topic</small>
+                </div>
               </div>
             </div>
           </div>
@@ -352,9 +692,17 @@ const TeacherDashboard = () => {
         <div className="dashboard-section classrooms-section">
           <div className="section-header">
             <h2>My Classrooms</h2>
-            <button className="btn btn-secondary btn-sm">
-              <FaEye /> View All
-            </button>
+            <div className="section-actions">
+              <button 
+                className="btn btn-primary"
+                onClick={() => setShowCreateClassroom(true)}
+              >
+                <FaPlus /> Create Classroom
+              </button>
+              <button className="btn btn-secondary btn-sm">
+                <FaEye /> View All
+              </button>
+            </div>
           </div>
           <div className="classrooms-grid">
             {classrooms && classrooms.map(classroom => (
@@ -393,25 +741,40 @@ const TeacherDashboard = () => {
         </div>
 
         {/* Top Performers Section */}
-        <div className="dashboard-section performers-section">
+        <div className="dashboard-section top-performers-section">
           <div className="section-header">
             <h2>Top Performers</h2>
-            <button className="btn btn-secondary btn-sm">
-              <FaEye /> View All
-            </button>
+            <div className="section-actions">
+              <button className="btn btn-link">
+                <FaEye /> View All
+              </button>
+            </div>
           </div>
-          <div className="performers-list">
-            {analytics.topPerformers && analytics.topPerformers.map((performer, index) => (
-              <div key={index} className="performer-card">
+          <div className="performers-grid">
+            {analytics.topPerformers && analytics.topPerformers.slice(0, 3).map((performer, index) => (
+              <div key={performer.id} className={`performer-card rank-${index + 1}`}>
                 <div className="performer-rank">
-                  {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                  {index === 0 && <FaTrophy className="trophy gold" />}
+                  {index === 1 && <FaTrophy className="trophy silver" />}
+                  {index === 2 && <FaTrophy className="trophy bronze" />}
+                  <span className="rank-number">#{index + 1}</span>
+                </div>
+                <div className="performer-avatar">
+                  <img 
+                    src={performer.avatar || `https://i.pravatar.cc/150?img=${performer.id}`} 
+                    alt={performer.name}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="performer-info">
                   <h4>{performer.name}</h4>
-                  <p>{performer.challengesCompleted} challenges completed</p>
+                  <p className="performer-score">{performer.score} points</p>
+                  <p className="performer-challenges">{performer.challengesCompleted} challenges completed</p>
                 </div>
-                <div className="performer-score">
-                  <span className="score">{performer.score}%</span>
+                <div className="performer-actions">
+                  <button className="btn btn-sm btn-outline">
+                    <FaEye /> View Profile
+                  </button>
                 </div>
               </div>
             ))}

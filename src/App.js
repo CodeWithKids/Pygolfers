@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/Buttons.css";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaPlay, FaUser, FaCog, FaSignOutAlt, FaChevronDown, FaTrophy, FaCode, FaUsers, FaChartLine, FaStar, FaQuoteLeft, FaGithub, FaTwitter, FaDiscord, FaGraduationCap, FaChalkboardTeacher, FaUserFriends, FaShieldAlt, FaHeart, FaGamepad, FaMedal, FaRocket } from "react-icons/fa";
+import { FaPlay, FaUser, FaCog, FaSignOutAlt, FaChevronDown, FaTrophy, FaCode, FaUsers, FaChartLine, FaStar, FaQuoteLeft, FaGithub, FaTwitter, FaDiscord, FaGraduationCap, FaChalkboardTeacher, FaUserFriends, FaShieldAlt, FaHeart, FaGamepad, FaMedal, FaRocket, FaBell } from "react-icons/fa";
 import { motion } from 'framer-motion';
 import CodePreview from './components/CodePreview';
 import './components/CodePreview.css';
@@ -376,6 +376,8 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+  const [showNotifications, setShowNotifications] = React.useState(false);
+  const [notifications, setNotifications] = React.useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -487,6 +489,134 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
   React.useEffect(() => {
     closeMenu();
   }, [location.pathname]);
+
+  // Initialize notifications based on user role
+  React.useEffect(() => {
+    if (currentUser.isAuthenticated) {
+      const mockNotifications = generateMockNotifications(currentUser.role);
+      setNotifications(mockNotifications);
+    }
+  }, [currentUser.role, currentUser.isAuthenticated]);
+
+  // Generate mock notifications based on user role
+  const generateMockNotifications = (role) => {
+    const baseNotifications = [
+      {
+        id: 1,
+        type: 'system',
+        title: 'Welcome to PyGolfers!',
+        message: 'Get started with your first coding challenge',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+        read: false,
+        priority: 'low'
+      }
+    ];
+
+    if (role === 'teacher') {
+      return [
+        ...baseNotifications,
+        {
+          id: 2,
+          type: 'submission',
+          title: 'New Challenge Submission',
+          message: 'Emma Johnson submitted "Hello World" challenge',
+          timestamp: new Date(Date.now() - 5 * 60 * 1000),
+          read: false,
+          priority: 'high'
+        },
+        {
+          id: 3,
+          type: 'achievement',
+          title: 'Student Achievement',
+          message: 'Alex Smith earned the "Code Master" badge',
+          timestamp: new Date(Date.now() - 15 * 60 * 1000),
+          read: false,
+          priority: 'medium'
+        }
+      ];
+    } else if (role === 'parent') {
+      return [
+        ...baseNotifications,
+        {
+          id: 2,
+          type: 'progress',
+          title: 'Child Progress Update',
+          message: 'Your child completed 3 challenges this week',
+          timestamp: new Date(Date.now() - 30 * 60 * 1000),
+          read: false,
+          priority: 'medium'
+        },
+        {
+          id: 3,
+          type: 'achievement',
+          title: 'Child Achievement',
+          message: 'Your child earned a new badge!',
+          timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
+          read: true,
+          priority: 'low'
+        }
+      ];
+    } else if (role === 'student') {
+      return [
+        ...baseNotifications,
+        {
+          id: 2,
+          type: 'challenge',
+          title: 'New Challenge Available',
+          message: 'Check out the new "Python Basics" challenge',
+          timestamp: new Date(Date.now() - 10 * 60 * 1000),
+          read: false,
+          priority: 'medium'
+        },
+        {
+          id: 3,
+          type: 'achievement',
+          title: 'Congratulations!',
+          message: 'You earned the "First Steps" badge',
+          timestamp: new Date(Date.now() - 45 * 60 * 1000),
+          read: true,
+          priority: 'low'
+        }
+      ];
+    }
+
+    return baseNotifications;
+  };
+
+  // Get unread notification count
+  const getUnreadNotificationCount = () => {
+    return notifications.filter(notification => !notification.read).length;
+  };
+
+  // Mark notification as read
+  const markNotificationAsRead = (notificationId) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === notificationId ? { ...notif, read: true } : notif
+      )
+    );
+  };
+
+  // Mark all notifications as read
+  const markAllNotificationsAsRead = () => {
+    setNotifications(prev => 
+      prev.map(notif => ({ ...notif, read: true }))
+    );
+  };
+
+  // Format time ago
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const diff = now - new Date(timestamp);
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return 'Just now';
+  };
   
   // Handle logout
   const handleLogout = () => {
@@ -533,105 +663,281 @@ const NavBar = ({ currentUser, setCurrentUser }) => {
             onKeyDown={(e) => handleKeyDown(e, 'main')}
           >
             <ul className="nav-links">
-              <li>
-                <Link 
-                  to="/" 
-                  className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} 
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/about" 
-                  className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} 
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/challenges" 
-                  className={`nav-link ${location.pathname.startsWith('/challenges') ? 'active' : ''}`} 
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Challenges
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/leaderboard" 
-                  className={`nav-link ${location.pathname === '/leaderboard' ? 'active' : ''}`} 
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Leaderboard
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/events" 
-                  className={`nav-link ${location.pathname === '/events' ? 'active' : ''}`} 
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Events
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/community" 
-                  className={`nav-link ${location.pathname === '/community' ? 'active' : ''}`} 
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Community
-                </Link>
-              </li>
-              
-              {/* Role-based Dashboard Links */}
-              {currentUser.isAuthenticated && currentUser.role === 'teacher' && (
-                <li>
-                  <Link 
-                    to="/teacher-dashboard" 
-                    className={`nav-link ${location.pathname === '/teacher-dashboard' ? 'active' : ''}`} 
-                    onClick={closeMenu}
-                    tabIndex={isMenuOpen ? 0 : -1}
-                  >
-                    Dashboard
-                  </Link>
-                </li>
+              {/* Teacher-specific menu items */}
+              {currentUser.isAuthenticated && currentUser.role === 'teacher' ? (
+                <>
+                  <li>
+                    <Link 
+                      to="/teacher-dashboard" 
+                      className={`nav-link ${location.pathname === '/teacher-dashboard' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/community" 
+                      className={`nav-link ${location.pathname === '/community' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Community
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/events" 
+                      className={`nav-link ${location.pathname === '/events' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Events
+                    </Link>
+                  </li>
+                </>
+              ) : currentUser.isAuthenticated && currentUser.role === 'parent' ? (
+                <>
+                  <li>
+                    <Link 
+                      to="/parent-dashboard" 
+                      className={`nav-link ${location.pathname === '/parent-dashboard' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/challenges" 
+                      className={`nav-link ${location.pathname.startsWith('/challenges') ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Challenges
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/leaderboard" 
+                      className={`nav-link ${location.pathname === '/leaderboard' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Leaderboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/community" 
+                      className={`nav-link ${location.pathname === '/community' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Community
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/events" 
+                      className={`nav-link ${location.pathname === '/events' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Events
+                    </Link>
+                  </li>
+                </>
+              ) : currentUser.isAuthenticated && currentUser.role === 'student' ? (
+                <>
+                  <li>
+                    <Link 
+                      to="/challenges" 
+                      className={`nav-link ${location.pathname.startsWith('/challenges') ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Challenges
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/classrooms" 
+                      className={`nav-link ${location.pathname === '/classrooms' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Classrooms
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/leaderboard" 
+                      className={`nav-link ${location.pathname === '/leaderboard' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Leaderboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/community" 
+                      className={`nav-link ${location.pathname === '/community' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Community
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/events" 
+                      className={`nav-link ${location.pathname === '/events' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Events
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  {/* Default menu for non-authenticated users and students */}
+                  <li>
+                    <Link 
+                      to="/" 
+                      className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/about" 
+                      className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/challenges" 
+                      className={`nav-link ${location.pathname.startsWith('/challenges') ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Challenges
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/leaderboard" 
+                      className={`nav-link ${location.pathname === '/leaderboard' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Leaderboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/events" 
+                      className={`nav-link ${location.pathname === '/events' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Events
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/community" 
+                      className={`nav-link ${location.pathname === '/community' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Community
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/contact" 
+                      className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Contact
+                    </Link>
+                  </li>
+                </>
               )}
-              
-              {currentUser.isAuthenticated && currentUser.role === 'parent' && (
-                <li>
-                  <Link 
-                    to="/parent-dashboard" 
-                    className={`nav-link ${location.pathname === '/parent-dashboard' ? 'active' : ''}`} 
-                    onClick={closeMenu}
-                    tabIndex={isMenuOpen ? 0 : -1}
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-              )}
-              
-              <li>
-                <Link 
-                  to="/contact" 
-                  className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} 
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  Contact
-                </Link>
-              </li>
             </ul>
+            
+            {/* Notification Icon for All Authenticated Users */}
+            {currentUser.isAuthenticated && (
+              <div className="nav-notifications">
+                <button 
+                  className="notification-btn"
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  title="Notifications"
+                  tabIndex={isMenuOpen ? 0 : -1}
+                >
+                  <FaBell />
+                  {getUnreadNotificationCount() > 0 && (
+                    <span className="notification-badge">
+                      {getUnreadNotificationCount()}
+                    </span>
+                  )}
+                </button>
+                
+                {/* Notifications Dropdown */}
+                {showNotifications && (
+                  <div className="notifications-dropdown">
+                    <div className="notifications-header">
+                      <h3>Notifications</h3>
+                      <button 
+                        className="btn btn-link"
+                        onClick={markAllNotificationsAsRead}
+                      >
+                        Mark all as read
+                      </button>
+                    </div>
+                    <div className="notifications-list">
+                      {notifications.map(notification => (
+                        <div 
+                          key={notification.id}
+                          className={`notification-item ${notification.read ? 'read' : 'unread'}`}
+                          onClick={() => markNotificationAsRead(notification.id)}
+                        >
+                          <div className="notification-icon">
+                            {notification.type === 'submission' && <FaCode />}
+                            {notification.type === 'achievement' && <FaTrophy />}
+                            {notification.type === 'system' && <FaBell />}
+                            {notification.type === 'progress' && <FaChartLine />}
+                            {notification.type === 'challenge' && <FaPlay />}
+                          </div>
+                          <div className="notification-content">
+                            <h4>{notification.title}</h4>
+                            <p>{notification.message}</p>
+                            <span className="notification-time">
+                              {formatTimeAgo(notification.timestamp)}
+                            </span>
+                          </div>
+                          {!notification.read && <div className="unread-indicator" />}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
             
             {isMobile && !currentUser.isAuthenticated && (
               <div className="mobile-auth-buttons">

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import TeacherDashboard from '../components/TeacherDashboard';
 import '../styles/Buttons.css';
 
 // Demo roles: in a real app, get this from user profile/auth
@@ -24,10 +23,8 @@ const initialClassrooms = [
 ];
 
 export default function Classrooms() {
-  // If user is a teacher, show the enhanced teacher dashboard
-  if (DEMO_ROLE === 'teacher') {
-    return <TeacherDashboard />;
-  }
+  // Note: Teachers should use the Teacher Dashboard instead
+  // This page is now focused on student classroom experience
 
   // Original student view logic below
   const [classrooms, setClassrooms] = useState(initialClassrooms);
