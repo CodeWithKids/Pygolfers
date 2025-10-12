@@ -507,8 +507,8 @@
   }
   
   .page-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
   }
   
   .controls-top {
@@ -522,16 +522,81 @@
     max-width: 100%;
   }
   
+  .search-input {
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .sort-container {
+    padding: 0.75rem;
+  }
+  
+  .sort-select {
+    font-size: 0.9rem;
+  }
+  
+  .difficulty-filters {
+    justify-content: flex-start;
+    gap: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+  
+  .filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  
   .challenges-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
   
   .challenge-card {
     padding: 1.5rem;
   }
   
-  .difficulty-filters {
-    justify-content: center;
+  .challenge-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .badge-container {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .challenge-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .difficulty-badge {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+  }
+  
+  .challenge-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .challenge-footer {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .par-score {
+    font-size: 0.85rem;
+  }
+  
+  .start-challenge-btn {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
   }
   
   .pagination {
@@ -541,25 +606,162 @@
   .pagination-btn {
     width: 36px;
     height: 36px;
+    font-size: 0.85rem;
+  }
+  
+  .no-results {
+    padding: 2rem 1rem;
+  }
+  
+  .no-results h3 {
+    font-size: 1.25rem;
+  }
+  
+  .no-results p {
     font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
-  .difficulty-filters {
-    flex-wrap: wrap;
+  .challenges-container {
+    padding: 1rem 0.75rem;
   }
   
-  .filter-btn {
-    padding: 0.4rem 1rem;
+  .page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .controls-top {
+    gap: 0.75rem;
+  }
+  
+  .search-input {
+    padding: 0.65rem 0.85rem 0.65rem 2.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .sort-container {
+    padding: 0.65rem;
+  }
+  
+  .sort-select {
     font-size: 0.85rem;
   }
   
+  .difficulty-filters {
+    gap: 0.4rem;
+  }
+  
+  .filter-btn {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+  }
+  
+  .challenges-grid {
+    gap: 1.25rem;
+  }
+  
+  .challenge-card {
+    padding: 1.25rem;
+  }
+  
   .challenge-title {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+  }
+  
+  .difficulty-badge {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.7rem;
+  }
+  
+  .new-badge {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
   }
   
   .challenge-description {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+  }
+  
+  .par-score {
+    font-size: 0.8rem;
+  }
+  
+  .start-challenge-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .pagination-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+  
+  .no-results-image {
+    max-width: 150px;
+  }
+  
+  .no-results h3 {
+    font-size: 1.1rem;
+  }
+  
+  .no-results p {
+    font-size: 0.85rem;
+  }
+  
+  .clear-filters-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .challenges-container {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .challenge-card {
+    padding: 1.25rem;
+  }
+  
+  .challenges-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .challenge-card:hover {
+    transform: none;
+  }
+  
+  .challenge-card:active {
+    transform: scale(0.98);
+  }
+  
+  .filter-btn:hover {
+    background: white;
+    border-color: #e1e4e8;
+  }
+  
+  .filter-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .start-challenge-btn:hover {
+    background: var(--teal);
+  }
+  
+  .start-challenge-btn:active {
+    transform: scale(0.98);
   }
 }
