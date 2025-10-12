@@ -185,6 +185,8 @@ const AchievementSystem = ({ user, challengesCompleted = 0, totalScore = 0 }) =>
   };
 
   const getProgressPercentage = (achievement) => {
+    if (!achievement || !achievement.criteria) return 0;
+    
     switch (achievement.id) {
       case 'first_solution':
         return Math.min(100, (challengesCompleted / achievement.criteria.challengesCompleted) * 100);
@@ -201,7 +203,7 @@ const AchievementSystem = ({ user, challengesCompleted = 0, totalScore = 0 }) =>
         <h2>Achievements</h2>
         <div className="achievement-stats">
           <div className="stat">
-            <span className="stat-number">{unlockedAchievements.length}</span>
+            <span className="stat-number">{unlockedAchievements && Array.isArray(unlockedAchievements) ? unlockedAchievements.length : 0}</span>
             <span className="stat-label">Unlocked</span>
           </div>
           <div className="stat">
@@ -209,7 +211,11 @@ const AchievementSystem = ({ user, challengesCompleted = 0, totalScore = 0 }) =>
             <span className="stat-label">Total</span>
           </div>
           <div className="stat">
-            <span className="stat-number">{unlockedAchievements.reduce((sum, a) => sum + a.points, 0)}</span>
+            <span className="stat-number">
+              {unlockedAchievements && Array.isArray(unlockedAchievements) 
+                ? unlockedAchievements.reduce((sum, a) => sum + (a?.points || 0), 0)
+                : 0}
+            </span>
             <span className="stat-label">Points</span>
           </div>
         </div>
@@ -229,7 +235,8 @@ const AchievementSystem = ({ user, challengesCompleted = 0, totalScore = 0 }) =>
               {achievementDefinitions
                 .filter(achievement => achievement.category === category)
                 .map(achievement => {
-                  const isUnlocked = unlockedAchievements.some(a => a.id === achievement.id);
+                  const isUnlocked = unlockedAchievements && Array.isArray(unlockedAchievements) && 
+                    unlockedAchievements.some(a => a && a.id === achievement.id);
                   const progress = getProgressPercentage(achievement);
                   const IconComponent = achievement.icon;
                   

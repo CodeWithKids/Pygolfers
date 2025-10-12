@@ -20,8 +20,8 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/profile/Profile";
 import ProfileSettings from "./pages/profile/ProfileSettings";
 import Events from "./pages/Events";
-import ParentDashboard from "./components/ParentDashboard";
 import TeacherDashboard from "./components/TeacherDashboard";
+import StudentDashboard from "./components/StudentDashboard";
 import CommunityForum from "./components/CommunityForum";
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
@@ -701,16 +701,6 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
                 <>
                   <li>
                     <Link 
-                      to="/parent-dashboard" 
-                      className={`nav-link ${location.pathname === '/parent-dashboard' ? 'active' : ''}`} 
-                      onClick={closeMenu}
-                      tabIndex={isMenuOpen ? 0 : -1}
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link 
                       to="/challenges" 
                       className={`nav-link ${location.pathname.startsWith('/challenges') ? 'active' : ''}`} 
                       onClick={closeMenu}
@@ -752,6 +742,16 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
                 </>
               ) : currentUser.isAuthenticated && currentUser.role === 'student' ? (
                 <>
+                  <li>
+                    <Link 
+                      to="/student-dashboard" 
+                      className={`nav-link ${location.pathname === '/student-dashboard' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      <FaUser /> Dashboard
+                    </Link>
+                  </li>
                   <li>
                     <Link 
                       to="/challenges" 
@@ -1140,7 +1140,7 @@ const App = () => {
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/settings" element={<ProfileSettings />} />
           <Route path="/events" element={<Events currentUser={currentUser} />} />
-          <Route path="/parent-dashboard" element={<ParentDashboard />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
           <Route path="/community" element={<CommunityForum />} />
         </Routes>
