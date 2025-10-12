@@ -98,7 +98,7 @@ const About = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            About <span className="highlight">PyGolfers</span> <span role="img" aria-label="snake and golf flag">🐍⛳</span>
+            About <span className="highlight">PyGolfers</span>
           </motion.h1>
           <motion.p 
             className="tagline"

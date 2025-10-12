@@ -353,7 +353,6 @@ const ProfileSettings = () => {
           <FaArrowLeft /> Back
         </button>
         <div className="header-branding">
-          <span className="logo-icon">🐍⛳</span>
           <h1>PyGolfers Settings</h1>
         </div>
         <p className="header-subtitle">Customize your coding profile and preferences</p>

@@ -154,7 +154,6 @@ const ForgotPassword = () => {
       >
         <div className="forgot-password-header">
           <div className="pygolfers-logo">
-            <span className="logo-icon">🐍⛳</span>
             <h1>PyGolfers</h1>
           </div>
           <h2>Reset Your Password</h2>

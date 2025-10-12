@@ -102,7 +102,7 @@ const Contact = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1>Got Questions About PyGolfers? 🐍⛳</h1>
+              <h1>Got Questions About PyGolfers?</h1>
               <div className="header-divider"></div>
               <p className="subtitle">
                 Our friendly team is here to help young coders and their families! Whether you need technical help, have questions about your account, or just want to say hello, we'd love to hear from you.

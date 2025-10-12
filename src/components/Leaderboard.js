@@ -124,7 +124,6 @@ const Leaderboard = () => {
       >
         <div className="header-content">
           <h1>
-            <span className="logo-icon">🐍⛳</span>
             PyGolfers Leaderboard
           </h1>
           <p>Compete with friends and climb the ranks!</p>

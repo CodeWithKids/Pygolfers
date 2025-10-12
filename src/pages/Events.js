@@ -229,7 +229,6 @@ const Events = ({ currentUser }) => {
           >
             <div className="hero-text">
               <h1>
-                <span className="logo-icon">🐍⛳</span>
                 Python Events & Competitions
               </h1>
               <p>Join our community events to learn, compete, and connect with fellow Python enthusiasts!</p>

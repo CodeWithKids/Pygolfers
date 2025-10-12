@@ -183,7 +183,7 @@ const Home = () => {
       <section className="hero">
         <div className="hero-content">
           <h1>
-            Where Kids Become <span className="highlight">Python Champions</span>! 🐍⛳
+            Where Kids Become <span className="highlight">Python Champions</span>!
           </h1>
           <p className="hero-subtitle">
             Master Python through fun code golf challenges! Write the shortest code possible, 
@@ -641,6 +641,33 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
           <h1 className="app-title" style={{ color: getTitleColor() }}>PyGolfers</h1>
         </Link>
         
+        {/* Mobile Header Actions - Notification & Profile */}
+        {isMobile && currentUser.isAuthenticated && (
+          <div className="mobile-header-actions">
+            <button 
+              className="mobile-notification-btn"
+              onClick={() => setShowNotifications(!showNotifications)}
+              title="Notifications"
+            >
+              <FaBell />
+              {getUnreadNotificationCount() > 0 && (
+                <span className="notification-badge">{getUnreadNotificationCount()}</span>
+              )}
+            </button>
+            <button 
+              className="mobile-profile-btn"
+              onClick={toggleUserMenu}
+              title="Profile Menu"
+            >
+              <img 
+                src={currentUser.avatar} 
+                alt={currentUser.name} 
+                className="mobile-avatar"
+              />
+            </button>
+          </div>
+        )}
+        
         <div className="nav-container">
           <button 
             className="menu-toggle" 
@@ -696,6 +723,26 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
                       Events
                     </Link>
                   </li>
+                  <li>
+                    <Link 
+                      to="/about" 
+                      className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/contact" 
+                      className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Contact
+                    </Link>
+                  </li>
                 </>
               ) : currentUser.isAuthenticated && currentUser.role === 'parent' ? (
                 <>
@@ -737,6 +784,26 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
                       tabIndex={isMenuOpen ? 0 : -1}
                     >
                       Events
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/about" 
+                      className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/contact" 
+                      className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Contact
                     </Link>
                   </li>
                 </>
@@ -800,6 +867,26 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
                       tabIndex={isMenuOpen ? 0 : -1}
                     >
                       Events
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/about" 
+                      className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/contact" 
+                      className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Contact
                     </Link>
                   </li>
                 </>
@@ -939,6 +1026,44 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
               </div>
             )}
             
+            {isMobile && currentUser.isAuthenticated && (
+              <div className="mobile-user-section">
+                <div className="mobile-user-profile">
+                  <img 
+                    src={currentUser.avatar} 
+                    alt={currentUser.username} 
+                    className="mobile-user-avatar"
+                  />
+                  <div className="mobile-user-info">
+                    <span className="mobile-username">{currentUser.name}</span>
+                    <span className="mobile-user-role">{currentUser.role}</span>
+                  </div>
+                </div>
+                <div className="mobile-user-actions">
+                  <Link 
+                    to="/profile" 
+                    className="mobile-action-btn"
+                    onClick={closeMenu}
+                  >
+                    <FaUser /> Profile
+                  </Link>
+                  <Link 
+                    to="/settings" 
+                    className="mobile-action-btn"
+                    onClick={closeMenu}
+                  >
+                    <FaCog /> Settings
+                  </Link>
+                  <button 
+                    className="mobile-action-btn logout-btn"
+                    onClick={handleLogout}
+                  >
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </div>
+              </div>
+            )}
+            
             {isMobile && !currentUser.isAuthenticated && (
               <div className="mobile-auth-buttons">
                 <Link 
@@ -1064,6 +1189,32 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
             </div>
           )}
         </div>
+        
+        {/* Mobile User Dropdown */}
+        {isMobile && currentUser.isAuthenticated && isUserMenuOpen && (
+          <div className="mobile-user-dropdown">
+            <Link 
+              to="/profile" 
+              className="mobile-dropdown-item"
+              onClick={() => { closeMenu(); setIsUserMenuOpen(false); }}
+            >
+              <FaUser className="icon" /> Profile
+            </Link>
+            <Link 
+              to="/settings" 
+              className="mobile-dropdown-item"
+              onClick={() => { closeMenu(); setIsUserMenuOpen(false); }}
+            >
+              <FaCog className="icon" /> Settings
+            </Link>
+            <button 
+              className="mobile-dropdown-item logout"
+              onClick={handleLogout}
+            >
+              <FaSignOutAlt className="icon" /> Logout
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
@@ -1098,7 +1249,7 @@ const App = () => {
     }
   };
 
-  const [currentUser, setCurrentUser] = useState(dummyAccounts.teacher); // Default to teacher for testing
+  const [currentUser, setCurrentUser] = useState({ isAuthenticated: false, role: null }); // Default to unauthenticated
 
   // Function to switch between dummy accounts
   const switchAccount = (accountType) => {
@@ -1148,27 +1299,21 @@ const App = () => {
           <div className="footer-content container">
             <div className="footer-row">
               <div className="footer-logo">
-                <span role="img" aria-label="snake">🐍</span> PyGolfers
+                PyGolfers
               </div>
               <div className="footer-copyright">
                 &copy; {new Date().getFullYear()} PyGolfers. All rights reserved.
               </div>
-              <div className="footer-legal">
-                <a href="/privacy">Privacy Policy</a>
-                <span className="divider">•</span>
-                <a href="/terms">Terms of Service</a>
-                <span className="divider">•</span>
-                <a href="/cookies">Cookie Policy</a>
+              <div className="footer-link">
+                <a 
+                  href="https://codewithkids.africa/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="code-with-kids-link"
+                >
+                  Powered by Code With Kids
+                </a>
               </div>
-              <a 
-                href="https://github.com/CodeWithKids/Pygolfers" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="github-link"
-                aria-label="GitHub"
-              >
-                <FaGithub />
-              </a>
             </div>
           </div>
         </footer>
