@@ -62,9 +62,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-  background-size: 200% 100%;
-  animation: gradient 3s ease infinite;
+  background: var(--primary);
 }
 
 .header-content {
@@ -133,7 +131,7 @@
   transform: translateX(-50%);
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  background: var(--primary);
   border-radius: 2px;
 }
 
@@ -338,7 +336,7 @@
 .form-input:focus ~ .input-underline::after,
 .form-textarea:focus ~ .input-underline::after {
   width: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  background: var(--primary);
 }
 
 .form-input.error ~ .input-underline,
@@ -843,9 +841,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-  background-size: 200% 100%;
-  animation: gradient 3s ease infinite;
+  background: var(--primary);
 }
 
 .contact-info:hover {
@@ -975,9 +971,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-  background-size: 200% 100%;
-  animation: gradient 3s ease infinite;
+  background: var(--primary);
   opacity: 0.7;
 }
 

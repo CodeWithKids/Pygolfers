@@ -22,7 +22,9 @@ import ProfileSettings from "./pages/profile/ProfileSettings";
 import Events from "./pages/Events";
 import TeacherDashboard from "./components/TeacherDashboard";
 import StudentDashboard from "./components/StudentDashboard";
+import ParentDashboard from "./components/ParentDashboard";
 import CommunityForum from "./components/CommunityForum";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   <motion.div 
@@ -705,6 +707,16 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
                   </li>
                   <li>
                     <Link 
+                      to="/challenges" 
+                      className={`nav-link ${location.pathname.startsWith('/challenges') ? 'active' : ''}`} 
+                      onClick={closeMenu}
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      Challenges
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
                       to="/community" 
                       className={`nav-link ${location.pathname === '/community' ? 'active' : ''}`} 
                       onClick={closeMenu}
@@ -748,22 +760,12 @@ const NavBar = ({ currentUser, setCurrentUser, switchAccount }) => {
                 <>
                   <li>
                     <Link 
-                      to="/challenges" 
-                      className={`nav-link ${location.pathname.startsWith('/challenges') ? 'active' : ''}`} 
+                      to="/parent-dashboard" 
+                      className={`nav-link ${location.pathname === '/parent-dashboard' ? 'active' : ''}`} 
                       onClick={closeMenu}
                       tabIndex={isMenuOpen ? 0 : -1}
                     >
-                      Challenges
-                    </Link>
-                  </li>
-                  <li>
-                    <Link 
-                      to="/leaderboard" 
-                      className={`nav-link ${location.pathname === '/leaderboard' ? 'active' : ''}`} 
-                      onClick={closeMenu}
-                      tabIndex={isMenuOpen ? 0 : -1}
-                    >
-                      Leaderboard
+                      <FaUser /> Dashboard
                     </Link>
                   </li>
                   <li>
@@ -1269,14 +1271,10 @@ const App = () => {
   </ProtectedRoute>
 } />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/register" element={<Registration />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Registration setCurrentUser={setCurrentUser} />} />
+          <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/challenges" element={
-  <ProtectedRoute isAuthenticated={currentUser.isAuthenticated} message="Sign in to view and solve coding challenges!">
-    <Challenges />
-  </ProtectedRoute>
-} />
+          <Route path="/challenges" element={<Challenges currentUser={currentUser} />} />
           <Route path="/challenge/:id" element={
   <ProtectedRoute isAuthenticated={currentUser.isAuthenticated} message="Sign in to attempt this coding challenge!">
     <ChallengeDetail />
@@ -1284,7 +1282,7 @@ const App = () => {
 } />
           <Route path="/leaderboard" element={
             <ProtectedRoute isAuthenticated={currentUser.isAuthenticated} message="Please log in to view the leaderboard.">
-              <Leaderboard />
+              <Leaderboard currentUser={currentUser} />
             </ProtectedRoute>
           } />
           <Route path="/profile" element={<Profile />} />
@@ -1293,18 +1291,15 @@ const App = () => {
           <Route path="/events" element={<Events currentUser={currentUser} />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+          <Route path="/parent-dashboard" element={<ParentDashboard />} />
           <Route path="/community" element={<CommunityForum />} />
         </Routes>
         <footer className="footer">
           <div className="footer-content container">
             <div className="footer-row">
-              <div className="footer-logo">
-                PyGolfers
-              </div>
-              <div className="footer-copyright">
-                &copy; {new Date().getFullYear()} PyGolfers. All rights reserved.
-              </div>
-              <div className="footer-link">
+              <div className="footer-brand">
+                <span className="footer-logo">PyGolfers</span>
+                <span className="footer-separator">•</span>
                 <a 
                   href="https://codewithkids.africa/" 
                   target="_blank" 
@@ -1313,6 +1308,9 @@ const App = () => {
                 >
                   Powered by Code With Kids
                 </a>
+              </div>
+              <div className="footer-copyright">
+                &copy; {new Date().getFullYear()} PyGolfers. All rights reserved.
               </div>
             </div>
           </div>

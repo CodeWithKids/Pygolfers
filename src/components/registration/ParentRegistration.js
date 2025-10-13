@@ -143,7 +143,7 @@ const ParentRegistration = () => {
       
       // Redirect to parent dashboard after 3 seconds
       setTimeout(() => {
-        navigate('/');
+        navigate('/parent-dashboard');
       }, 3000);
       
     } catch (error) {

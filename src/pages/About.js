@@ -12,7 +12,9 @@ import {
   FaGlobe,
   FaHeart,
   FaShieldAlt,
-  FaChevronDown
+  FaChevronDown,
+  FaUserGraduate,
+  FaChartLine
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import './About.css';
@@ -59,27 +61,39 @@ const teamMembers = [
 const features = [
   {
     id: 1,
+    icon: <FaShieldAlt className="feature-icon" />,
+    title: 'Safe & Secure',
+    description: 'COPPA compliant with robust privacy controls to protect young learners.'
+  },
+  {
+    id: 2,
+    icon: <FaUserGraduate className="feature-icon" />,
+    title: 'Kid-Friendly',
+    description: 'Designed specifically for young learners with age-appropriate content.'
+  },
+  {
+    id: 3,
+    icon: <FaChartLine className="feature-icon" />,
+    title: 'Track Progress',
+    description: 'Monitor learning journey with detailed analytics and progress reports.'
+  },
+  {
+    id: 4,
     icon: <FaLightbulb className="feature-icon" />,
     title: 'Learn by Doing',
     description: 'Hands-on coding challenges that make learning fun and engaging.'
   },
   {
-    id: 2,
+    id: 5,
     icon: <FaTrophy className="feature-icon" />,
     title: 'Earn Badges',
-    description: 'Complete challenges to earn badges and track your progress.'
+    description: 'Complete challenges to earn badges and track your achievements.'
   },
   {
-    id: 3,
+    id: 6,
     icon: <FaUsers className="feature-icon" />,
     title: 'Join a Community',
     description: 'Connect with other young coders and share your projects.'
-  },
-  {
-    id: 4,
-    icon: <FaPython className="feature-icon" />,
-    title: 'Master Python',
-    description: 'Build a strong foundation in Python programming.'
   }
 ];
 

@@ -4,7 +4,7 @@ import { FaUser, FaEnvelope, FaLock, FaUserGraduate, FaChalkboardTeacher, FaUser
 import { motion, AnimatePresence } from 'framer-motion';
 import './Registration.css';
 
-const Registration = () => {
+const Registration = ({ setCurrentUser }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
@@ -156,13 +156,65 @@ const Registration = () => {
     // Simulate API call
     setTimeout(() => {
       console.log('Registration data:', formData);
+      
+      // Create new user object
+      const newUser = {
+        id: `${formData.role}_${Date.now()}`,
+        username: formData.username,
+        name: formData.fullName,
+        email: formData.email,
+        role: formData.role,
+        avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
+        isAuthenticated: true,
+        ...(formData.role === 'learner' && {
+          age: 12,
+          grade: '7th Grade',
+          stats: {
+            totalPoints: 0,
+            challengesCompleted: 0,
+            currentStreak: 0,
+            rank: 0,
+            level: 1
+          }
+        }),
+        ...(formData.role === 'teacher' && {
+          subject: 'Computer Science',
+          school: 'PyGolfers Academy',
+          stats: {
+            totalStudents: 0,
+            totalClassrooms: 0,
+            challengesCreated: 0,
+            averageProgress: 0
+          }
+        }),
+        ...(formData.role === 'parent' && {
+          relationshipType: 'Parent',
+          children: []
+        })
+      };
+      
+      // Log the user in
+      setCurrentUser(newUser);
+      
       setIsSubmitting(false);
-      setIsSuccess(true);
-      // Scroll to top to show success message
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      
+      // Redirect based on role immediately
+      switch (formData.role) {
+        case 'learner':
+          navigate('/student-dashboard', { replace: true });
+          break;
+        case 'teacher':
+          navigate('/teacher-dashboard', { replace: true });
+          break;
+        case 'parent':
+          navigate('/parent-dashboard', { replace: true });
+          break;
+        case 'guest':
+          navigate('/challenges', { replace: true });
+          break;
+        default:
+          navigate('/', { replace: true });
+      }
     }, 1500);
   };
 
@@ -427,33 +479,6 @@ const Registration = () => {
           </motion.button>
 
           <div className="form-footer">
-            <div className="benefits-section">
-              <h3>Why Choose PyGolfers?</h3>
-              <div className="benefits-grid">
-                <div className="benefit-card">
-                  <div className="benefit-icon">
-                    <FaShieldAlt />
-                  </div>
-                  <h4>Safe & Secure</h4>
-                  <p>COPPA compliant with robust privacy controls</p>
-                </div>
-                <div className="benefit-card">
-                  <div className="benefit-icon">
-                    <FaUserGraduate />
-                  </div>
-                  <h4>Kid-Friendly</h4>
-                  <p>Designed specifically for young learners</p>
-                </div>
-                <div className="benefit-card">
-                  <div className="benefit-icon">
-                    <FaChartLine />
-                  </div>
-                  <h4>Track Progress</h4>
-                  <p>Monitor learning journey with detailed analytics</p>
-                </div>
-              </div>
-            </div>
-            
             <div className="auth-actions">
               <p className="login-prompt">
                 Already have an account? <Link to="/login" className="login-link">
@@ -470,9 +495,6 @@ const Registration = () => {
               </p>
             </div>
           </div>
-          <button type="submit" className="btn btn-primary register-btn" disabled={isSubmitting} tabIndex={6}>
-            {isSubmitting ? 'Registering...' : 'Create Account'}
-          </button>
         </form>
       </motion.div>
       

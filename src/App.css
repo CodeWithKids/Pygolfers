@@ -1190,7 +1190,7 @@ html {
 /* Try It Now Section */
 .try-it-section {
   padding: 4rem 5%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary);
   position: relative;
   overflow: hidden;
 }
@@ -1247,7 +1247,7 @@ html {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: var(--primary);
 }
 
 .challenge-header {
@@ -1275,7 +1275,7 @@ html {
 }
 
 .difficulty-badge.easy {
-  background: linear-gradient(135deg, #10B981, #059669);
+  background: #10B981;
   color: white;
 }
 
@@ -1316,7 +1316,7 @@ html {
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  background: #f8fafc;
   border-radius: 12px;
 }
 
@@ -1394,7 +1394,7 @@ html {
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: var(--primary);
   color: white;
   text-decoration: none;
   border-radius: 25px;
@@ -1451,7 +1451,7 @@ html {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--teal), var(--yellow), var(--pink));
+  background: var(--teal);
 }
 
 .user-type-card:hover {
@@ -1464,7 +1464,7 @@ html {
   width: 80px;
   height: 80px;
   margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, rgba(54, 182, 168, 0.1), rgba(54, 182, 168, 0.05));
+  background: rgba(54, 182, 168, 0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1999,34 +1999,34 @@ html {
 .footer-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  gap: 2rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .footer-logo {
-  font-weight: 800;
+  font-weight: 600;
   color: white;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   white-space: nowrap;
+  font-size: 0.9rem;
 }
 
-.footer-logo span {
-  line-height: 1;
-  font-size: 1.3em;
+.footer-separator {
+  color: #64748b;
+  font-size: 0.9rem;
 }
 
 .footer-copyright {
   color: #94a3b8;
   white-space: nowrap;
-}
-
-.footer-link {
-  color: #94a3b8;
-  white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 .code-with-kids-link {
@@ -2036,6 +2036,7 @@ html {
   transition: all 0.2s ease;
   padding: 0.25rem 0;
   border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
 }
 
 .code-with-kids-link:hover {
@@ -2099,18 +2100,27 @@ html {
 
 @media (max-width: 768px) {
   .footer {
-    padding: 1.5rem 5%;
+    padding: 1.5rem 1rem;
   }
   
   .footer-row {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    text-align: center;
   }
   
-  .github-link {
-    margin-left: 0;
-    margin-top: 0.5rem;
+  .footer-brand {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-separator {
+    display: none;
+  }
+  
+  .footer-copyright {
+    order: 2;
   }
 }
 

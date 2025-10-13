@@ -67,11 +67,12 @@ const mockUsers = [
   },
 ];
 
-const Leaderboard = () => {
+const Leaderboard = ({ currentUser }) => {
   const [users, setUsers] = useState(mockUsers);
   const [timeFilter, setTimeFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [currentUserRanking, setCurrentUserRanking] = useState(null);
 
   // Handle window resize
   useEffect(() => {
@@ -82,6 +83,31 @@ const Leaderboard = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Find current user's ranking
+  useEffect(() => {
+    if (currentUser && currentUser.isAuthenticated && currentUser.role === 'student') {
+      // Check if current user is in the leaderboard
+      let userRank = users.find(user => user.username === currentUser.username);
+      
+      // If not found, create a mock ranking for the current user
+      if (!userRank && currentUser.stats) {
+        userRank = {
+          id: currentUser.id,
+          username: currentUser.username,
+          name: currentUser.name,
+          avatar: currentUser.avatar,
+          score: currentUser.stats.totalPoints || 0,
+          solved: currentUser.stats.challengesCompleted || 0,
+          rank: currentUser.stats.rank || 15,
+          badge: currentUser.stats.level >= 15 ? 'Advanced' : currentUser.stats.level >= 10 ? 'Intermediate' : 'Beginner',
+          streak: currentUser.stats.currentStreak || 0
+        };
+      }
+      
+      setCurrentUserRanking(userRank);
+    }
+  }, [currentUser, users]);
 
   // Filter users based on search and time filter
   const filteredUsers = users.filter(user => {

@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSearch, FaFilter, FaSortAmountDown, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaSortAmountDown, FaChevronLeft, FaChevronRight, FaLock } from 'react-icons/fa';
 import '../styles/Challenges.css';
 
 const ITEMS_PER_PAGE = 6;
 
-const Challenges = () => {
+const Challenges = ({ currentUser }) => {
+  const navigate = useNavigate();
   const [difficultyFilter, setDifficultyFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +33,7 @@ const Challenges = () => {
             title: 'FizzBuzz',
             description: 'Print numbers from 1 to N, but for multiples of 3 print "Fizz", for multiples of 5 print "Buzz", and for both print "FizzBuzz".',
             difficulty: 'easy',
+            points: 30,
             par: 4,
             parChars: 40,
             completed: true,
@@ -43,6 +45,7 @@ const Challenges = () => {
             title: 'Palindrome Checker',
             description: 'Check if a given string is a palindrome (reads the same backward as forward).',
             difficulty: 'easy',
+            points: 25,
             par: 3,
             parChars: 30,
             completed: false,
@@ -54,6 +57,7 @@ const Challenges = () => {
             title: 'Prime Number Generator',
             description: 'Generate all prime numbers up to a given number N using the Sieve of Eratosthenes.',
             difficulty: 'medium',
+            points: 50,
             par: 6,
             completed: false,
             createdAt: '2025-06-01',
@@ -64,6 +68,7 @@ const Challenges = () => {
             title: 'Maze Solver',
             description: 'Find the shortest path through a 2D maze from start to end using BFS.',
             difficulty: 'hard',
+            points: 100,
             par: 15,
             completed: false,
             createdAt: '2025-06-05',
@@ -74,6 +79,7 @@ const Challenges = () => {
             title: 'Anagram Groups',
             description: 'Group anagrams together from a list of strings.',
             difficulty: 'medium',
+            points: 60,
             par: 8,
             completed: false,
             createdAt: '2025-06-07',
@@ -84,6 +90,7 @@ const Challenges = () => {
             title: 'Binary Search Tree',
             description: 'Implement a binary search tree with insert, delete, and search operations.',
             difficulty: 'hard',
+            points: 90,
             par: 12,
             completed: false,
             createdAt: '2025-06-06',
@@ -94,6 +101,7 @@ const Challenges = () => {
             title: 'URL Shortener',
             description: 'Design a URL shortening service that converts long URLs to short, unique codes.',
             difficulty: 'medium',
+            points: 55,
             par: 10,
             completed: false,
             createdAt: '2025-06-08',
@@ -104,6 +112,7 @@ const Challenges = () => {
             title: 'Sudoku Solver',
             description: 'Create a program that can solve any 9x9 Sudoku puzzle using backtracking.',
             difficulty: 'hard',
+            points: 100,
             par: 15,
             completed: false,
             createdAt: '2025-06-08',
@@ -403,9 +412,15 @@ const Challenges = () => {
               >
                 <div className="challenge-header">
                   <h3 className="challenge-title">
-                    <Link to={`/challenge/${challenge.id}`} className="challenge-link">
-                      {challenge.title}
-                    </Link>
+                    {currentUser && currentUser.isAuthenticated ? (
+                      <Link to={`/challenge/${challenge.id}`} className="challenge-link">
+                        {challenge.title}
+                      </Link>
+                    ) : (
+                      <span className="challenge-link-disabled" title="Login required to solve">
+                        {challenge.title}
+                      </span>
+                    )}
                   </h3>
                   <div className="badge-container">
                     <span className={`difficulty-badge ${getDifficultyBadgeClass(challenge.difficulty)}`}>
@@ -417,14 +432,27 @@ const Challenges = () => {
                 </div>
                 <p className="challenge-description">{challenge.description}</p>
                 <div className="challenge-footer">
-                  <span className="par-score">Par: {challenge.par} lines</span>
-                  <Link 
-                    to={`/challenge/${challenge.id}`} 
-                    className="start-challenge-btn"
-                    aria-label={`Start ${challenge.title} challenge`}
-                  >
-                    {challenge.completed ? 'View Solution' : 'Start Challenge'}
-                  </Link>
+                  <div className="challenge-meta-info">
+                    <span className="par-score">Par: {challenge.par} lines</span>
+                    <span className="points-score">🏆 {challenge.points} points</span>
+                  </div>
+                  {currentUser && currentUser.isAuthenticated ? (
+                    <Link 
+                      to={`/challenge/${challenge.id}`} 
+                      className="start-challenge-btn"
+                      aria-label={`Start ${challenge.title} challenge`}
+                    >
+                      {challenge.completed ? 'View Solution' : 'Start Challenge'}
+                    </Link>
+                  ) : (
+                    <button 
+                      className="start-challenge-btn login-required"
+                      onClick={() => navigate('/login', { state: { message: 'Please sign in to solve challenges!', from: { pathname: `/challenge/${challenge.id}` } } })}
+                      aria-label="Login required to start challenge"
+                    >
+                      <FaLock /> Login to Start
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))

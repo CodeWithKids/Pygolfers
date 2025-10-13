@@ -3,12 +3,13 @@ import { FaArrowRight, FaUserPlus, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './Login.css';
+import { mockLoginAccounts } from '../utils/mockUsers';
 
-const Login = () => {
+const Login = ({ setCurrentUser }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const message = location.state?.message;
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || null;
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -79,18 +80,42 @@ const Login = () => {
     if (validateForm()) {
       setIsLoading(true);
       
-      // Simulate API call with better error handling
+      // Simulate API call
       setTimeout(() => {
         console.log('Login attempt with:', formData);
         
-        // Simulate different scenarios
-        const isSuccessful = Math.random() > 0.3; // 70% success rate for demo
+        // Check credentials against mock accounts
+        const account = mockLoginAccounts.find(
+          acc => (acc.username === formData.username || acc.email === formData.username) 
+              && acc.password === formData.password
+        );
         
-        if (isSuccessful) {
+        if (account) {
+          // Successful login
+          setCurrentUser(account.userData);
           setIsLoading(false);
-          navigate(from, { replace: true });
+          
+          // Redirect based on role or return to previous page
+          if (from) {
+            navigate(from, { replace: true });
+          } else {
+            // Default redirects based on role
+            switch (account.userData.role) {
+              case 'student':
+                navigate('/student-dashboard', { replace: true });
+                break;
+              case 'teacher':
+                navigate('/teacher-dashboard', { replace: true });
+                break;
+              case 'parent':
+                navigate('/parent-dashboard', { replace: true });
+                break;
+              default:
+                navigate('/', { replace: true });
+            }
+          }
         } else {
-          // Simulate login failure
+          // Failed login
           setLoginAttempts(prev => prev + 1);
           setErrors({
             api: loginAttempts >= 2 ? 

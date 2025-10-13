@@ -370,56 +370,6 @@ const StudentDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="header-actions">
-          <div className="nav-notifications">
-            <button 
-              className="notification-btn"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              <FaBell />
-              {getUnreadNotificationCount() > 0 && (
-                <span className="notification-badge">{getUnreadNotificationCount()}</span>
-              )}
-            </button>
-            {showNotifications && (
-              <div className="notifications-dropdown">
-                <div className="notifications-header">
-                  <h4>Notifications</h4>
-                  <button 
-                    className="btn btn-sm btn-link"
-                    onClick={markAllNotificationsAsRead}
-                  >
-                    Mark all read
-                  </button>
-                </div>
-                <div className="notifications-list">
-                  {notifications && notifications.length > 0 ? (
-                    notifications.slice(0, 5).map(notification => (
-                      <div 
-                        key={notification.id}
-                        className={`notification-item ${notification.read ? 'read' : 'unread'}`}
-                        onClick={() => markNotificationAsRead(notification.id)}
-                      >
-                        <div className="notification-icon">
-                          {getNotificationIcon(notification.type)}
-                        </div>
-                        <div className="notification-content">
-                          <p>{notification.message}</p>
-                          <span className="notification-time">{notification.date}</span>
-                        </div>
-                        {!notification.read && <div className="unread-indicator"></div>}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="empty-state">
-                      <p>No notifications</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
 
       {/* Main Dashboard Grid */}
