@@ -304,11 +304,12 @@
 
 .faq-item {
   background: var(--bg-secondary);
-  padding: 2rem;
+  padding: 0;
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .faq-item:hover {
@@ -316,17 +317,49 @@
   box-shadow: var(--shadow-md);
 }
 
-.faq-item h3 {
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-  font-size: 1.3rem;
-  font-weight: 600;
+.faq-item.open {
+  border-color: var(--teal);
 }
 
-.faq-item p {
+.faq-question {
+  padding: 1.5rem 2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-secondary);
+  transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+  background: var(--bg-tertiary);
+}
+
+.faq-question h3 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.faq-question svg {
+  color: var(--teal);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.faq-answer {
+  padding: 0 2rem;
+  overflow: hidden;
+}
+
+.faq-answer p {
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
+  padding-bottom: 1.5rem;
 }
 
 /* Safety Section */

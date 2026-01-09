@@ -893,30 +893,36 @@ const About = () => {
           <div className="faq-container">
             <h2>Frequently Asked Questions</h2>
             <div className="faq-grid">
-              <div className="faq-item">
-                <h3>Is PyGolfers free?</h3>
-                <p>Yes! We offer free challenges and basic features. Premium features are available for advanced learners.</p>
-              </div>
-              <div className="faq-item">
-                <h3>What age is PyGolfers for?</h3>
-                <p>PyGolfers is designed for kids aged 8-14, but anyone can join and learn!</p>
-              </div>
-              <div className="faq-item">
-                <h3>Do I need Python experience?</h3>
-                <p>No! We have beginner-friendly challenges and tutorials to get you started.</p>
-              </div>
-              <div className="faq-item">
-                <h3>Is it safe for kids?</h3>
-                <p>Absolutely! We're COPPA compliant with parental controls and moderated community.</p>
-              </div>
-              <div className="faq-item">
-                <h3>Can parents track progress?</h3>
-                <p>Yes! Parents can view their child's achievements and progress with permission.</p>
-              </div>
-              <div className="faq-item">
-                <h3>How does code golf work?</h3>
-                <p>Like golf, you try to solve coding challenges using the fewest lines of code possible!</p>
-              </div>
+              <FAQItem 
+                question="Is PyGolfers free?"
+                answer="Yes! We offer free challenges and basic features to get you started. Premium features are available for advanced learners who want access to more challenges, detailed analytics, and priority support."
+                index={0}
+              />
+              <FAQItem 
+                question="What age is PyGolfers for?"
+                answer="PyGolfers is designed for kids aged 8-14, but anyone can join and learn! Our challenges are structured to be age-appropriate while still being engaging for learners of all ages."
+                index={1}
+              />
+              <FAQItem 
+                question="Do I need Python experience?"
+                answer="No experience needed! We have beginner-friendly challenges and step-by-step tutorials to get you started. Our platform guides you through your first lines of code and helps you build confidence as you progress."
+                index={2}
+              />
+              <FAQItem 
+                question="Is it safe for kids?"
+                answer="Absolutely! We're COPPA compliant with robust parental controls and a carefully moderated community. All content is reviewed, and we never share personal information. Safety is our top priority."
+                index={3}
+              />
+              <FAQItem 
+                question="Can parents track progress?"
+                answer="Yes! Parents can view their child's achievements, progress reports, and completed challenges through our secure parent dashboard. You'll always know how your child is doing."
+                index={4}
+              />
+              <FAQItem 
+                question="How does code golf work?"
+                answer="Like golf, you try to solve coding challenges using the fewest lines of code possible! Each challenge has a 'par' score, and you earn better badges (Birdie, Eagle, Hole-in-One) for more efficient solutions."
+                index={5}
+              />
             </div>
           </div>
         </motion.section>
@@ -986,7 +992,7 @@ const About = () => {
           }}
         >
           <h2 style={{ color: 'white', marginBottom: '1rem' }}>Ready to Become a Python Champion? 🏆</h2>
-          <p style={{ maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>Join 1,000+ kids learning to code with PyGolfers!</p>
+          <p style={{ maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>Join thousands of kids learning to code with PyGolfers! Start your coding journey today and discover the joy of programming.</p>
           
           <div className="cta-options">
             <div className="cta-card">
