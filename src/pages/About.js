@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   FaPython, 
   FaTrophy, 
@@ -14,17 +14,20 @@ import {
   FaShieldAlt,
   FaChevronDown,
   FaUserGraduate,
-  FaChartLine
+  FaChartLine,
+  FaChevronUp,
+  FaPlay,
+  FaPause
 } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import './About.css';
 
 const teamMembers = [
   {
     id: 1,
     name: 'Sarah Johnson',
-    role: 'Lead Instructor',
-    bio: 'Python expert with 10+ years of teaching experience',
+    role: 'Lead Instructor & Founder',
+    bio: 'Python expert with 10+ years of teaching experience. Sarah believes coding should be fun and accessible for everyone, especially kids!',
     image: 'https://randomuser.me/api/portraits/women/45.jpg',
     social: {
       github: 'https://github.com',
@@ -36,7 +39,7 @@ const teamMembers = [
     id: 2,
     name: 'Michael Chen',
     role: 'Curriculum Developer',
-    bio: 'Former software engineer passionate about education',
+    bio: 'Former software engineer at top tech companies, now passionate about making coding education engaging and effective for young minds.',
     image: 'https://randomuser.me/api/portraits/men/32.jpg',
     social: {
       github: 'https://github.com',
@@ -48,7 +51,7 @@ const teamMembers = [
     id: 3,
     name: 'Emma Davis',
     role: 'Community Manager',
-    bio: 'Dedicated to creating a positive learning environment',
+    bio: 'Dedicated to creating a positive, safe, and supportive learning environment where every child feels welcome and encouraged to explore.',
     image: 'https://randomuser.me/api/portraits/women/63.jpg',
     social: {
       github: 'https://github.com',
@@ -97,7 +100,228 @@ const features = [
   }
 ];
 
+// Animated Counter Component
+const AnimatedCounter = ({ target, duration = 2000, suffix = '' }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, threshold: 0.5 });
+
+  useEffect(() => {
+    if (isInView) {
+      let startTime = null;
+      const animate = (currentTime) => {
+        if (!startTime) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentCount = Math.floor(easeOutQuart * target);
+        
+        setCount(currentCount);
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setCount(target);
+        }
+      };
+      
+      requestAnimationFrame(animate);
+    }
+  }, [isInView, target, duration]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+};
+
+// Interactive FAQ Item Component
+const FAQItem = ({ question, answer, index }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <motion.div 
+      className={`faq-item ${isOpen ? 'open' : ''}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      whileHover={{ scale: 1.02 }}
+    >
+      <div 
+        className="faq-question"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <h3>{question}</h3>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+        </motion.div>
+      </div>
+      <motion.div
+        className="faq-answer"
+        initial={false}
+        animate={{
+          height: isOpen ? 'auto' : 0,
+          opacity: isOpen ? 1 : 0
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <p>{answer}</p>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Interactive Feature Card Component
+const InteractiveFeatureCard = ({ feature, index }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, threshold: 0.3 });
+
+  return (
+    <motion.div 
+      ref={ref}
+      className="feature-card interactive"
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      whileHover={{ 
+        scale: 1.05,
+        y: -10,
+        transition: { duration: 0.2 }
+      }}
+      whileTap={{ scale: 0.98 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+    >
+      <motion.div 
+        className="feature-icon-container"
+        animate={{
+          scale: isHovered ? 1.2 : 1,
+          rotate: isHovered ? [0, -10, 10, -10, 10, 0] : 0
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        {feature.icon}
+      </motion.div>
+      <h3 className="feature-title">{feature.title}</h3>
+      <motion.p 
+        className="feature-description"
+        animate={{ opacity: isHovered ? 1 : 0.8 }}
+      >
+        {feature.description}
+      </motion.p>
+      {isHovered && (
+        <motion.div
+          className="feature-highlight"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.3 }}
+        />
+      )}
+    </motion.div>
+  );
+};
+
+// Interactive Code Golf Demo
+const CodeGolfDemo = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [codeIndex, setCodeIndex] = useState(0);
+  
+  const codeExamples = [
+    { lines: 5, code: 'print("Hello, World!")', score: 'Par: 100' },
+    { lines: 3, code: 'print("Hi")', score: 'Birdie: 80' },
+    { lines: 1, code: 'print("Hi")', score: 'Eagle: 60' }
+  ];
+
+  useEffect(() => {
+    let interval;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCodeIndex((prev) => (prev + 1) % codeExamples.length);
+      }, 2000);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  return (
+    <motion.div 
+      className="code-golf-demo"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="demo-header">
+        <h3>See Code Golf in Action!</h3>
+        <button 
+          className="demo-toggle"
+          onClick={() => setIsPlaying(!isPlaying)}
+        >
+          {isPlaying ? <FaPause /> : <FaPlay />}
+        </button>
+      </div>
+      <motion.div
+        key={codeIndex}
+        className="demo-code-block"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="code-info">
+          <span className="code-lines">{codeExamples[codeIndex].lines} lines</span>
+          <span className="code-score">{codeExamples[codeIndex].score}</span>
+        </div>
+        <pre className="code-snippet">
+          <code>{codeExamples[codeIndex].code}</code>
+        </pre>
+        <div className="code-progress">
+          <motion.div 
+            className="progress-bar"
+            initial={{ width: 0 }}
+            animate={{ width: isPlaying ? '100%' : '0%' }}
+            transition={{ duration: 2, repeat: isPlaying ? Infinity : 0 }}
+          />
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const About = () => {
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  
+  const testimonials = [
+    {
+      quote: "PyGolfers made coding fun! I love the challenges and earning badges!",
+      author: "Alex, age 12",
+      role: "Student",
+      avatar: "https://i.pravatar.cc/150?img=1",
+      rating: 5
+    },
+    {
+      quote: "My daughter went from hating coding to asking for more challenges every day!",
+      author: "Sarah M.",
+      role: "Parent",
+      avatar: "https://i.pravatar.cc/150?img=2",
+      rating: 5
+    },
+    {
+      quote: "The golf concept is brilliant! It makes coding feel like a game, not homework.",
+      author: "Marcus, age 14",
+      role: "Student",
+      avatar: "https://i.pravatar.cc/150?img=3",
+      rating: 5
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <motion.div 
       className="about-container"
@@ -139,8 +363,9 @@ const About = () => {
         >
           <h2>Welcome to PyGolfers!</h2>
           <p>PyGolfers is a fun and friendly place where kids become coding champions! Our mission is to make learning Python exciting, creative, and rewarding for everyone ages 8–14.</p>
-          <p>Founded in 2023, we've created a safe, fun environment where young coders can develop their Python skills while competing with friends and earning cool achievement badges. Our platform is designed specifically for kids and families, with built-in safety features and parental controls.</p>
-          <p>PyGolfers borrows the concept of golf—but with code! In traditional golf, the goal is to get the ball in the hole using as few strokes as possible. In PyGolfers, the "golf course" is a coding puzzle, and your "strokes" are lines of Python code. Just like in golf, the challenge is to solve each puzzle using the shortest, most efficient solution you can—the fewer lines of code you write, the better your score! This playful approach turns every Python puzzle into a fun game of skill and strategy, making coding feel like a creative adventure rather than just another lesson.</p>
+          <p>Founded in 2023, we've created a safe, fun environment where young coders can develop their Python skills while competing with friends and earning cool achievement badges. Our platform is designed specifically for kids and families, with built-in safety features and parental controls that ensure a secure learning experience.</p>
+          <p><strong>What is Code Golf?</strong> PyGolfers borrows the concept of golf—but with code! In traditional golf, the goal is to get the ball in the hole using as few strokes as possible. In PyGolfers, the "golf course" is a coding puzzle, and your "strokes" are lines of Python code. Just like in golf, the challenge is to solve each puzzle using the shortest, most efficient solution you can—the fewer lines of code you write, the better your score! This playful approach turns every Python puzzle into a fun game of skill and strategy, making coding feel like a creative adventure rather than just another lesson.</p>
+          <p>We believe that learning to code should be joyful, not stressful. That's why we've built PyGolfers with gamification at its core—every challenge completed, every badge earned, and every friend you help brings you closer to becoming a Python champion!</p>
         </motion.section>
 
         {/* Stats Section */}
@@ -170,7 +395,9 @@ const About = () => {
                 <div className="stat-icon">
                   <FaCode />
                 </div>
-                <div className="stat-number">500+</div>
+                <div className="stat-number">
+                  <AnimatedCounter target={500} suffix="+" />
+                </div>
                 <div className="stat-label">Challenges Solved</div>
               </motion.div>
               <motion.div 
@@ -184,7 +411,9 @@ const About = () => {
                 <div className="stat-icon">
                   <FaUsers />
                 </div>
-                <div className="stat-number">1,000+</div>
+                <div className="stat-number">
+                  <AnimatedCounter target={1000} suffix="+" />
+                </div>
                 <div className="stat-label">Active Students</div>
               </motion.div>
               <motion.div 
@@ -198,7 +427,9 @@ const About = () => {
                 <div className="stat-icon">
                   <FaGlobe />
                 </div>
-                <div className="stat-number">50+</div>
+                <div className="stat-number">
+                  <AnimatedCounter target={50} suffix="+" />
+                </div>
                 <div className="stat-label">Countries</div>
               </motion.div>
               <motion.div 
@@ -212,7 +443,9 @@ const About = () => {
                 <div className="stat-icon">
                   <FaHeart />
                 </div>
-                <div className="stat-number">95%</div>
+                <div className="stat-number">
+                  <AnimatedCounter target={95} suffix="%" />
+                </div>
                 <div className="stat-label">Parent Satisfaction</div>
               </motion.div>
             </div>
@@ -261,7 +494,32 @@ const About = () => {
         >
           <h2>Who's It For?</h2>
           <p>PyGolfers is perfect for kids who love solving puzzles, playing games, or just trying new things! No experience is needed—just bring your curiosity and creativity.</p>
-          <p>Whether you're a complete beginner or already know some Python, PyGolfers has challenges for all skill levels. The only rule? Have fun!</p>
+          <p>Whether you're a complete beginner or already know some Python, PyGolfers has challenges for all skill levels. Our curriculum is designed to grow with you, from your first "Hello, World!" to building your own games and projects.</p>
+          <p><strong>Perfect for:</strong></p>
+          <ul style={{ 
+            listStyle: 'none', 
+            padding: 0, 
+            margin: '1rem 0',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '1rem'
+          }}>
+            <li style={{ padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              🎮 Kids who love games and puzzles
+            </li>
+            <li style={{ padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              🧠 Curious minds ready to explore coding
+            </li>
+            <li style={{ padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              👨‍👩‍👧‍👦 Parents looking for safe, educational platforms
+            </li>
+            <li style={{ padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+              🎓 Teachers seeking engaging coding curriculum
+            </li>
+          </ul>
+          <p style={{ marginTop: '1.5rem', fontStyle: 'italic', color: 'var(--text-secondary)' }}>
+            The only rule? Have fun while learning!
+          </p>
         </motion.section>
 
         <motion.section 

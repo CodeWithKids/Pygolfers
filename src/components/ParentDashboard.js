@@ -27,6 +27,40 @@ import {
 } from 'react-icons/fa';
 import './ParentDashboard.css';
 
+// Helper function to get notification icon based on type
+const getNotificationIcon = (type) => {
+  switch (type) {
+    case 'challenge':
+      return <FaCode />;
+    case 'achievement':
+      return <FaTrophy />;
+    case 'classroom':
+      return <FaGraduationCap />;
+    case 'system':
+      return <FaBell />;
+    case 'progress':
+      return <FaChartLine />;
+    default:
+      return <FaBell />;
+  }
+};
+
+// Helper function to get activity icon based on type
+const getActivityIcon = (type) => {
+  switch (type) {
+    case 'challenge':
+      return <FaCode />;
+    case 'achievement':
+      return <FaTrophy />;
+    case 'classroom':
+      return <FaGraduationCap />;
+    case 'badge':
+      return <FaAward />;
+    default:
+      return <FaGamepad />;
+  }
+};
+
 const ParentDashboard = () => {
   const [children, setChildren] = useState([]);
   const [selectedChild, setSelectedChild] = useState(null);
@@ -40,6 +74,9 @@ const ParentDashboard = () => {
     totalPoints: 0,
     weeklyProgress: 0
   });
+  const [showParentalControls, setShowParentalControls] = useState(false);
+  const [showTeacherMessage, setShowTeacherMessage] = useState(false);
+  const [messageTeacher, setMessageTeacher] = useState(null);
 
   const getUnreadNotificationCount = () => {
     return notifications.filter(n => !n.read).length;
@@ -632,9 +669,320 @@ const ParentDashboard = () => {
                 </div>
               </div>
             </div>
+
+            {/* Screen Time & Activity Monitoring */}
+            <div className="dashboard-section screen-time-section">
+              <div className="section-header">
+                <h2>Screen Time & Activity</h2>
+                <button 
+                  className="btn btn-outline"
+                  onClick={() => setShowParentalControls(true)}
+                >
+                  <FaCog /> Set Limits
+                </button>
+              </div>
+              
+              <div className="screen-time-grid">
+                <div className="screen-time-card">
+                  <div className="screen-time-icon">
+                    <FaClock />
+                  </div>
+                  <div className="screen-time-content">
+                    <span className="screen-time-label">Today's Screen Time</span>
+                    <span className="screen-time-value">2h 15m</span>
+                    <span className="screen-time-limit">of 3h limit</span>
+                  </div>
+                  <div className="screen-time-progress-ring">
+                    <svg width="60" height="60">
+                      <circle 
+                        cx="30" 
+                        cy="30" 
+                        r="25" 
+                        fill="none" 
+                        stroke="#e0e0e0" 
+                        strokeWidth="5"
+                      />
+                      <circle 
+                        cx="30" 
+                        cy="30" 
+                        r="25" 
+                        fill="none" 
+                        stroke="#36B6A8" 
+                        strokeWidth="5"
+                        strokeDasharray={`${(2.25 / 3) * 157} 157`}
+                        transform="rotate(-90 30 30)"
+                      />
+                    </svg>
+                    <span className="progress-percentage">75%</span>
+                  </div>
+                </div>
+                
+                <div className="screen-time-card">
+                  <div className="screen-time-icon">
+                    <FaCalendarAlt />
+                  </div>
+                  <div className="screen-time-content">
+                    <span className="screen-time-label">This Week</span>
+                    <span className="screen-time-value">12.5h</span>
+                    <span className="screen-time-trend positive">↑ 2.5h from last week</span>
+                  </div>
+                </div>
+                
+                <div className="screen-time-card">
+                  <div className="screen-time-icon">
+                    <FaFire />
+                  </div>
+                  <div className="screen-time-content">
+                    <span className="screen-time-label">Active Days</span>
+                    <span className="screen-time-value">{selectedChild.weeklyStats.daysActive}/7</span>
+                    <span className="screen-time-sublabel">days this week</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="activity-timeline">
+                <h4>Activity Timeline (This Week)</h4>
+                <div className="timeline-bars">
+                  {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => {
+                    const hours = [1.5, 2.3, 1.8, 2.5, 2.0, 0.5, 1.9][index];
+                    const maxHours = 3;
+                    return (
+                      <div key={day} className="timeline-day">
+                        <div className="timeline-bar-container">
+                          <div 
+                            className="timeline-bar"
+                            style={{ height: `${(hours / maxHours) * 100}%` }}
+                            title={`${hours}h`}
+                          ></div>
+                        </div>
+                        <span className="timeline-label">{day}</span>
+                        <span className="timeline-hours">{hours}h</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Communication with Teachers */}
+            <div className="dashboard-section teacher-communication-section">
+              <div className="section-header">
+                <h2>Connect with Teachers</h2>
+              </div>
+              
+              <div className="teachers-list">
+                {selectedChild.classrooms && selectedChild.classrooms.length > 0 ? (
+                  selectedChild.classrooms.map(classroom => (
+                    <div key={classroom.id} className="teacher-card">
+                      <div className="teacher-info">
+                        <div className="teacher-avatar">
+                          <FaChalkboardTeacher />
+                        </div>
+                        <div className="teacher-details">
+                          <h4>{classroom.teacher}</h4>
+                          <p>{classroom.name}</p>
+                        </div>
+                      </div>
+                      <div className="teacher-actions">
+                        <button 
+                          className="btn btn-secondary"
+                          onClick={() => {
+                            setMessageTeacher(classroom.teacher);
+                            setShowTeacherMessage(true);
+                          }}
+                        >
+                          <FaEnvelope /> Message
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="empty-state">
+                    <p>No teachers to connect with yet</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Parental Controls */}
+            <div className="dashboard-section parental-controls-section">
+              <div className="section-header">
+                <h2>Safety & Controls</h2>
+              </div>
+              
+              <div className="controls-grid">
+                <div className="control-item">
+                  <div className="control-header">
+                    <FaShieldAlt className="control-icon" />
+                    <h4>Content Filtering</h4>
+                  </div>
+                  <p>Safe, age-appropriate content only</p>
+                  <div className="control-status active">
+                    <FaCheckCircle /> Active
+                  </div>
+                </div>
+                
+                <div className="control-item">
+                  <div className="control-header">
+                    <FaClock className="control-icon" />
+                    <h4>Screen Time Limits</h4>
+                  </div>
+                  <p>Daily limit: 3 hours</p>
+                  <button className="btn btn-outline" onClick={() => setShowParentalControls(true)}>
+                    Adjust
+                  </button>
+                </div>
+                
+                <div className="control-item">
+                  <div className="control-header">
+                    <FaBell className="control-icon" />
+                    <h4>Activity Alerts</h4>
+                  </div>
+                  <p>Get notified of achievements</p>
+                  <div className="control-status active">
+                    <FaCheckCircle /> Enabled
+                  </div>
+                </div>
+                
+                <div className="control-item">
+                  <div className="control-header">
+                    <FaUsers className="control-icon" />
+                    <h4>Community Access</h4>
+                  </div>
+                  <p>Moderated forum access only</p>
+                  <div className="control-status active">
+                    <FaCheckCircle /> Supervised
+                  </div>
+                </div>
+              </div>
+            </div>
           </>
         )}
       </div>
+
+      {/* Parental Controls Modal */}
+      {showParentalControls && (
+        <div className="modal-overlay" onClick={() => setShowParentalControls(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Parental Controls</h3>
+              <button 
+                className="modal-close"
+                onClick={() => setShowParentalControls(false)}
+              >
+                <FaTimesCircle />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="control-setting">
+                <label>Daily Screen Time Limit</label>
+                <select className="control-select">
+                  <option value="1">1 hour</option>
+                  <option value="2">2 hours</option>
+                  <option value="3" selected>3 hours</option>
+                  <option value="4">4 hours</option>
+                  <option value="0">No limit</option>
+                </select>
+              </div>
+              
+              <div className="control-setting">
+                <label>Activity Notifications</label>
+                <div className="control-options">
+                  <label className="checkbox-label">
+                    <input type="checkbox" defaultChecked /> Achievements
+                  </label>
+                  <label className="checkbox-label">
+                    <input type="checkbox" defaultChecked /> Challenge Completions
+                  </label>
+                  <label className="checkbox-label">
+                    <input type="checkbox" /> Daily Summary
+                  </label>
+                  <label className="checkbox-label">
+                    <input type="checkbox" defaultChecked /> Weekly Report
+                  </label>
+                </div>
+              </div>
+              
+              <div className="control-setting">
+                <label>Content Restrictions</label>
+                <div className="control-options">
+                  <label className="checkbox-label">
+                    <input type="checkbox" defaultChecked disabled /> Age-appropriate content only
+                  </label>
+                  <label className="checkbox-label">
+                    <input type="checkbox" defaultChecked /> Moderated community access
+                  </label>
+                  <label className="checkbox-label">
+                    <input type="checkbox" defaultChecked /> Safe browsing mode
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline" onClick={() => setShowParentalControls(false)}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={() => setShowParentalControls(false)}>
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Teacher Message Modal */}
+      {showTeacherMessage && (
+        <div className="modal-overlay" onClick={() => setShowTeacherMessage(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Message {messageTeacher}</h3>
+              <button 
+                className="modal-close"
+                onClick={() => setShowTeacherMessage(false)}
+              >
+                <FaTimesCircle />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="message-form">
+                <div className="form-group">
+                  <label>Subject</label>
+                  <input 
+                    type="text" 
+                    className="form-input"
+                    placeholder="Enter message subject"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Message</label>
+                  <textarea 
+                    className="form-textarea"
+                    rows="6"
+                    placeholder="Write your message here..."
+                  ></textarea>
+                </div>
+                
+                <div className="message-info">
+                  <FaBell className="info-icon" />
+                  <span>Your teacher will receive this message within 24 hours</span>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline" onClick={() => setShowTeacherMessage(false)}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={() => {
+                setShowTeacherMessage(false);
+                // Add send message logic here
+              }}>
+                <FaEnvelope /> Send Message
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
